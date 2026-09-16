@@ -117,6 +117,9 @@ phase. When invoking a Windows Docker Desktop client from WSL, set
 `DOCKER_DESKTOP_WINDOWS_PATHS=1` so bind sources are translated with `wslpath`.
 The released primary artifacts were evaluated through this hardened path.
 Set `EVALPLUS_CPUS` when the container host exposes fewer than eight CPUs.
+The untrusted execution phase runs as the invoking user by default; override
+`EVALPLUS_CONTAINER_USER` only when the container host requires a different
+numeric UID:GID mapping.
 
 The repository also retains a full unmodified-EvalPlus StarCoder2-3B control
 generation and two-task stock-harness equivalence records for all five models

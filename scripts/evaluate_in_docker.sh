@@ -12,6 +12,7 @@ sample_name="$(basename "$samples")"
 base_image="ganler/evalplus@sha256:26b118098bef281fe8dfe999bf05f1d5b45374b4e6c00161ec0f30592aef4740"
 image="local-code-study/evalplus:0.3.1"
 eval_cpus="${EVALPLUS_CPUS:-8}"
+container_user="${EVALPLUS_CONTAINER_USER:-$(id -u):$(id -g)}"
 cache="$results_root/evalplus-cache"
 mount_cache="$cache"
 mount_results_root="$results_root"
@@ -38,6 +39,7 @@ docker run --rm \
   python -c "from evalplus.data import get_human_eval_plus; get_human_eval_plus(version='v0.1.10')"
 
 docker run --rm \
+  --user "$container_user" \
   --network none \
   --read-only \
   --cap-drop ALL \
