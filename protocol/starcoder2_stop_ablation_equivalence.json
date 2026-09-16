@@ -1,0 +1,30 @@
+{
+  "experiment": "starcoder2_no_new_def_stop",
+  "comparison": "stock_evalplus_vs_verified_primary_generation_path",
+  "tasks": {
+    "first": "HumanEval/0",
+    "last": "HumanEval/19",
+    "count": 20
+  },
+  "logical_condition": {
+    "evalplus_version": "0.3.1",
+    "model": "bigcode/starcoder2-3b",
+    "revision": "733247c55e3f73af49ce8e9c7949bf14af205928",
+    "removed_stop_text": "\ndef ",
+    "greedy": true,
+    "max_new_tokens": 512,
+    "dtype": "bfloat16",
+    "force_base_prompt": true
+  },
+  "raw": {
+    "byte_identical_prefix": true,
+    "stock_bytes": 39416,
+    "stock_sha256": "fe9397287712c8842ccaeb40bad32c9f5f479944bdd07af7691b8a4ac1e13517"
+  },
+  "sanitized": {
+    "byte_identical_prefix": true,
+    "stock_bytes": 12332,
+    "stock_sha256": "e484512ea623397a88491e7c38fa6cb9d8a21c9bb29c53ea4c42d80ed8eeb023"
+  },
+  "interpretation": "The decode-once predicate and hook restoration changed execution cost but not the first 20 retained raw or sanitized records under the altered stop list."
+}

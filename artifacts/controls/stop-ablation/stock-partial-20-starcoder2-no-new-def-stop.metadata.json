@@ -1,0 +1,42 @@
+{
+  "experiment": "starcoder2_no_new_def_stop",
+  "post_hoc": true,
+  "evalplus_version": "0.3.1",
+  "dataset": "humaneval",
+  "dataset_version": "v0.1.10",
+  "model_id": "bigcode/starcoder2-3b",
+  "model_revision": "733247c55e3f73af49ce8e9c7949bf14af205928",
+  "greedy": true,
+  "n_samples": 1,
+  "max_new_tokens": 512,
+  "dtype": "bfloat16",
+  "force_base_prompt": true,
+  "removed_stop_text": "\ndef ",
+  "stops_before": [
+    "<|endoftext|>",
+    "<|endofmask|>",
+    "</s>",
+    "\nif __name__",
+    "\ndef main(",
+    "\nprint(",
+    "\ndef ",
+    "\nclass ",
+    "\nimport ",
+    "\nfrom ",
+    "\nassert "
+  ],
+  "stops_after": [
+    "<|endoftext|>",
+    "<|endofmask|>",
+    "</s>",
+    "\nif __name__",
+    "\ndef main(",
+    "\nprint(",
+    "\nclass ",
+    "\nimport ",
+    "\nfrom ",
+    "\nassert "
+  ],
+  "id_range": null,
+  "output": "/mnt/c/Users/jaive.DESKTOP-3TNM9JL/Desktop/Local-Deployment-of-Transformer-based-Code-Assistants-main/results/controls/starcoder2-no-new-def-stop.jsonl"
+}
