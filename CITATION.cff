@@ -7,6 +7,14 @@ date-released: 2026-09-16
 authors:
   - family-names: Bassi
     given-names: Jaiveer
+    orcid: "https://orcid.org/0009-0006-3633-3220"
+license: MIT
+keywords:
+  - HumanEval
+  - EvalPlus
+  - code generation
+  - reproducibility
+  - local inference
 repository-code: "https://github.com/imjbassi/local-deployment-of-transformer-based-code-assistants"
 url: "https://github.com/imjbassi/local-deployment-of-transformer-based-code-assistants"
 abstract: >-
