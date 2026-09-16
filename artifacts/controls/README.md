@@ -13,8 +13,17 @@ files compare every task with the retained primary artifacts without executing
 model output.
 
 The full stock and optimized files differ on three raw tasks (32, 38, and 50)
-and two sanitized tasks (38 and 50). Hardened evaluation output is added only
-after execution through the repository's network-isolated container path.
+and two sanitized tasks (38 and 50). The retained hardened EvalPlus result
+scores the stock control at 2/164 (1.2%) on both HumanEval and HumanEval+, with
+passes on HumanEval/49 and HumanEval/53. The primary wrapper scored those tasks
+plus HumanEval/50, for 3/164 (1.8%). The control therefore rules out the wrapper
+optimization as an explanation for the low StarCoder2 result.
+
+The evaluation ran in
+[GitHub Actions run 35048614817](https://github.com/imjbassi/local-deployment-of-transformer-based-code-assistants/actions/runs/35048614817)
+through the repository's network-isolated, read-only, capability-dropped
+container path. The evaluator result and built image identifier are retained
+alongside the completions.
 
 ## Five-model equivalence control
 

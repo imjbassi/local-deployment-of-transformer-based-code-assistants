@@ -2,13 +2,13 @@ cff-version: 1.2.0
 message: "If you use this software, protocol, artifacts, or technical report, please cite the repository."
 title: "Do Published HumanEval Rankings Survive Local Deployment?"
 type: software
-version: 1.0.0
-date-released: 2026-09-14
+version: 1.1.0
+date-released: 2026-09-15
 authors:
   - family-names: Bassi
     given-names: Jaiveer
-repository-code: "https://github.com/imjbassi/Local-Deployment-of-Transformer-based-Code-Assistants"
-url: "https://github.com/imjbassi/Local-Deployment-of-Transformer-based-Code-Assistants"
+repository-code: "https://github.com/imjbassi/local-deployment-of-transformer-based-code-assistants"
+url: "https://github.com/imjbassi/local-deployment-of-transformer-based-code-assistants"
 abstract: >-
   Benchmark software, a preregistered protocol, completed five-model primary
   artifacts, and a technical report testing whether the HumanEval ranking in

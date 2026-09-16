@@ -1,7 +1,7 @@
 # Manuscript review
 
-Review date: 2026-09-14
-Scope: internal evidence, LaTeX, citation, and rendering review of version 1.0
+Review date: 2026-09-15
+Scope: internal evidence, LaTeX, citation, and rendering review of version 1.1
 
 ## Verdict
 
@@ -34,7 +34,7 @@ Tectonic.
 | Kendall's tau-b is 0.8 with 95% interval [0.6, 0.8] | `primary-analysis.json`, 10,000 paired replicates, seed 2026 | Verified |
 | StarCoder2/Qwen0.5 reversal and interval | `primary-analysis.json`, 10,000 paired replicates, seed 2026 | Verified |
 | Two-task stock-harness equivalence for all five models | `artifacts/controls` and `protocol/all_models_stock_equivalence.json` | Verified |
-| Full stock StarCoder2 generation | 164 retained raw and sanitized records plus static comparisons | Generated; hardened scoring pending |
+| Full stock StarCoder2 control: 2/164 on HE and HE+ | 164 retained records, hardened evaluator JSON, image identifier, and static comparisons | Verified |
 | Checkpoint identities and revisions | `protocol/published_targets.json` | Verified |
 | BF16, RTX 4070, package and evaluator versions | hardware, package-freeze, and evaluator-image artifacts | Verified |
 | Published scores | Qwen2.5-Coder technical report, Table 5 | Verified against primary source |

@@ -53,8 +53,11 @@ Python and must not be executed outside a sandbox.
 unmodified-EvalPlus StarCoder2-3B control generation and two-task equivalence
 records for all five models. The two-task raw and sanitized outputs are
 byte-identical to the retained primary records. Hardened functional scoring of
-the full stock control remains pending because no container runtime is
-available on the current workstation.
+the full stock control produced 2/164 (1.2%) on both HumanEval and HumanEval+,
+with passes on HumanEval/49 and HumanEval/53. The primary wrapper also passed
+HumanEval/50, producing 3/164 (1.8%). Thus the unmodified stock harness does not
+restore the published score or ordering and does not explain the low primary
+result.
 
 The planned 20-sample sensitivity condition and independent review have not yet
 been completed. The primary result is complete and auditable; an archival paper

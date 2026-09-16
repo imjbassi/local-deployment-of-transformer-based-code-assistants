@@ -124,9 +124,10 @@ numeric UID:GID mapping.
 The repository also retains a full unmodified-EvalPlus StarCoder2-3B control
 generation and two-task stock-harness equivalence records for all five models
 under `artifacts/controls/`. The latter are byte-identical to the corresponding
-primary records. The full stock control has not been assigned a functional
-score because this workstation currently has no container runtime; generated
-Python is not executed directly on the host.
+primary records. Because this workstation has no container runtime, the full
+stock control was scored by the repository's hardened container workflow on an
+ephemeral GitHub runner: 2/164 (1.2%) on both HumanEval and HumanEval+.
+Generated Python was not executed directly on the host.
 
 ## Outputs
 

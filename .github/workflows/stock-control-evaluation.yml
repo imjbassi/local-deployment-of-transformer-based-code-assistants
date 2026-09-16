@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Evaluate retained StarCoder2 control in the hardened container
         env:
           EVALPLUS_CPUS: "4"
@@ -20,7 +20,7 @@ jobs:
           artifacts/controls/stock-evalplus/stock-evalplus-starcoder2-3b.jsonl
       - name: Upload evaluator outputs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: stock-starcoder2-evalplus-results
           if-no-files-found: error

@@ -33,9 +33,11 @@ A paper or archival release requires all of the following:
 
 A full 164-task StarCoder2-3B generation through unmodified EvalPlus 0.3.1 is
 retained in `artifacts/controls/`. Static comparison finds two sanitized records
-that differ from the primary generation. Functional scoring is intentionally
-pending: Docker or an equivalent hardened container runtime is not installed on
-this workstation, and model-generated Python will not be executed on the host.
+that differ from the primary generation. A network-isolated hardened evaluation
+on an ephemeral GitHub runner scored the stock control at 2/164 (1.2%) on both
+HumanEval and HumanEval+. The primary wrapper scored 3/164 (1.8%), so the stock
+control does not restore the published result. The evaluator JSON and image
+identifier are retained with the control artifacts.
 
 The two-task unmodified-EvalPlus equivalence check is complete for all five
 models. Raw and sanitized records match the retained primary artifacts byte for

@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-15
+
 ### Added
 
 - Evidence-backed technical report for the five-model primary experiment.
@@ -17,6 +19,8 @@ All notable changes to this project are documented here. The format follows
   analysis seed 2026).
 - Full unmodified-EvalPlus StarCoder2-3B control generations and two-task
   stock-harness equivalence artifacts for all five models.
+- Hardened stock-control evaluator output confirming 2/164 (1.2%) on both
+  HumanEval and HumanEval+.
 - A non-executing JSONL comparison command for retained generation artifacts.
 
 ## [1.0.0] - 2026-09-14
