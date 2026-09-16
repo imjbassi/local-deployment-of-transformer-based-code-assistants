@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 import pytest
+
 from local_code_benchmark.compare import compare_jsonl
 
 

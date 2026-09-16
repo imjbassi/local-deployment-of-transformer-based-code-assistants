@@ -1,4 +1,5 @@
 import pytest
+
 from local_code_benchmark.analyze import (
     analyze,
     bootstrap_kendall_tau_b_ci,
