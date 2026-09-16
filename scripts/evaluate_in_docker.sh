@@ -33,6 +33,7 @@ mkdir -p "$cache"
 
 # Fetch the pinned public test data before the untrusted-code phase loses network access.
 docker run --rm \
+  --user "$container_user" \
   --mount "type=bind,src=$mount_cache,dst=/cache" \
   --env XDG_CACHE_HOME=/cache \
   "$image" \
