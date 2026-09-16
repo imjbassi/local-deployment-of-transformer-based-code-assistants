@@ -6,6 +6,25 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-09-16
+
+### Added
+
+- Independent EvalPlus leaderboard values and documented greedy direct-completion
+  setup as an explicit third comparison source in the manuscript.
+- A complete post-hoc StarCoder2-3B ablation removing only the exact `\ndef `
+  generation stop, with 164 raw and sanitized records.
+- Hardened evaluator output showing 17/164 (10.4%) HumanEval and 15/164 (9.1%)
+  HumanEval+ for the ablation.
+- A 20-task stock-path equivalence prefix, byte-identity record, workflow run
+  provenance, checksums, and machine-readable summary.
+
+### Changed
+
+- Reframed the residual StarCoder2 gap as an unresolved anomaly: the stop rule
+  explains a substantial fraction of failures but does not recover the
+  independent 31.7%/27.4% result.
+
 ## [1.1.0] - 2026-09-15
 
 ### Added

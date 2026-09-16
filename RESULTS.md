@@ -36,11 +36,22 @@ detail needed to reconstruct Table 5 from the paper alone.
 
 A direct diagnostic showed that the pinned StarCoder2 checkpoint generates
 sensible code for its model-card prompt, but begins HumanEval/0 by repeating the
-function definition. EvalPlus treats a new top-level `def` as the end of the
-requested completion, leaving an empty function body. Most StarCoder2 failures
-have this form or continue with repository-path text. This is evidence of
-prompt-and-stopping sensitivity under a uniform harness, not evidence of damaged
-weights.
+function definition. EvalPlus treats the exact text `\ndef ` as a generation
+boundary, then removes the repeated definition during truncation. The provider
+decodes only newly generated tokens; the prompt appears in retained raw JSONL
+because EvalPlus deliberately stores `prompt + implementation`.
+
+The independent EvalPlus leaderboard reports 31.7% HumanEval and 27.4%
+HumanEval+ for StarCoder2-3B, identifies it as direct code completion, and
+documents greedy pass@1. Our stock result therefore conflicts with a second
+party using the same evaluator family and nominal mode.
+
+A post-hoc one-factor ablation removed only `\ndef ` from the stop list. It
+produced 17/164 (10.4%) HumanEval and 15/164 (9.1%) HumanEval+ passes. Relative
+to the 2/164 stock control, the stop change recovers 9.15 and 7.93 percentage
+points, respectively, but remains 21.3 and 18.3 points below the independent
+leaderboard. The stop interaction is a demonstrated contributor; the residual
+pipeline divergence is an unresolved anomaly.
 
 ## Artifacts and remaining work
 
@@ -58,6 +69,13 @@ with passes on HumanEval/49 and HumanEval/53. The primary wrapper also passed
 HumanEval/50, producing 3/164 (1.8%). Thus the unmodified stock harness does not
 restore the published score or ordering and does not explain the low primary
 result.
+
+The complete stop-rule ablation is retained in
+[`artifacts/controls/stop-ablation`](artifacts/controls/stop-ablation), including
+raw and sanitized generations, hardened evaluator output, checksums, condition
+metadata, and the first 20 stock-path records. Those 20 records are byte-identical
+to the faster full-run path and document that decode-once stopping and hook
+restoration change execution cost rather than outputs under the altered list.
 
 The planned 20-sample sensitivity condition and independent review have not yet
 been completed. The primary result is complete and auditable; an archival paper

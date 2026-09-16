@@ -45,6 +45,14 @@ post-processed because changing the prompt or stop policy after observing scores
 would violate the primary protocol. Treat this as a deployment-condition result,
 not a claim that the published score is erroneous.
 
+A completed post-hoc ablation removed only the exact `\ndef ` stop. HumanEval
+rose to 17/164 (10.4%) and HumanEval+ to 15/164 (9.1%), compared with 2/164
+(1.2%) on each benchmark in the stock control. This establishes the stop as a
+partial cause, not a complete explanation: the independent EvalPlus leaderboard
+reports 31.7% and 27.4% under nominally greedy direct completion. Treat the
+remaining 21.3- and 18.3-point gaps as an unresolved pipeline anomaly. Do not
+generalize the local primary score into a model-quality claim.
+
 ## Host constraints
 
 The Windows system drive had approximately 13 GB free during setup. Primary

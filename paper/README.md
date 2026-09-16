@@ -1,8 +1,9 @@
 # Paper source and build
 
-The checked-in PDF reports the completed five-model primary experiment. It is a
-technical report, not a peer-reviewed publication, and it does not present the
-unrun stochastic sensitivity condition as a result.
+The checked-in PDF reports the completed five-model primary experiment, stock
+control, and post-hoc StarCoder2 stop-rule ablation. It is a technical report,
+not a peer-reviewed publication, and it does not present the unrun stochastic
+sensitivity condition as a result.
 
 ## Contents
 
@@ -39,4 +40,5 @@ pdftoppm -png \
 
 The LaTeX source contains no derived benchmark logic. Values in the manuscript
 must remain traceable to `artifacts/primary/primary-analysis.json`,
-`artifacts/primary/outcomes.jsonl`, or the cited source table.
+`artifacts/primary/outcomes.jsonl`,
+`artifacts/controls/stop-ablation/summary.json`, or a cited source.

@@ -129,6 +129,20 @@ stock control was scored by the repository's hardened container workflow on an
 ephemeral GitHub runner: 2/164 (1.2%) on both HumanEval and HumanEval+.
 Generated Python was not executed directly on the host.
 
+The post-hoc StarCoder2 stop-rule ablation is also complete. It removes only
+EvalPlus 0.3.1's exact `\ndef ` generation stop and retains every other logical
+condition. Hardened scoring produced 17/164 (10.4%) on HumanEval and 15/164
+(9.1%) on HumanEval+, compared with the independent EvalPlus leaderboard's
+31.7% and 27.4%. The stop rule is therefore a measured contributor, but the
+remaining divergence is unresolved. Full generations, evaluator output,
+checksums, and a 20-task byte-equivalence record for the performance-only
+generation path are in `artifacts/controls/stop-ablation/`.
+
+```bash
+python scripts/starcoder2_stop_ablation.py \
+  --output results/controls/starcoder2-no-new-def-stop.jsonl
+```
+
 ## Outputs
 
 Every run directory contains:

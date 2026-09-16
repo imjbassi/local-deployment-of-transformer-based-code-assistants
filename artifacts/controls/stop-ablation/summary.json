@@ -1,0 +1,35 @@
+{
+  "experiment": "starcoder2_no_new_def_stop",
+  "status": "complete",
+  "classification": "post_hoc_secondary_ablation",
+  "change_from_primary": "Removed the exact generation stop text \\ndef ; all other logical generation settings were retained.",
+  "humaneval": {
+    "passed": 17,
+    "total": 164,
+    "pass_at_1_percent": 10.365853658536585
+  },
+  "humaneval_plus": {
+    "passed": 15,
+    "total": 164,
+    "pass_at_1_percent": 9.146341463414634
+  },
+  "comparators": {
+    "stock_evalplus_local": {
+      "humaneval_percent": 1.2195121951219512,
+      "humaneval_plus_percent": 1.2195121951219512
+    },
+    "independent_evalplus_leaderboard": {
+      "humaneval_percent": 31.7,
+      "humaneval_plus_percent": 27.4,
+      "accessed": "2026-09-16"
+    }
+  },
+  "interpretation": "The newline-def stop explains part, but not most, of the independent-score divergence. The remaining difference is unresolved.",
+  "hardened_evaluation": {
+    "github_actions_run_id": 35077128303,
+    "git_commit": "c6176aa0148dd7ded1b0d733ed163b8f7bc0185f",
+    "network_disabled_for_untrusted_execution": true,
+    "evalplus_version": "0.3.1",
+    "dataset_version": "v0.1.10"
+  }
+}

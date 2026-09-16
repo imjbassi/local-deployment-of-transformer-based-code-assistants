@@ -44,6 +44,13 @@ models. Raw and sanitized records match the retained primary artifacts byte for
 byte; hashes and condition metadata are in
 `protocol/all_models_stock_equivalence.json`.
 
+A post-hoc StarCoder2-3B ablation removing only the exact `\ndef ` generation
+stop is complete. Hardened evaluation scored 17/164 (10.4%) on HumanEval and
+15/164 (9.1%) on HumanEval+. A separately retained 20-task stock prefix is
+byte-identical to the performance-only generation path. The change explains
+part of the local failure but does not recover the independent EvalPlus
+leaderboard's 31.7% and 27.4%; the remaining divergence is unresolved.
+
 Until the open gates pass, the defensible claim is limited to the completed
 primary condition and its stated interpretation boundary; do not describe the
 repository as a finished or peer-reviewed paper.
