@@ -15,8 +15,9 @@ EvalPlus 0.3.1 in a network-isolated container.
 
 ## Primary decision
 
-The published HumanEval order was not reproduced. Kendall's tau-b is 0.8. The
-local order from low to high is StarCoder2-3B, Qwen2.5-Coder-0.5B,
+The published HumanEval order was not reproduced. Kendall's tau-b is 0.8, with
+a paired task-bootstrap 95% interval of [0.6, 0.8]. The local order from low to
+high is StarCoder2-3B, Qwen2.5-Coder-0.5B,
 DeepSeek-Coder-1.3B, Qwen2.5-Coder-1.5B, and Qwen2.5-Coder-3B.
 
 StarCoder2-3B reverses its published ordering with Qwen2.5-Coder-0.5B. The local
@@ -47,6 +48,13 @@ weights.
 the five full evaluator result files, 820 task-level outcomes, the analysis JSON,
 environment metadata, and checksums. These files include untrusted generated
 Python and must not be executed outside a sandbox.
+
+[`artifacts/controls`](artifacts/controls) additionally contains a complete
+unmodified-EvalPlus StarCoder2-3B control generation and two-task equivalence
+records for all five models. The two-task raw and sanitized outputs are
+byte-identical to the retained primary records. Hardened functional scoring of
+the full stock control remains pending because no container runtime is
+available on the current workstation.
 
 The planned 20-sample sensitivity condition and independent review have not yet
 been completed. The primary result is complete and auditable; an archival paper

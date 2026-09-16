@@ -1,0 +1,24 @@
+{
+  "candidate": "results\\controls\\stock-evalplus-starcoder2-3b.raw.jsonl",
+  "candidate_record_count": 164,
+  "candidate_sha256": "af91a0959479aab2c92300a2f27fc677896576a29547a39644b62139e9003572",
+  "differing_record_task_ids": [
+    "HumanEval/32",
+    "HumanEval/38",
+    "HumanEval/50"
+  ],
+  "differing_solution_task_ids": [
+    "HumanEval/32",
+    "HumanEval/38",
+    "HumanEval/50"
+  ],
+  "extra_in_candidate": [],
+  "files_byte_identical": false,
+  "missing_from_candidate": [],
+  "reference": "artifacts\\primary\\humaneval\\starcoder2-3b.raw.jsonl",
+  "reference_record_count": 164,
+  "reference_sha256": "b911d84b09ba36f17ca6accf433f0d75951970191057e57611f89e958ec22e51",
+  "shared_record_count": 164,
+  "shared_records_identical": false,
+  "shared_solutions_identical": false
+}

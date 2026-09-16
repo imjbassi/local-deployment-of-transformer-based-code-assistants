@@ -1,6 +1,9 @@
 import pytest
-
-from local_code_benchmark.analyze import analyze, kendall_tau_b
+from local_code_benchmark.analyze import (
+    analyze,
+    bootstrap_kendall_tau_b_ci,
+    kendall_tau_b,
+)
 
 TARGETS = {
     "models": [
@@ -28,6 +31,21 @@ def test_kendall_tau_b_detects_reverse_order() -> None:
     assert kendall_tau_b([1, 2, 3], [3, 2, 1]) == -1.0
 
 
+def test_tau_bootstrap_is_paired_reproducible_and_bounded() -> None:
+    outcomes_by_model = [
+        [0.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 1.0],
+        [1.0, 1.0, 1.0, 1.0],
+    ]
+    interval = bootstrap_kendall_tau_b_ci(
+        [1.0, 2.0, 3.0], outcomes_by_model, replicates=100, seed=7
+    )
+    assert interval == bootstrap_kendall_tau_b_ci(
+        [1.0, 2.0, 3.0], outcomes_by_model, replicates=100, seed=7
+    )
+    assert -1.0 <= interval[0] <= interval[1] <= 1.0
+
+
 def test_analysis_reproduces_strict_order() -> None:
     result = analyze(
         TARGETS,
@@ -37,6 +55,8 @@ def test_analysis_reproduces_strict_order() -> None:
     )
     assert result["decision"] == "reproduced"
     assert result["kendall_tau_b"] == 1.0
+    low, high = result["kendall_tau_b_bootstrap_ci_95"]
+    assert low <= result["kendall_tau_b"] <= high
 
 
 def test_analysis_rejects_duplicate_outcome() -> None:

@@ -1,0 +1,55 @@
+{
+  "date": "2026-09-15",
+  "evalplus_version": "0.3.1",
+  "dataset": "HumanEval+ v0.1.10",
+  "tasks": [
+    "HumanEval/0",
+    "HumanEval/1"
+  ],
+  "condition": {
+    "decoding": "greedy",
+    "dtype": "bfloat16",
+    "max_new_tokens": 512,
+    "batch_size": 1,
+    "prompt": "base"
+  },
+  "comparison": "Unmodified EvalPlus 0.3.1 Hugging Face generation versus the retained primary generation wrapper, using the first two task records from each run.",
+  "models": [
+    {
+      "model_key": "qwen2.5-coder-0.5b",
+      "sanitized_byte_identical": true,
+      "raw_byte_identical": true,
+      "sanitized_first_two_records_sha256": "7319f97a39c62d702e2af3626331374b48996c2e89c339d384d23161d2bfd0d1",
+      "raw_first_two_records_sha256": "0251e13aeebe2609c2cb4dbd1097f9690f7361d326dacb0660db3fd4e9647d94"
+    },
+    {
+      "model_key": "starcoder2-3b",
+      "sanitized_byte_identical": true,
+      "raw_byte_identical": true,
+      "sanitized_first_two_records_sha256": "dfd9120115e860305c24ef2a09725c79942d10517eaf00084729df98a724e0b4",
+      "raw_first_two_records_sha256": "8f3d50361e5fd0f9e6f1bae33424b5bb47a63e4e6bc3e3b0939cfa3cde7823ca"
+    },
+    {
+      "model_key": "deepseek-coder-1.3b",
+      "sanitized_byte_identical": true,
+      "raw_byte_identical": true,
+      "sanitized_first_two_records_sha256": "806c21d26019bca1a2a181402211449ccf5643d05ff9cc17c2c0f1ff53f7a26a",
+      "raw_first_two_records_sha256": "a5e5d48e399c3829788c3987c5bae7b2e1d3efc17170a0e595bbe2afc687f93a"
+    },
+    {
+      "model_key": "qwen2.5-coder-1.5b",
+      "sanitized_byte_identical": true,
+      "raw_byte_identical": true,
+      "sanitized_first_two_records_sha256": "e5818f122fbb3472af9bf22a37741008659d7669271e17eff16d24aafea8e3a1",
+      "raw_first_two_records_sha256": "c6d26ef4c2f6c7153b77ec8e866e13aad937f521e068cd318110f9c2524aa0e4"
+    },
+    {
+      "model_key": "qwen2.5-coder-3b",
+      "sanitized_byte_identical": true,
+      "raw_byte_identical": true,
+      "sanitized_first_two_records_sha256": "d79a4150f07ae353e145aa2c7bb94041a6758307f1624b9b2d420ca282eaf73a",
+      "raw_first_two_records_sha256": "5218dbedc9addff82b40676ea81d984fa3a0371bfed63ba5322d711f3f77e8e8"
+    }
+  ],
+  "all_models_byte_identical_for_both_tasks": true
+}

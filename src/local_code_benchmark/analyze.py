@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import random
 from pathlib import Path
 from typing import Any
 
@@ -35,6 +36,47 @@ def kendall_tau_b(published: list[float], local: list[float]) -> float:
         * (concordant + discordant + ties_local)
     )
     return (concordant - discordant) / denominator if denominator else 0.0
+
+
+def bootstrap_kendall_tau_b_ci(
+    published: list[float],
+    task_outcomes_by_model: list[list[float]],
+    *,
+    confidence: float = 0.95,
+    replicates: int = 10_000,
+    seed: int = 2026,
+) -> tuple[float, float]:
+    """Bootstrap a percentile interval for tau-b by resampling paired tasks.
+
+    Each model row must contain outcomes for the same tasks in the same order.
+    A replicate samples task columns with replacement, preserving the pairing
+    across every model before recomputing local pass rates and tau-b.
+    """
+    if len(published) != len(task_outcomes_by_model) or len(published) < 2:
+        raise ValueError("published values and model outcome rows must align")
+    if not 0 < confidence < 1:
+        raise ValueError("confidence must be in (0, 1)")
+    if replicates < 1:
+        raise ValueError("replicates must be at least 1")
+    task_counts = {len(row) for row in task_outcomes_by_model}
+    if len(task_counts) != 1 or not task_counts or next(iter(task_counts)) == 0:
+        raise ValueError("model outcome rows must contain the same non-zero task count")
+
+    task_count = next(iter(task_counts))
+    rng = random.Random(seed)
+    estimates = []
+    for _ in range(replicates):
+        indices = [rng.randrange(task_count) for _ in range(task_count)]
+        local = [
+            sum(row[index] for index in indices) / task_count
+            for row in task_outcomes_by_model
+        ]
+        estimates.append(kendall_tau_b(published, local))
+    estimates.sort()
+    tail = (1.0 - confidence) / 2.0
+    low_index = max(0, math.floor(tail * replicates))
+    high_index = min(replicates - 1, math.ceil((1.0 - tail) * replicates) - 1)
+    return estimates[low_index], estimates[high_index]
 
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -110,6 +152,15 @@ def analyze(
     local = [rates[key]["humaneval"] for key in keys]
     tau = kendall_tau_b(published, local)
     tasks = sorted(task_sets[0])
+    tau_interval = bootstrap_kendall_tau_b_ci(
+        published,
+        [
+            [float(by_model[key][task]["humaneval_passed"]) for task in tasks]
+            for key in keys
+        ],
+        replicates=bootstrap_replicates,
+        seed=seed,
+    )
     adjacent = []
     significant_reversal = False
     for index, (lower, higher) in enumerate(zip(keys, keys[1:], strict=False)):
@@ -143,6 +194,7 @@ def analyze(
     return {
         "primary_endpoint": "kendall_tau_b",
         "kendall_tau_b": tau,
+        "kendall_tau_b_bootstrap_ci_95": tau_interval,
         "decision": decision,
         "local_rates": rates,
         "published_rates": published_rates,

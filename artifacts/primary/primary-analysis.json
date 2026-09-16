@@ -46,6 +46,10 @@
   "decision": "failed_to_reproduce",
   "expected_tasks": 164,
   "kendall_tau_b": 0.8,
+  "kendall_tau_b_bootstrap_ci_95": [
+    0.6,
+    0.8
+  ],
   "local_minus_published": {
     "deepseek-coder-1.3b": {
       "humaneval": -0.006536585365853609,

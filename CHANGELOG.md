@@ -13,6 +13,11 @@ All notable changes to this project are documented here. The format follows
   internal claim-to-evidence review.
 - Regression checks tying manuscript counts and release boundaries to the
   primary analysis artifacts.
+- A paired task-bootstrap interval for Kendall's tau-b (10,000 replicates,
+  analysis seed 2026).
+- Full unmodified-EvalPlus StarCoder2-3B control generations and two-task
+  stock-harness equivalence artifacts for all five models.
+- A non-executing JSONL comparison command for retained generation artifacts.
 
 ## [1.0.0] - 2026-09-14
 

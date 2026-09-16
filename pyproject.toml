@@ -47,6 +47,7 @@ code-model-benchmark = "local_code_benchmark.cli:main"
 code-model-validate = "local_code_benchmark.validate:main"
 code-model-analyze = "local_code_benchmark.analyze:main"
 code-model-consolidate = "local_code_benchmark.consolidate:main"
+code-model-compare = "local_code_benchmark.compare:main"
 
 [project.urls]
 Repository = "https://github.com/imjbassi/Local-Deployment-of-Transformer-based-Code-Assistants"

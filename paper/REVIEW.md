@@ -31,8 +31,10 @@ Tectonic.
 |---|---|---|
 | Five models completed 164 tasks | Five 164-line sample files and evaluator outputs | Verified |
 | Local HumanEval and HumanEval+ counts | `outcomes.jsonl` and five evaluator result files | Verified |
-| Kendall's tau-b is 0.8 | `primary-analysis.json` | Verified |
+| Kendall's tau-b is 0.8 with 95% interval [0.6, 0.8] | `primary-analysis.json`, 10,000 paired replicates, seed 2026 | Verified |
 | StarCoder2/Qwen0.5 reversal and interval | `primary-analysis.json`, 10,000 paired replicates, seed 2026 | Verified |
+| Two-task stock-harness equivalence for all five models | `artifacts/controls` and `protocol/all_models_stock_equivalence.json` | Verified |
+| Full stock StarCoder2 generation | 164 retained raw and sanitized records plus static comparisons | Generated; hardened scoring pending |
 | Checkpoint identities and revisions | `protocol/published_targets.json` | Verified |
 | BF16, RTX 4070, package and evaluator versions | hardware, package-freeze, and evaluator-image artifacts | Verified |
 | Published scores | Qwen2.5-Coder technical report, Table 5 | Verified against primary source |

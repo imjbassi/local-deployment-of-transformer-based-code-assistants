@@ -1,0 +1,15 @@
+4ca864d44275b492774400b4f1286ccea74533ff3d852bc11fcbca1659bd17af  README.md
+44b11d532dfdcd8b70dd427a495baf4a5f19c819ef78440e41dd164f7b9d8a05  stock-evalplus/stock-evalplus-starcoder2-3b.jsonl
+af91a0959479aab2c92300a2f27fc677896576a29547a39644b62139e9003572  stock-evalplus/stock-evalplus-starcoder2-3b.raw.jsonl
+290d919498f245aee97f4af6a8333613307494b8eaaece3c377a03c8b67e8f60  stock-evalplus/stock-vs-optimized-raw.json
+ddbbd2bf59ae1a4573d97ad0c4e98b6c8c84c8a457b36929bb545faa6935e42e  stock-evalplus/stock-vs-optimized-sanitized.json
+806c21d26019bca1a2a181402211449ccf5643d05ff9cc17c2c0f1ff53f7a26a  two-task-equivalence/stock/deepseek-coder-1.3b.jsonl
+a5e5d48e399c3829788c3987c5bae7b2e1d3efc17170a0e595bbe2afc687f93a  two-task-equivalence/stock/deepseek-coder-1.3b.raw.jsonl
+7319f97a39c62d702e2af3626331374b48996c2e89c339d384d23161d2bfd0d1  two-task-equivalence/stock/qwen2.5-coder-0.5b.jsonl
+0251e13aeebe2609c2cb4dbd1097f9690f7361d326dacb0660db3fd4e9647d94  two-task-equivalence/stock/qwen2.5-coder-0.5b.raw.jsonl
+e5818f122fbb3472af9bf22a37741008659d7669271e17eff16d24aafea8e3a1  two-task-equivalence/stock/qwen2.5-coder-1.5b.jsonl
+c6d26ef4c2f6c7153b77ec8e866e13aad937f521e068cd318110f9c2524aa0e4  two-task-equivalence/stock/qwen2.5-coder-1.5b.raw.jsonl
+d79a4150f07ae353e145aa2c7bb94041a6758307f1624b9b2d420ca282eaf73a  two-task-equivalence/stock/qwen2.5-coder-3b.jsonl
+5218dbedc9addff82b40676ea81d984fa3a0371bfed63ba5322d711f3f77e8e8  two-task-equivalence/stock/qwen2.5-coder-3b.raw.jsonl
+dfd9120115e860305c24ef2a09725c79942d10517eaf00084729df98a724e0b4  two-task-equivalence/stock/starcoder2-3b.jsonl
+8f3d50361e5fd0f9e6f1bae33424b5bb47a63e4e6bc3e3b0939cfa3cde7823ca  two-task-equivalence/stock/starcoder2-3b.raw.jsonl

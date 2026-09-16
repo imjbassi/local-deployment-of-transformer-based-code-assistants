@@ -25,6 +25,7 @@ def test_manuscript_primary_table_matches_analysis() -> None:
         assert humaneval_plus in manuscript
 
     assert "Kendall's tau-b was 0.8" in manuscript
+    assert "interval of [0.6, 0.8]" in manuscript
     assert "[-28.66, -15.85]" in manuscript
     assert "failed to reproduce" in manuscript.lower()
 

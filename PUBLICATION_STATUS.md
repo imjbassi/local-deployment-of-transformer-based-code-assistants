@@ -29,6 +29,19 @@ A paper or archival release requires all of the following:
 7. **Open:** deposit immutable release artifacts at a persistent public
    identifier.
 
+## Additional control status
+
+A full 164-task StarCoder2-3B generation through unmodified EvalPlus 0.3.1 is
+retained in `artifacts/controls/`. Static comparison finds two sanitized records
+that differ from the primary generation. Functional scoring is intentionally
+pending: Docker or an equivalent hardened container runtime is not installed on
+this workstation, and model-generated Python will not be executed on the host.
+
+The two-task unmodified-EvalPlus equivalence check is complete for all five
+models. Raw and sanitized records match the retained primary artifacts byte for
+byte; hashes and condition metadata are in
+`protocol/all_models_stock_equivalence.json`.
+
 Until the open gates pass, the defensible claim is limited to the completed
 primary condition and its stated interpretation boundary; do not describe the
 repository as a finished or peer-reviewed paper.
