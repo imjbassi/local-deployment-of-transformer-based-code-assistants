@@ -13,6 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Evaluate retained StarCoder2 control in the hardened container
+        env:
+          EVALPLUS_CPUS: "4"
         run: >-
           bash scripts/evaluate_in_docker.sh
           artifacts/controls/stock-evalplus/stock-evalplus-starcoder2-3b.jsonl

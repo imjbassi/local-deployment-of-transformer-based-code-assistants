@@ -11,6 +11,7 @@ results_root="$(dirname "$samples")"
 sample_name="$(basename "$samples")"
 base_image="ganler/evalplus@sha256:26b118098bef281fe8dfe999bf05f1d5b45374b4e6c00161ec0f30592aef4740"
 image="local-code-study/evalplus:0.3.1"
+eval_cpus="${EVALPLUS_CPUS:-8}"
 cache="$results_root/evalplus-cache"
 mount_cache="$cache"
 mount_results_root="$results_root"
@@ -43,7 +44,7 @@ docker run --rm \
   --security-opt no-new-privileges \
   --pids-limit 512 \
   --memory 8g \
-  --cpus 8 \
+  --cpus "$eval_cpus" \
   --tmpfs /tmp:rw,noexec,nosuid,size=2g \
   --mount "type=bind,src=$mount_cache,dst=/cache" \
   --env XDG_CACHE_HOME=/cache \

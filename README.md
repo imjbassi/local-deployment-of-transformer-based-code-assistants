@@ -116,6 +116,7 @@ then disables networking and drops Linux capabilities for the untrusted-code
 phase. When invoking a Windows Docker Desktop client from WSL, set
 `DOCKER_DESKTOP_WINDOWS_PATHS=1` so bind sources are translated with `wslpath`.
 The released primary artifacts were evaluated through this hardened path.
+Set `EVALPLUS_CPUS` when the container host exposes fewer than eight CPUs.
 
 The repository also retains a full unmodified-EvalPlus StarCoder2-3B control
 generation and two-task stock-harness equivalence records for all five models
