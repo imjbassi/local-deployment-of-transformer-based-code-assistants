@@ -26,8 +26,8 @@ A paper or archival release requires all of the following:
    it triggers under `EXPERIMENT_PLAN.md`.
 6. **Open:** obtain a second-person review of protocol-to-artifact mapping and
    the eventual manuscript.
-7. **Open:** deposit immutable release artifacts at a persistent public
-   identifier.
+7. **Complete:** release v1.2.0 is archived on Zenodo as
+   [10.5281/zenodo.22800651](https://doi.org/10.5281/zenodo.22800651).
 
 ## Additional control status
 

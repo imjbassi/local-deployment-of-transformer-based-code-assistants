@@ -15,6 +15,10 @@ keywords:
   - code generation
   - reproducibility
   - local inference
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.22800651
+    description: Zenodo archive of release v1.2.0
 repository-code: "https://github.com/imjbassi/local-deployment-of-transformer-based-code-assistants"
 url: "https://github.com/imjbassi/local-deployment-of-transformer-based-code-assistants"
 abstract: >-

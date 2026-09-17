@@ -35,7 +35,7 @@ def test_manuscript_keeps_release_boundaries_explicit() -> None:
     manuscript = (ROOT / "paper" / "main.tex").read_text(encoding="utf-8").lower()
     assert "has not been run and is not reported here" in manuscript
     assert "do not show that the published score is erroneous" in manuscript
-    assert "no doi or third-party archival identifier is claimed" in manuscript
+    assert "10.5281/zenodo.22800651" in manuscript
 
 
 def test_rendered_pdf_is_checked_in() -> None:

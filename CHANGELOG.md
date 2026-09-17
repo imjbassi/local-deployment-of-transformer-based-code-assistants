@@ -6,6 +6,11 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Zenodo DOI [10.5281/zenodo.22800651](https://doi.org/10.5281/zenodo.22800651) for the v1.2.0 release in the
+  README, `CITATION.cff`, and manuscript.
+
 ## [1.2.0] - 2026-09-16
 
 ### Added

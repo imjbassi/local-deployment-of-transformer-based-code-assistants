@@ -1,5 +1,7 @@
 # Do Published HumanEval Rankings Survive Local Deployment?
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22800651.svg)](https://doi.org/10.5281/zenodo.22800651)
+
 This repository tests whether a published ordering of small, open code models is
 preserved on a single consumer GPU. The primary target is Table 5 of the
 [Qwen2.5-Coder technical report](https://arxiv.org/abs/2409.12186), not the
@@ -194,6 +196,7 @@ audit manuscript.
 ## License and citation
 
 Software and documentation are MIT licensed. Models, HumanEval, and EvalPlus
-retain their upstream licenses. Citation metadata in [CITATION.cff](CITATION.cff)
-describes the software protocol only; update it only after validated result
-artifacts and a public archive exist.
+retain their upstream licenses. Release v1.2.0 of the code, protocol, artifacts,
+and report is archived on Zenodo at
+[10.5281/zenodo.22800651](https://doi.org/10.5281/zenodo.22800651); citation
+metadata is in [CITATION.cff](CITATION.cff).

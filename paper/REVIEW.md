@@ -72,8 +72,7 @@ identified by source in Table 2.
 2. Reconstruct the independent EvalPlus StarCoder2 pipeline closely enough to
    locate the remaining 21.3-point HumanEval and 18.3-point HumanEval+ gaps.
 3. Obtain a second-person protocol-to-artifact and manuscript review.
-4. Deposit a versioned artifact bundle and report at a persistent identifier.
-5. Select a venue and adapt length, anonymization, formatting, and disclosure
+4. Select a venue and adapt length, anonymization, formatting, and disclosure
    statements to its current author instructions.
 
 These items limit a venue-submission claim, but they do not invalidate the
