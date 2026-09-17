@@ -1,0 +1,38 @@
+name: Hardened sampling sensitivity evaluation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        samples:
+          - qwen2.5-coder-1.5b-seed11
+          - deepseek-coder-1.3b-seed11
+          - starcoder2-3b-seed11
+          - starcoder2-3b-no-trailing-newline-seed11
+    steps:
+      - uses: actions/checkout@v7
+      - name: Evaluate retained 20-sample condition in the hardened container
+        env:
+          EVALPLUS_CPUS: "4"
+        run: >-
+          bash scripts/evaluate_in_docker.sh
+          artifacts/controls/sampling-sensitivity/${{ matrix.samples }}.jsonl
+      - name: Upload evaluator outputs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: sampling-sensitivity-${{ matrix.samples }}
+          if-no-files-found: error
+          path: |
+            artifacts/controls/sampling-sensitivity/${{ matrix.samples }}_eval_results.json
+            artifacts/controls/sampling-sensitivity/evaluator-image.txt
+          retention-days: 30
