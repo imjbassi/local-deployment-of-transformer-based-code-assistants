@@ -12,7 +12,10 @@ unsupported values in this repository's historical manuscript.
 The preregistered primary run is complete for all five models and 164 tasks. The
 published ordering failed to reproduce (Kendall's tau-b = 0.8; paired
 task-bootstrap 95% interval [0.6, 0.8]) because StarCoder2-3B reversed its
-ordering with Qwen2.5-Coder-0.5B. See
+ordering with Qwen2.5-Coder-0.5B. A post-hoc diagnosis traced that reversal to
+the trailing newline EvalPlus 0.3.1 appends to base-model prompts: removing only
+that newline raises StarCoder2-3B from 3/164 to 49/164 and recovers the
+published order for all five models (tau-b = 1.0). See
 [RESULTS.md](RESULTS.md) for the measured scores, decision rule, interpretation
 boundary, and remaining release gates. The exact published targets remain
 machine-readable in [protocol/published_targets.json](protocol/published_targets.json).
@@ -134,15 +137,29 @@ Generated Python was not executed directly on the host.
 The post-hoc StarCoder2 stop-rule ablation is also complete. It removes only
 EvalPlus 0.3.1's exact `\ndef ` generation stop and retains every other logical
 condition. Hardened scoring produced 17/164 (10.4%) on HumanEval and 15/164
-(9.1%) on HumanEval+, compared with the independent EvalPlus leaderboard's
-31.7% and 27.4%. The stop rule is therefore a measured contributor, but the
-remaining divergence is unresolved. Full generations, evaluator output,
-checksums, and a 20-task byte-equivalence record for the performance-only
-generation path are in `artifacts/controls/stop-ablation/`.
+(9.1%) on HumanEval+, compared with the published 31.7% and 27.4%: a measured
+but partial effect. Full generations, evaluator output, checksums, and a 20-task
+byte-equivalence record for the performance-only generation path are in
+`artifacts/controls/stop-ablation/`.
 
 ```bash
 python scripts/starcoder2_stop_ablation.py \
   --output results/controls/starcoder2-no-new-def-stop.jsonl
+```
+
+The post-hoc prompt-newline ablation keeps every stop and removes only the
+trailing newline EvalPlus 0.3.1 appends to `task["prompt"].strip()`. It was run
+for all five checkpoints. StarCoder2-3B scored 49/164 (29.9%) on HumanEval and
+42/164 (25.6%) on HumanEval+, the other checkpoints moved by at most three
+tasks, and the published order was recovered (tau-b = 1.0). Generations,
+hardened evaluator outputs, outcomes, analysis, and checksums are in
+`artifacts/controls/prompt-newline-ablation/`.
+
+```bash
+for model in qwen2.5-coder-0.5b starcoder2-3b deepseek-coder-1.3b \
+  qwen2.5-coder-1.5b qwen2.5-coder-3b; do
+  python scripts/prompt_newline_ablation.py --model "$model"
+done
 ```
 
 ## Outputs

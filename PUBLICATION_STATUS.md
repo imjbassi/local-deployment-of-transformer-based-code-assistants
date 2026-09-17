@@ -48,8 +48,16 @@ A post-hoc StarCoder2-3B ablation removing only the exact `\ndef ` generation
 stop is complete. Hardened evaluation scored 17/164 (10.4%) on HumanEval and
 15/164 (9.1%) on HumanEval+. A separately retained 20-task stock prefix is
 byte-identical to the performance-only generation path. The change explains
-part of the local failure but does not recover the independent EvalPlus
-leaderboard's 31.7% and 27.4%; the remaining divergence is unresolved.
+only part of the local failure.
+
+A post-hoc five-model ablation that keeps every stop and omits only the
+trailing newline EvalPlus 0.3.1 appends to base-model prompts is complete.
+Hardened evaluation scored StarCoder2-3B at 49/164 (29.9%) on HumanEval and
+42/164 (25.6%) on HumanEval+, within three tasks of its published values; the
+other checkpoints moved by at most three tasks, and the published order was
+recovered (tau-b = 1.0, 95% interval [0.8, 1.0]). The EvalPlus leaderboard's
+StarCoder2 values match the StarCoder2 technical report and are not an
+independent measurement.
 
 Until the open gates pass, the defensible claim is limited to the completed
 primary condition and its stated interpretation boundary; do not describe the

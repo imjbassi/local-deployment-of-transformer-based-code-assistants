@@ -31,6 +31,31 @@ def test_manuscript_primary_table_matches_analysis() -> None:
     assert "failed to reproduce" in manuscript.lower()
 
 
+def test_manuscript_newline_ablation_matches_artifacts() -> None:
+    manuscript = (ROOT / "paper" / "main.tex").read_text(encoding="utf-8")
+    ablation = ROOT / "artifacts" / "controls" / "prompt-newline-ablation"
+    analysis = json.loads((ablation / "ablation-analysis.json").read_text(encoding="utf-8"))
+    counts = {
+        "qwen2.5-coder-0.5b": (37, 31),
+        "starcoder2-3b": (49, 42),
+        "deepseek-coder-1.3b": (54, 46),
+        "qwen2.5-coder-1.5b": (67, 56),
+        "qwen2.5-coder-3b": (85, 71),
+    }
+
+    for model, (humaneval_count, plus_count) in counts.items():
+        rates = analysis["local_rates"][model]
+        assert round(164 * rates["humaneval"]) == humaneval_count
+        assert round(164 * rates["humaneval_plus"]) == plus_count
+
+    assert analysis["kendall_tau_b"] == 1.0
+    assert analysis["kendall_tau_b_bootstrap_ci_95"] == [0.8, 1.0]
+    assert "29.9\\% (49/164)" in manuscript
+    assert "25.6\\% (42/164)" in manuscript
+    assert "tau-b was 1.0" in manuscript
+    assert "does not replace the primary decision" in manuscript
+
+
 def test_manuscript_keeps_release_boundaries_explicit() -> None:
     manuscript = (ROOT / "paper" / "main.tex").read_text(encoding="utf-8").lower()
     assert "has not been run and is not reported here" in manuscript

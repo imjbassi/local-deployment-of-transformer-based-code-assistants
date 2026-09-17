@@ -99,16 +99,22 @@ precision relative to independent intervals but cannot create information not
 present in 164 tasks. HumanEval+ adds tests, not independent tasks, so it does not
 increase the task-level sample size.
 
-## Completed post-hoc diagnostic
+## Completed post-hoc diagnostics
 
 After the primary outcome and stock-EvalPlus control were known, one secondary
 ablation removed the exact `\ndef ` generation stop for StarCoder2-3B. This was
 not preregistered and does not alter the primary decision. All other logical
 generation and evaluation settings were retained. The faster generation path
 was accepted only after its first 20 raw and sanitized records matched a stock
-path under the same altered stop list byte-for-byte. The result and its bounded
-interpretation are reported in `RESULTS.md`; the residual independent-score gap
-is explicitly unresolved.
+path under the same altered stop list byte-for-byte. It explained only part of
+the StarCoder2 gap.
+
+A second secondary ablation, also not preregistered, retained every stop text
+and changed only the model input to omit the trailing newline EvalPlus 0.3.1
+appends to `task["prompt"].strip()`. It was run for all five checkpoints with
+the same verified generation path and scored in the same hardened evaluator.
+The preregistered analysis code was applied to its 820 outcomes descriptively.
+Both results and their bounded interpretation are reported in `RESULTS.md`.
 
 ## Analysis order
 

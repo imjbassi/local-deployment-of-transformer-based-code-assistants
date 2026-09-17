@@ -8,8 +8,23 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- Post-hoc five-model ablation that omits only the trailing newline EvalPlus
+  0.3.1 appends to base-model prompts, with generations, hardened evaluator
+  outputs, 820 outcomes, analysis, summary, checksums, runner
+  (`scripts/prompt_newline_ablation.py`), and evaluation workflow. StarCoder2-3B
+  rises from 3/164 to 49/164 on HumanEval and the published order is recovered
+  (tau-b = 1.0, 95% interval [0.8, 1.0]).
+- Upstream provenance for the prompt boundary (EvalPlus commits `3ff1e38` and
+  `4df7001`) and for the StarCoder2 leaderboard values (StarCoder2 report
+  Table 9).
 - Zenodo DOI [10.5281/zenodo.22800651](https://doi.org/10.5281/zenodo.22800651) for the v1.2.0 release in the
   README, `CITATION.cff`, and manuscript.
+
+### Changed
+
+- Manuscript version 1.3 attributes the StarCoder2 reversal to the trailing
+  prompt newline, replaces the "unresolved anomaly" framing, and no longer
+  describes the EvalPlus leaderboard value as an independent measurement.
 
 ## [1.2.0] - 2026-09-16
 

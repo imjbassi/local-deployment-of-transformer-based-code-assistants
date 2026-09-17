@@ -41,17 +41,51 @@ boundary, then removes the repeated definition during truncation. The provider
 decodes only newly generated tokens; the prompt appears in retained raw JSONL
 because EvalPlus deliberately stores `prompt + implementation`.
 
-The independent EvalPlus leaderboard reports 31.7% HumanEval and 27.4%
-HumanEval+ for StarCoder2-3B, identifies it as direct code completion, and
-documents greedy pass@1. Our stock result therefore conflicts with a second
-party using the same evaluator family and nominal mode.
+The EvalPlus leaderboard lists 31.7% HumanEval and 27.4% HumanEval+ for
+StarCoder2-3B. That row was added on 2024-02-29, the day after StarCoder2's
+release and before EvalPlus code generation supported StarCoder2, with values
+identical to Table 9 of the StarCoder2 technical report. The leaderboard,
+StarCoder2, and Qwen2.5-Coder values should therefore be treated as one
+measurement, not three independent ones.
 
 A post-hoc one-factor ablation removed only `\ndef ` from the stop list. It
-produced 17/164 (10.4%) HumanEval and 15/164 (9.1%) HumanEval+ passes. Relative
-to the 2/164 stock control, the stop change recovers 9.15 and 7.93 percentage
-points, respectively, but remains 21.3 and 18.3 points below the independent
-leaderboard. The stop interaction is a demonstrated contributor; the residual
-pipeline divergence is an unresolved anomaly.
+produced 17/164 (10.4%) HumanEval and 15/164 (9.1%) HumanEval+ passes: a real
+but partial effect.
+
+## Post-hoc diagnosis: trailing prompt newline
+
+EvalPlus 0.3.1 sends `task["prompt"].strip() + "\n"` to base models. The
+prompt was stripped upstream on 2024-03-17 in a commit titled "fix: starcoder
+l2r inference" (`evalplus/evalplus@3ff1e38`), and a newline was re-appended on
+2024-08-03 (`evalplus/evalplus@4df7001`), after the StarCoder2 report. The exact
+code that produced the StarCoder2 report's values is not public, so this history
+explains the sensitivity rather than reconstructing that run. StarCoder2's tokenizer normally merges
+the newline after a closing docstring with the following indentation, so a
+prompt ending in a lone `\n` token is off-distribution. At HumanEval/0 the model
+then restarts the function at top level, which the `\ndef ` stop truncates to
+an empty body.
+
+A second post-hoc ablation kept every stop text and changed only the model input
+to omit that trailing newline, for all five checkpoints. Hardened evaluation
+(GitHub Actions run 35235307019) produced:
+
+| Model | Published HE / HE+ | Primary HE / HE+ | No trailing newline HE / HE+ |
+|---|---:|---:|---:|
+| Qwen2.5-Coder-0.5B | 28.0 / 23.8 | 39 / 33 | 22.6 (37) / 18.9 (31) |
+| StarCoder2-3B | 31.7 / 27.4 | 3 / 3 | 29.9 (49) / 25.6 (42) |
+| DeepSeek-Coder-1.3B | 34.8 / 26.8 | 56 / 47 | 32.9 (54) / 28.0 (46) |
+| Qwen2.5-Coder-1.5B | 43.9 / 36.6 | 64 / 56 | 40.9 (67) / 34.1 (56) |
+| Qwen2.5-Coder-3B | 52.4 / 42.7 | 86 / 70 | 51.8 (85) / 43.3 (71) |
+
+StarCoder2-3B moves from 2–3 passes to 49/164, within three tasks of its
+published HumanEval and HumanEval+ counts. The other checkpoints change by at
+most three tasks. Under this condition the published order is recovered exactly:
+Kendall's tau-b is 1.0 (paired task-bootstrap 95% interval [0.8, 1.0]), and the
+preregistered rule would classify the condition as reproduced. Because the
+condition was selected after the primary result, this does not replace the
+primary decision; it identifies the documented pipeline change on which that
+decision depends. Artifacts are in
+[`artifacts/controls/prompt-newline-ablation`](artifacts/controls/prompt-newline-ablation).
 
 ## Artifacts and remaining work
 
@@ -76,6 +110,10 @@ raw and sanitized generations, hardened evaluator output, checksums, condition
 metadata, and the first 20 stock-path records. Those 20 records are byte-identical
 to the faster full-run path and document that decode-once stopping and hook
 restoration change execution cost rather than outputs under the altered list.
+
+The prompt-newline ablation directory contains raw and sanitized generations
+for all five checkpoints, runner metadata, hardened evaluator outputs, 820
+task-level outcomes, the ablation analysis, a summary, and checksums.
 
 The planned 20-sample sensitivity condition and independent review have not yet
 been completed. The primary result is complete and auditable; an archival paper

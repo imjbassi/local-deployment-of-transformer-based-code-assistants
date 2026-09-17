@@ -1,0 +1,135 @@
+{
+  "experiment": "no_trailing_prompt_newline",
+  "status": "complete",
+  "classification": "post_hoc_secondary_ablation",
+  "change_from_primary": "The model input omits the trailing newline EvalPlus 0.3.1 appends to task['prompt'].strip(); all stop texts and every other logical generation and evaluation setting were retained.",
+  "upstream_prompt_history": [
+    {
+      "repository": "evalplus/evalplus",
+      "commit": "3ff1e38868",
+      "date": "2024-03-17",
+      "message": "fix: starcoder l2r inference",
+      "change": "prompt passed as construct_contract_prompt(...).strip()"
+    },
+    {
+      "repository": "evalplus/evalplus",
+      "commit": "4df700112e",
+      "date": "2024-08-03",
+      "message": "fix: add a newliner after striped prompt",
+      "change": "prompt passed as task['prompt'].strip() + '\\n'"
+    }
+  ],
+  "models": {
+    "qwen2.5-coder-0.5b": {
+      "published_percent": {
+        "humaneval": 28.0,
+        "humaneval_plus": 23.8
+      },
+      "primary_passed": {
+        "humaneval": 39,
+        "humaneval_plus": 33
+      },
+      "ablation_passed": {
+        "humaneval": 37,
+        "humaneval_plus": 31
+      },
+      "ablation_pass_at_1_percent": {
+        "humaneval": 22.5609756097561,
+        "humaneval_plus": 18.902439024390244
+      }
+    },
+    "starcoder2-3b": {
+      "published_percent": {
+        "humaneval": 31.7,
+        "humaneval_plus": 27.4
+      },
+      "primary_passed": {
+        "humaneval": 3,
+        "humaneval_plus": 3
+      },
+      "ablation_passed": {
+        "humaneval": 49,
+        "humaneval_plus": 42
+      },
+      "ablation_pass_at_1_percent": {
+        "humaneval": 29.878048780487802,
+        "humaneval_plus": 25.609756097560975
+      }
+    },
+    "deepseek-coder-1.3b": {
+      "published_percent": {
+        "humaneval": 34.8,
+        "humaneval_plus": 26.8
+      },
+      "primary_passed": {
+        "humaneval": 56,
+        "humaneval_plus": 47
+      },
+      "ablation_passed": {
+        "humaneval": 54,
+        "humaneval_plus": 46
+      },
+      "ablation_pass_at_1_percent": {
+        "humaneval": 32.926829268292686,
+        "humaneval_plus": 28.04878048780488
+      }
+    },
+    "qwen2.5-coder-1.5b": {
+      "published_percent": {
+        "humaneval": 43.9,
+        "humaneval_plus": 36.6
+      },
+      "primary_passed": {
+        "humaneval": 64,
+        "humaneval_plus": 56
+      },
+      "ablation_passed": {
+        "humaneval": 67,
+        "humaneval_plus": 56
+      },
+      "ablation_pass_at_1_percent": {
+        "humaneval": 40.853658536585364,
+        "humaneval_plus": 34.146341463414636
+      }
+    },
+    "qwen2.5-coder-3b": {
+      "published_percent": {
+        "humaneval": 52.4,
+        "humaneval_plus": 42.7
+      },
+      "primary_passed": {
+        "humaneval": 86,
+        "humaneval_plus": 70
+      },
+      "ablation_passed": {
+        "humaneval": 85,
+        "humaneval_plus": 71
+      },
+      "ablation_pass_at_1_percent": {
+        "humaneval": 51.829268292682926,
+        "humaneval_plus": 43.292682926829265
+      }
+    }
+  },
+  "kendall_tau_b": 1.0,
+  "kendall_tau_b_bootstrap_ci_95": [
+    0.8,
+    1.0
+  ],
+  "decision_rule_output": "reproduced",
+  "decision_note": "The preregistered rule is applied descriptively; this condition was chosen after the primary result and does not replace the primary decision.",
+  "starcoder2_published_source": "StarCoder2 technical report Table 9 (31.7 HE, 27.4 HE+); the EvalPlus leaderboard row was added on 2024-02-29 with identical values.",
+  "hardened_evaluation": {
+    "github_actions_run_id": 35235307019,
+    "starcoder2_first_run_id": 35230324702,
+    "git_commit": "ac61ae6d5d1ba54acd2001ce03cdb695d3fb5668",
+    "evaluator_image": "sha256:cef006a1a243de4781a049eac11e7a1676178d48c6bb4c1b3f3e5869c74eaa49",
+    "network_disabled_for_untrusted_execution": true,
+    "evalplus_version": "0.3.1",
+    "dataset_version": "v0.1.10"
+  },
+  "provenance_notes": [
+    "starcoder2-3b-no-trailing-newline.metadata.json was written by the first StarCoder2-only runner revision and retains its original experiment name and output path; the generation logic is unchanged in the generalized runner.",
+    "The StarCoder2 samples scored 49/164 and 42/164 in both hardened runs."
+  ]
+}
