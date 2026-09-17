@@ -1,0 +1,33 @@
+{
+  "experiment": "no_trailing_prompt_newline",
+  "model_key": "deepseek-coder-1.3b",
+  "post_hoc": true,
+  "evalplus_version": "0.3.1",
+  "dataset": "humaneval",
+  "dataset_version": "v0.1.10",
+  "model_id": "deepseek-ai/deepseek-coder-1.3b-base",
+  "model_revision": "c919139c3a9b4070729c8b2cca4847ab29ca8d94",
+  "greedy": true,
+  "n_samples": 1,
+  "max_new_tokens": 512,
+  "dtype": "bfloat16",
+  "force_base_prompt": true,
+  "generation_path": "verified_primary_decode_once_with_hook_restoration",
+  "model_prompt": "task[\"prompt\"].strip()",
+  "stock_model_prompt": "task[\"prompt\"].strip() + \"\\n\"",
+  "stop_texts": [
+    "<|endoftext|>",
+    "<|endofmask|>",
+    "</s>",
+    "\nif __name__",
+    "\ndef main(",
+    "\nprint(",
+    "\ndef ",
+    "\nclass ",
+    "\nimport ",
+    "\nfrom ",
+    "\nassert "
+  ],
+  "id_range": null,
+  "output": "/mnt/c/Users/jaive.DESKTOP-3TNM9JL/Desktop/Local-Deployment-of-Transformer-based-Code-Assistants-main/results/controls/prompt-newline-ablation/deepseek-coder-1.3b-no-trailing-newline.jsonl"
+}

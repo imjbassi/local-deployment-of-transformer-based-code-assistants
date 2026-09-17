@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the post-hoc StarCoder2 trailing-newline prompt ablation."""
+"""Run the post-hoc trailing-newline prompt ablation for one primary checkpoint."""
 
 from __future__ import annotations
 
@@ -16,20 +16,23 @@ from primary_codegen import install_non_accumulating_codegen
 
 REPOSITORY = Path(__file__).resolve().parents[1]
 TARGETS = REPOSITORY / "protocol" / "published_targets.json"
-DEFAULT_OUTPUT = (
-    REPOSITORY / "results" / "controls" / "starcoder2-no-trailing-newline.jsonl"
-)
+OUTPUT_ROOT = REPOSITORY / "results" / "controls" / "prompt-newline-ablation"
 REMOVED_SUFFIX = "\n"
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Run the stock EvalPlus StarCoder2-3B condition while removing only "
-            "the trailing newline EvalPlus appends to the model prompt."
+            "Run the stock EvalPlus primary condition for one checkpoint while "
+            "removing only the trailing newline EvalPlus appends to the model prompt."
         )
     )
-    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--model", default="starcoder2-3b", help="Primary target key.")
+    parser.add_argument(
+        "--output",
+        type=Path,
+        help="Sanitized JSONL path; defaults to <results>/<model>-no-trailing-newline.jsonl.",
+    )
     parser.add_argument(
         "--id-range",
         nargs=2,
@@ -93,10 +96,12 @@ def main() -> None:
     install_prompt_suffix_removal(HuggingFaceDecoder)
 
     targets = json.loads(TARGETS.read_text(encoding="utf-8"))["models"]
-    target = next(item for item in targets if item["key"] == "starcoder2-3b")
+    target = next((item for item in targets if item["key"] == args.model), None)
+    if target is None:
+        raise ValueError(f"unknown model key: {args.model}")
     snapshot = snapshot_download(repo_id=target["model_id"], revision=target["revision"])
 
-    output = args.output.resolve()
+    output = (args.output or OUTPUT_ROOT / f"{args.model}-no-trailing-newline.jsonl").resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
     model = make_model(
         model=snapshot,
@@ -111,7 +116,8 @@ def main() -> None:
     model.eos = list(dict.fromkeys(model.eos))
 
     metadata = {
-        "experiment": "starcoder2_no_trailing_prompt_newline",
+        "experiment": "no_trailing_prompt_newline",
+        "model_key": args.model,
         "post_hoc": True,
         "evalplus_version": version,
         "dataset": "humaneval",
