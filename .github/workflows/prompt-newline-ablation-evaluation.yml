@@ -1,0 +1,30 @@
+name: Hardened StarCoder2 prompt-newline ablation evaluation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - name: Evaluate retained prompt-newline ablation in the hardened container
+        env:
+          EVALPLUS_CPUS: "4"
+        run: >-
+          bash scripts/evaluate_in_docker.sh
+          artifacts/controls/prompt-newline-ablation/starcoder2-no-trailing-newline.jsonl
+      - name: Upload evaluator outputs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: starcoder2-prompt-newline-ablation-evalplus-results
+          if-no-files-found: error
+          path: |
+            artifacts/controls/prompt-newline-ablation/*_eval_results.json
+            artifacts/controls/prompt-newline-ablation/evaluator-image.txt
+          retention-days: 30
