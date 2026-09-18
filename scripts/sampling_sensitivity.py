@@ -8,6 +8,14 @@ pinned EvalPlus 0.3.1 generation path. Sampling is seeded once per run.
 ``--no-trailing-newline`` additionally applies the post-hoc prompt change
 documented in ``scripts/prompt_newline_ablation.py``; it is not part of the
 preregistered condition and is recorded in the run metadata.
+
+``--batch-size`` controls how many of the 20 samples are generated per call. It
+is a memory setting, not a scientific parameter: the sample count, temperature,
+top-p, prompt, stops, and token cap are unchanged. DeepSeek-Coder-1.3B uses
+multi-head attention, so its key/value cache for 20 concurrent sequences fills a
+12 GB card; the driver then spills GPU memory into host RAM and a single task
+takes over 15 minutes instead of seconds. That checkpoint therefore runs at
+batch size 2, and the value used is recorded in the run metadata.
 """
 
 from __future__ import annotations
@@ -89,6 +97,19 @@ def main() -> None:
     )
     model.eos = list(dict.fromkeys(model.eos))
     model.max_new_tokens = MAX_NEW_TOKENS
+
+    # The protocol forbids CPU or disk offload. Accelerate falls back to host
+    # memory when the GPU is occupied, which makes generation orders of
+    # magnitude slower and can exhaust system RAM, so fail fast instead.
+    device_map = getattr(model.model, "hf_device_map", None) or {}
+    offloaded = sorted(
+        module for module, device in device_map.items() if str(device) in {"cpu", "disk"}
+    )
+    if offloaded:
+        raise RuntimeError(
+            f"{len(offloaded)} module(s) were offloaded off the GPU "
+            f"(first: {offloaded[0]}); free GPU memory before running this condition"
+        )
 
     metadata = {
         "experiment": "sampling_sensitivity",
