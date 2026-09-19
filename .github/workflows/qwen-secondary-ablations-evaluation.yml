@@ -1,0 +1,36 @@
+name: Hardened Qwen secondary ablation evaluation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        samples:
+          - qwen2.5-coder-1.5b-chat-prompt-seed11
+          - qwen2.5-coder-1.5b-int8-seed11
+    steps:
+      - uses: actions/checkout@v7
+      - name: Evaluate retained ablation in the hardened container
+        env:
+          EVALPLUS_CPUS: "4"
+        run: >-
+          bash scripts/evaluate_in_docker.sh
+          artifacts/controls/qwen-secondary-ablations/${{ matrix.samples }}.jsonl
+      - name: Upload evaluator outputs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: qwen-secondary-ablation-${{ matrix.samples }}
+          if-no-files-found: error
+          path: |
+            artifacts/controls/qwen-secondary-ablations/${{ matrix.samples }}_eval_results.json
+            artifacts/controls/qwen-secondary-ablations/evaluator-image.txt
+          retention-days: 30
