@@ -1,0 +1,165 @@
+{
+  "condition": "sampling_sensitivity",
+  "results": {
+    "deepseek-coder-1.3b": {
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 2026,
+      "expected_tasks": 164,
+      "n_samples": 20,
+      "pass_at_k": {
+        "humaneval": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.25884146341463415,
+              0.38749999999999996
+            ],
+            "estimate": 0.32195121951219513
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.34185473772307384,
+              0.48587185997633975
+            ],
+            "estimate": 0.41260870522791915
+          }
+        },
+        "humaneval_plus": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.21829268292682924,
+              0.33963414634146344
+            ],
+            "estimate": 0.27835365853658534
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.29302154912029,
+              0.4341157435374663
+            ],
+            "estimate": 0.36406537101361724
+          }
+        }
+      }
+    },
+    "qwen2.5-coder-1.5b": {
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 2026,
+      "expected_tasks": 164,
+      "n_samples": 20,
+      "pass_at_k": {
+        "humaneval": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.31158536585365854,
+              0.4405487804878049
+            ],
+            "estimate": 0.375609756097561
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.43784806123990033,
+              0.5782107371189811
+            ],
+            "estimate": 0.507704935311737
+          }
+        },
+        "humaneval_plus": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.25426829268292683,
+              0.37835365853658537
+            ],
+            "estimate": 0.3146341463414634
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.36280881094414663,
+              0.5021583729769186
+            ],
+            "estimate": 0.4315263252284226
+          }
+        }
+      }
+    },
+    "starcoder2-3b": {
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 2026,
+      "expected_tasks": 164,
+      "n_samples": 20,
+      "pass_at_k": {
+        "humaneval": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.009146341463414634,
+              0.041768292682926825
+            ],
+            "estimate": 0.02347560975609756
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.02817172279694933,
+              0.08727724080646379
+            ],
+            "estimate": 0.055618219688388836
+          }
+        },
+        "humaneval_plus": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.00853658536585366,
+              0.041463414634146344
+            ],
+            "estimate": 0.023170731707317073
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.025983066525711696,
+              0.08594005638198797
+            ],
+            "estimate": 0.054093829444486395
+          }
+        }
+      }
+    },
+    "starcoder2-3b-no-trailing-newline": {
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 2026,
+      "expected_tasks": 164,
+      "n_samples": 20,
+      "pass_at_k": {
+        "humaneval": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.23689024390243904,
+              0.3615853658536585
+            ],
+            "estimate": 0.29817073170731706
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.3343279625714214,
+              0.4737734872511264
+            ],
+            "estimate": 0.4040228013541745
+          }
+        },
+        "humaneval_plus": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.2021341463414634,
+              0.3228658536585366
+            ],
+            "estimate": 0.2606707317073171
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.2796862808024365,
+              0.41556427609554736
+            ],
+            "estimate": 0.34736118452515796
+          }
+        }
+      }
+    }
+  }
+}

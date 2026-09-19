@@ -87,6 +87,41 @@ primary decision; it identifies the documented pipeline change on which that
 decision depends. Artifacts are in
 [`artifacts/controls/prompt-newline-ablation`](artifacts/controls/prompt-newline-ablation).
 
+## Stochastic sensitivity (preregistered secondary condition)
+
+The preregistered 20-sample condition (temperature 0.2, top-p 0.95, seed 11,
+BF16, 512 new tokens) is complete for the three planned checkpoints, plus a
+post-hoc no-trailing-newline run for StarCoder2-3B. All four runs were
+uninterrupted. Hardened evaluation (GitHub Actions run 35411593164) gives:
+
+| Condition | pass@1 (95% CI) | pass@5 (95% CI) | Greedy pass@1 |
+|---|---:|---:|---:|
+| Qwen2.5-Coder-1.5B | 37.6 [31.2, 44.1] | 50.8 [43.8, 57.8] | 39.0 |
+| DeepSeek-Coder-1.3B | 32.2 [25.9, 38.7] | 41.3 [34.2, 48.6] | 34.1 |
+| StarCoder2-3B, stock prompt | 2.3 [0.9, 4.2] | 5.6 [2.8, 8.7] | 1.8 |
+| StarCoder2-3B, no trailing newline | 29.8 [23.7, 36.2] | 40.4 [33.4, 47.4] | 29.9 |
+
+Intervals are paired task bootstraps over the 164 tasks with 10,000
+replicates. HumanEval+ pass@1 follows the same pattern (31.5, 27.8, 2.3, and
+26.1 respectively).
+
+Sampling pass@1 is within about two points of greedy pass@1 in every condition.
+StarCoder2-3B remains at 2.3% under the stock prompt even with 20 samples per
+task, so its primary result is not an artifact of greedy decoding, and the
+trailing-newline condition recovers it under sampling as well.
+
+Seeds 23 and 37 were not run. `EXPERIMENT_PLAN.md` triggers them only on a rank
+reversal or an adjacent pair below five percentage points; the seed-11 order is
+preserved and the closest adjacent pair (Qwen2.5-Coder-1.5B minus
+DeepSeek-Coder-1.3B) differs by 5.37 points. That margin is narrow, so the
+absence of a trigger should not be read as a wide separation.
+
+DeepSeek-Coder-1.3B generated at batch size 2 rather than 20. Its multi-head
+key/value cache for 20 concurrent sequences exhausts the 12 GB GPU, after which
+the driver spills into host memory and a single task exceeds 15 minutes. Batch
+size changes throughput only; the sample count, temperature, top-p, prompt,
+stop texts, and token cap are identical across conditions.
+
 ## Artifacts and remaining work
 
 [`artifacts/primary`](artifacts/primary) contains raw and sanitized completions,
@@ -115,7 +150,10 @@ The prompt-newline ablation directory contains raw and sanitized generations
 for all five checkpoints, runner metadata, hardened evaluator outputs, 820
 task-level outcomes, the ablation analysis, a summary, and checksums.
 
-The planned 20-sample sensitivity condition and independent review have not yet
-been completed. The primary result is complete and auditable; an archival paper
-release remains gated as described in
+The 20-sample generations, hardened evaluator outputs, pass@k analysis, summary,
+and checksums are in
+[`artifacts/controls/sampling-sensitivity`](artifacts/controls/sampling-sensitivity).
+
+An independent review has not yet been completed. The primary result is complete
+and auditable; an archival paper release remains gated as described in
 [`PUBLICATION_STATUS.md`](PUBLICATION_STATUS.md).

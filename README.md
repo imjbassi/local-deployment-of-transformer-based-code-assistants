@@ -162,6 +162,19 @@ for model in qwen2.5-coder-0.5b starcoder2-3b deepseek-coder-1.3b \
 done
 ```
 
+The preregistered 20-sample condition (temperature 0.2, top-p 0.95, seed 11) is
+complete for Qwen2.5-Coder-1.5B, DeepSeek-Coder-1.3B, and StarCoder2-3B, with a
+post-hoc no-trailing-newline run for StarCoder2-3B. Sampling pass@1 stays within
+about two points of greedy pass@1, and StarCoder2-3B remains at 2.3% under the
+stock prompt. Artifacts are in `artifacts/controls/sampling-sensitivity/`.
+
+```bash
+python scripts/sampling_sensitivity.py --model qwen2.5-coder-1.5b --seed 11
+# DeepSeek needs a smaller generation batch on a 12 GB GPU
+python scripts/sampling_sensitivity.py --model deepseek-coder-1.3b --seed 11 \
+  --batch-size 2
+```
+
 ## Outputs
 
 Every run directory contains:

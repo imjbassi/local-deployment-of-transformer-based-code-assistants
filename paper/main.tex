@@ -59,7 +59,7 @@
 \author{Jaiveer Bassi\\
 \small Independent Researcher, USA\\
 \small \href{mailto:jaiveerbassi@yahoo.com}{jaiveerbassi@yahoo.com}}
-\date{\small Technical report -- primary experiment and diagnostic ablations\\Version 1.3, September 17, 2026}
+\date{\small Technical report -- primary experiment, diagnostic ablations, and sampling condition\\Version 1.4, September 18, 2026}
 
 \begin{document}
 \maketitle
@@ -131,7 +131,7 @@ Qwen2.5-Coder-3B & Qwen/Qwen2.5-Coder-3B & 09d9bc5d376b0cfa0100a0694ea7de7232525
 
 All five models used the EvalPlus base-model HumanEval prompt, with base mode forced even when a tokenizer exposed a chat template. Generation was greedy with one completion per task, a maximum of 512 new tokens, batch size one, and BF16 weights. The models ran sequentially on one NVIDIA GeForce RTX~4070 with 12,282~MiB dedicated memory in WSL Ubuntu on Windows. The generation environment used PyTorch~2.8.0+cu128 and Transformers~4.57.6. No latency or throughput conclusion is drawn from the correctness run.
 
-The primary design uses no repeated random seeds. Conditional on the frozen inputs and software stack, greedy decoding is deterministic; repeated identical runs would measure system nondeterminism rather than sampling variance. A separately specified 20-sample sensitivity experiment has not been run and is not reported here.
+The primary design uses no repeated random seeds. Conditional on the frozen inputs and software stack, greedy decoding is deterministic; repeated identical runs would measure system nondeterminism rather than sampling variance. The separately specified 20-sample sensitivity condition is reported as a secondary result in Section~\ref{sec:sampling}; it does not enter the primary endpoint.
 
 \subsection{Functional evaluation and execution safety}
 
@@ -275,13 +275,41 @@ Qwen2.5-Coder-3B & 86 & 70 & 85 & 71 \\
 
 StarCoder2-3B rose from 2--3 passes to 49/164 (29.9\%) on HumanEval and 42/164 (25.6\%) on HumanEval+, three tasks below both published values. The other checkpoints changed by at most three tasks. The local order matched the published order exactly: Kendall's tau-b was 1.0, with a paired task-bootstrap 95\% interval of [0.8, 1.0]. Adjacent differences in published order were +7.32 points [1.83, 12.80] for StarCoder2-3B minus Qwen2.5-Coder-0.5B, +3.05 [-2.44, 8.54] for DeepSeek-Coder-1.3B minus StarCoder2-3B, +7.93 [0.61, 15.24] for Qwen2.5-Coder-1.5B minus DeepSeek-Coder-1.3B, and +10.98 [3.66, 18.29] for Qwen2.5-Coder-3B minus Qwen2.5-Coder-1.5B. Applied to these outcomes, the preregistered rule would return \emph{reproduced}. Because the condition was chosen after the primary result, it does not replace the primary decision; it identifies the documented evaluator change on which that decision depends.
 
+\section{Stochastic Sensitivity}
+\label{sec:sampling}
+
+The preregistered secondary condition draws 20 samples per task at temperature 0.2 with top-p 0.95, seed 11, BF16 weights, and the same prompt, stop texts, 512-token cap, and evaluator as the primary run. It covers the three resource-matched checkpoints named in the plan. We add one post-hoc run: StarCoder2-3B without the trailing prompt newline, so the diagnosis of Section~\ref{sec:diagnostic} can be checked outside greedy decoding. All four runs completed without interruption, and pass@$k$ uses the unbiased estimator~\citep{chen2021humaneval} with paired task-bootstrap intervals.
+
+\begin{table}[t]
+\centering
+\caption{Twenty-sample pass@$k$ on HumanEval with paired task-bootstrap 95\% intervals, beside the corresponding greedy pass@1.}
+\label{tab:sampling}
+\scriptsize
+\begin{tabularx}{\columnwidth}{@{}Xrrr@{}}
+\toprule
+Condition & pass@1 & pass@5 & Greedy \\
+\midrule
+Qwen2.5-Coder-1.5B & 37.6 [31.2, 44.1] & 50.8 [43.8, 57.8] & 39.0 \\
+DeepSeek-Coder-1.3B & 32.2 [25.9, 38.7] & 41.3 [34.2, 48.6] & 34.1 \\
+StarCoder2-3B, stock & 2.3 [0.9, 4.2] & 5.6 [2.8, 8.7] & 1.8 \\
+StarCoder2-3B, no newline & 29.8 [23.7, 36.2] & 40.4 [33.4, 47.4] & 29.9 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Table~\ref{tab:sampling} shows that sampling pass@1 falls within about two points of greedy pass@1 in every condition, so the primary greedy measurements are not unusual draws. StarCoder2-3B remains at 2.3\% under the stock prompt with 20 samples per task; its primary result is therefore not an artifact of greedy decoding, and the trailing-newline condition recovers it here as it does under greedy decoding. HumanEval+ pass@1 follows the same pattern at 31.5\%, 27.8\%, 2.3\%, and 26.1\%.
+
+Seeds 23 and 37 were not run. The plan triggers them only on a rank reversal or an adjacent pair below five \pp{}; the seed-11 ordering is preserved and the closest adjacent pair differs by 5.37~\pp{}. That margin is narrow, so the untriggered condition should not be read as a wide separation.
+
+DeepSeek-Coder-1.3B generated at batch size 2 rather than 20 because its multi-head key/value cache for 20 concurrent sequences exhausts the 12\,GB GPU, after which the driver spills into host memory. Batch size affects throughput only; sample count, temperature, top-p, prompt, stop texts, and token cap are identical across conditions.
+
 \section{Threats to Validity}
 
 \textbf{Target specification.} The published percentages and model identities are available in Qwen2.5-Coder Table~5, but the report does not specify every generation and post-processing detail for that table. The current public evaluation-code link associated with the report is not, by itself, an immutable reconstruction of the historical run. Our experiment therefore tests transfer to a disclosed condition, not faithful rerun of an undisclosed condition.
 
 \textbf{Single deployment stack.} We used one GPU, one precision, one inference library version, and one evaluator release. The result does not estimate variation across hardware, kernels, libraries, or quantization modes. It also does not support CPU performance claims.
 
-\textbf{One greedy completion.} The primary endpoint measures deterministic greedy pass@1. It does not characterize sampling distributions or pass@5. The task bootstrap quantifies uncertainty across the finite task set; it is not a substitute for repeated stochastic completions.
+\textbf{One greedy completion.} The primary endpoint measures deterministic greedy pass@1. The secondary 20-sample condition in Section~\ref{sec:sampling} characterizes sampling at one temperature and one seed for three checkpoints; it does not cover the remaining models, other temperatures, or repeated seeds. The task bootstrap quantifies uncertainty across the finite task set, not across sampler seeds.
 
 \textbf{Benchmark scope.} HumanEval contains 164 Python tasks. HumanEval+ adds tests but not independent tasks, so it does not increase the task-level sample size. We did not audit benchmark contamination, language generality, security, maintainability, or real repository-level coding ability.
 
@@ -303,7 +331,8 @@ The public repository~\citep{bassi2026repository} contains:
   \item equivalence records for the generation-wrapper changes, including two-task stock controls for all five models; and
   \item the full stock StarCoder2 generation, hardened evaluator output, image identifier, and task-level comparison; and
   \item the complete newline-\code{def} stop ablation, 20-task stock-path equivalence prefix, hardened evaluator output, run identifier, and checksums; and
-  \item the five-model trailing-newline ablation, including generations, hardened evaluator outputs, 820 task outcomes, analysis JSON, and checksums.
+  \item the five-model trailing-newline ablation, including generations, hardened evaluator outputs, 820 task outcomes, analysis JSON, and checksums; and
+  \item the four 20-sample sensitivity runs, with 13,120 completions, hardened evaluator outputs, pass@$k$ analysis, and checksums.
 \end{itemize}
 
 The artifact directory contains model-generated Python and should be treated as untrusted data. Re-evaluation should use the documented disposable container rather than executing samples on a host system. The code, protocol, retained artifacts, and report for the v1.2.0 release are archived on Zenodo under DOI \href{https://doi.org/10.5281/zenodo.22800651}{10.5281/zenodo.22800651}.
@@ -314,6 +343,10 @@ The published five-model HumanEval ordering did not survive our uniform local de
 
 The practical lesson is not that published tables are unusable. It is that their order should not be treated as checkpoint metadata. An evaluator revision changed one prompt boundary, left four models nearly untouched, and reduced a fifth from about 30\% to about 2\%. For base code models, the benchmark result is a property of the complete evaluation system. Reports should preserve exact prompt bytes, decoding, stopping, sanitization, evaluator version, checkpoint revision, and task-level outputs together, and evaluator changes to prompt construction should be checked for tokenizer boundary effects across model families.
 
+% Keep the bibliography on the final text page rather than spilling a few
+% entries onto an otherwise empty page.
+\footnotesize
+\setlength{\bibsep}{0.3em}
 \bibliographystyle{plainnat}
 \bibliography{references}
 

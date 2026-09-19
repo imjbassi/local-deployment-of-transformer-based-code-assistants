@@ -1,15 +1,15 @@
 # Manuscript review
 
-Review date: 2026-09-17
-Scope: internal evidence, LaTeX, citation, and rendering review of version 1.3
+Review date: 2026-09-18
+Scope: internal evidence, LaTeX, citation, and rendering review of version 1.4
 
 ## Verdict
 
 The manuscript is suitable as a transparent technical report of the completed
 primary experiment and the post-hoc StarCoder2 stop-rule and five-model
-prompt-newline ablations. It is not labeled peer reviewed. The planned
-stochastic sensitivity condition and an independent second-person review remain
-open publication gates.
+prompt-newline ablations, and the preregistered 20-sample sensitivity
+condition. It is not labeled peer reviewed. An independent second-person review
+remains an open publication gate.
 
 The canonical source is `main.tex`, the bibliography is maintained in
 `references.bib`, and the checked-in PDF is compiled from those files with
@@ -40,6 +40,9 @@ Tectonic.
 | Leaderboard values match StarCoder2 report | StarCoder2 technical report Table 9 (arXiv 2402.19173v1) | Verified against primary source |
 | EvalPlus prompt-boundary history | evalplus/evalplus commits `3ff1e38` (2024-03-17) and `4df7001` (2024-08-03) | Verified against upstream repository |
 | Prompt-newline ablation: StarCoder2 49/164 HE, 42/164 HE+; tau-b 1.0 [0.8, 1.0] | Five-model generations, hardened run 35235307019, `outcomes.jsonl`, `ablation-analysis.json` | Verified |
+| 20-sample pass@1 and pass@5 for four conditions | 13,120 completions, hardened run 35411593164, `sampling-analysis.json` | Verified |
+| Seeds 23 and 37 untriggered (closest pair 5.37 points) | `summary.json` seed_trigger block, computed from the same analysis | Verified |
+| All four sampling runs uninterrupted | Generation logs contain no resume markers | Verified |
 | No-newline-`def` ablation: 17/164 HE, 15/164 HE+ | 164 retained records, hardened evaluator JSON, run 35077128303, and summary JSON | Verified |
 | Stock/optimized ablation equivalence | First 20 raw and sanitized records, byte-prefix comparison, and recorded hashes | Verified |
 | Checkpoint identities and revisions | `protocol/published_targets.json` | Verified |
@@ -73,9 +76,8 @@ identified by source in Table 2.
 
 ## Open gates before venue submission
 
-1. Run the predeclared 20-sample sensitivity condition and any triggered seeds.
-2. Obtain a second-person protocol-to-artifact and manuscript review.
-3. Select a venue and adapt length, anonymization, formatting, and disclosure
+1. Obtain a second-person protocol-to-artifact and manuscript review.
+2. Select a venue and adapt length, anonymization, formatting, and disclosure
    statements to its current author instructions.
 
 These items limit a venue-submission claim, but they do not invalidate the

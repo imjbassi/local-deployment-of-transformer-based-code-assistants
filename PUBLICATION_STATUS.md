@@ -22,8 +22,10 @@ A paper or archival release requires all of the following:
    raw/sanitized completions, evaluator outputs, and checksums are checked in.
 4. **Complete:** the preregistered rank endpoint, paired uncertainty, and
    three-way decision were generated from task-level artifacts.
-5. **Open:** run the planned 20-sample sensitivity condition and any conditions
-   it triggers under `EXPERIMENT_PLAN.md`.
+5. **Complete:** the planned 20-sample sensitivity condition ran for the three
+   named checkpoints at seed 11. Its trigger for seeds 23 and 37 did not fire:
+   the ordering is preserved and the closest adjacent pair differs by 5.37
+   percentage points.
 6. **Open:** obtain a second-person review of protocol-to-artifact mapping and
    the eventual manuscript.
 7. **Complete:** release v1.2.0 is archived on Zenodo as
@@ -58,6 +60,12 @@ other checkpoints moved by at most three tasks, and the published order was
 recovered (tau-b = 1.0, 95% interval [0.8, 1.0]). The EvalPlus leaderboard's
 StarCoder2 values match the StarCoder2 technical report and are not an
 independent measurement.
+
+The preregistered 20-sample condition is complete for Qwen2.5-Coder-1.5B,
+DeepSeek-Coder-1.3B, and StarCoder2-3B, with a post-hoc no-trailing-newline run
+for StarCoder2-3B. Sampling pass@1 is within about two points of greedy pass@1
+in every condition, and StarCoder2-3B stays at 2.3% under the stock prompt, so
+its primary result is not a greedy-decoding artifact.
 
 Until the open gates pass, the defensible claim is limited to the completed
 primary condition and its stated interpretation boundary; do not describe the

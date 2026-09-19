@@ -1,0 +1,225 @@
+{
+  "experiment": "sampling_sensitivity",
+  "status": "complete",
+  "classification": "preregistered_secondary_condition",
+  "condition": {
+    "n_samples": 20,
+    "temperature": 0.2,
+    "top_p": 0.95,
+    "seed": 11,
+    "dtype": "bfloat16",
+    "max_new_tokens": 512,
+    "evalplus_version": "0.3.1",
+    "dataset_version": "v0.1.10"
+  },
+  "batch_size_note": "DeepSeek-Coder-1.3B generated at batch size 2 because its multi-head key/value cache for 20 concurrent sequences exhausts the 12 GB GPU and the driver then spills into host memory. Batch size changes throughput only; sample count, temperature, top-p, prompt, stops, and token cap are identical across conditions.",
+  "uninterrupted_runs": true,
+  "results": {
+    "deepseek-coder-1.3b": {
+      "model_key": "deepseek-coder-1.3b",
+      "preregistered": true,
+      "n_samples": 20,
+      "pass_at_k": {
+        "humaneval": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.25884146341463415,
+              0.38749999999999996
+            ],
+            "estimate": 0.32195121951219513
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.34185473772307384,
+              0.48587185997633975
+            ],
+            "estimate": 0.41260870522791915
+          }
+        },
+        "humaneval_plus": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.21829268292682924,
+              0.33963414634146344
+            ],
+            "estimate": 0.27835365853658534
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.29302154912029,
+              0.4341157435374663
+            ],
+            "estimate": 0.36406537101361724
+          }
+        }
+      },
+      "greedy_comparator_pass_at_1": {
+        "humaneval": 0.34146341463414637,
+        "humaneval_plus": 0.2865853658536585
+      },
+      "greedy_comparator_condition": "primary greedy run"
+    },
+    "qwen2.5-coder-1.5b": {
+      "model_key": "qwen2.5-coder-1.5b",
+      "preregistered": true,
+      "n_samples": 20,
+      "pass_at_k": {
+        "humaneval": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.31158536585365854,
+              0.4405487804878049
+            ],
+            "estimate": 0.375609756097561
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.43784806123990033,
+              0.5782107371189811
+            ],
+            "estimate": 0.507704935311737
+          }
+        },
+        "humaneval_plus": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.25426829268292683,
+              0.37835365853658537
+            ],
+            "estimate": 0.3146341463414634
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.36280881094414663,
+              0.5021583729769186
+            ],
+            "estimate": 0.4315263252284226
+          }
+        }
+      },
+      "greedy_comparator_pass_at_1": {
+        "humaneval": 0.3902439024390244,
+        "humaneval_plus": 0.34146341463414637
+      },
+      "greedy_comparator_condition": "primary greedy run"
+    },
+    "starcoder2-3b": {
+      "model_key": "starcoder2-3b",
+      "preregistered": true,
+      "n_samples": 20,
+      "pass_at_k": {
+        "humaneval": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.009146341463414634,
+              0.041768292682926825
+            ],
+            "estimate": 0.02347560975609756
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.02817172279694933,
+              0.08727724080646379
+            ],
+            "estimate": 0.055618219688388836
+          }
+        },
+        "humaneval_plus": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.00853658536585366,
+              0.041463414634146344
+            ],
+            "estimate": 0.023170731707317073
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.025983066525711696,
+              0.08594005638198797
+            ],
+            "estimate": 0.054093829444486395
+          }
+        }
+      },
+      "greedy_comparator_pass_at_1": {
+        "humaneval": 0.018292682926829267,
+        "humaneval_plus": 0.018292682926829267
+      },
+      "greedy_comparator_condition": "primary greedy run"
+    },
+    "starcoder2-3b-no-trailing-newline": {
+      "model_key": "starcoder2-3b",
+      "preregistered": false,
+      "n_samples": 20,
+      "pass_at_k": {
+        "humaneval": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.23689024390243904,
+              0.3615853658536585
+            ],
+            "estimate": 0.29817073170731706
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.3343279625714214,
+              0.4737734872511264
+            ],
+            "estimate": 0.4040228013541745
+          }
+        },
+        "humaneval_plus": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.2021341463414634,
+              0.3228658536585366
+            ],
+            "estimate": 0.2606707317073171
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.2796862808024365,
+              0.41556427609554736
+            ],
+            "estimate": 0.34736118452515796
+          }
+        }
+      },
+      "greedy_comparator_pass_at_1": {
+        "humaneval": 0.29878048780487804,
+        "humaneval_plus": 0.25609756097560976
+      },
+      "greedy_comparator_condition": "prompt-newline ablation"
+    }
+  },
+  "seed_trigger": {
+    "rule": "EXPERIMENT_PLAN.md runs seeds 23 and 37 only if the seed-11 analysis shows a rank reversal or an adjacent pair below five percentage points.",
+    "published_order_low_to_high": [
+      "starcoder2-3b",
+      "deepseek-coder-1.3b",
+      "qwen2.5-coder-1.5b"
+    ],
+    "adjacent_differences_points": [
+      {
+        "lower": "starcoder2-3b",
+        "higher": "deepseek-coder-1.3b",
+        "difference_points": 29.847560975609756
+      },
+      {
+        "lower": "deepseek-coder-1.3b",
+        "higher": "qwen2.5-coder-1.5b",
+        "difference_points": 5.365853658536587
+      }
+    ],
+    "rank_reversal": false,
+    "adjacent_pair_within_five_points": false,
+    "triggered": false
+  },
+  "hardened_evaluation": {
+    "github_actions_run_id": 35411593164,
+    "evaluator_image": "sha256:8871f6f8d88adeaeec3bdad6771789e1940fe77f2ee7ab8db328b852187b932e",
+    "network_disabled_for_untrusted_execution": true,
+    "evalplus_version": "0.3.1",
+    "dataset_version": "v0.1.10"
+  }
+}

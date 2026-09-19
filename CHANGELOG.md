@@ -19,6 +19,14 @@ All notable changes to this project are documented here. The format follows
   Table 9).
 - Zenodo DOI [10.5281/zenodo.22800651](https://doi.org/10.5281/zenodo.22800651) for the v1.2.0 release in the
   README, `CITATION.cff`, and manuscript.
+- Preregistered 20-sample sensitivity condition (seed 11) for
+  Qwen2.5-Coder-1.5B, DeepSeek-Coder-1.3B, and StarCoder2-3B, plus a post-hoc
+  no-trailing-newline run for StarCoder2-3B: 13,120 completions, hardened
+  evaluator outputs, pass@1 and pass@5 with task-bootstrap intervals, summary,
+  and checksums. Sampling pass@1 tracks greedy pass@1 within about two points,
+  and StarCoder2-3B stays at 2.3% under the stock prompt.
+- `local_code_benchmark.sampling` analysis module and a guard that fails a
+  sampling run when any module is placed off the GPU.
 
 ### Changed
 

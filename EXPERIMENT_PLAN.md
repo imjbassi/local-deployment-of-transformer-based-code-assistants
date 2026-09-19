@@ -99,6 +99,15 @@ precision relative to independent intervals but cannot create information not
 present in 164 tasks. HumanEval+ adds tests, not independent tasks, so it does not
 increase the task-level sample size.
 
+## Completed secondary condition
+
+The 20-sample condition ran at seed 11 for Qwen2.5-Coder-1.5B,
+DeepSeek-Coder-1.3B, and StarCoder2-3B, with an additional post-hoc
+no-trailing-newline run for StarCoder2-3B. All four runs were uninterrupted.
+The seed-23 and seed-37 trigger did not fire: the ordering is preserved and the
+closest adjacent pair differs by 5.37 percentage points. The prompt and 8-bit
+ablations on Qwen2.5-Coder-1.5B remain unrun. Results are in `RESULTS.md`.
+
 ## Completed post-hoc diagnostics
 
 After the primary outcome and stock-EvalPlus control were known, one secondary

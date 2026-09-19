@@ -56,9 +56,34 @@ def test_manuscript_newline_ablation_matches_artifacts() -> None:
     assert "does not replace the primary decision" in manuscript
 
 
+def test_manuscript_sampling_table_matches_analysis() -> None:
+    manuscript = (ROOT / "paper" / "main.tex").read_text(encoding="utf-8")
+    report = json.loads(
+        (
+            ROOT / "artifacts" / "controls" / "sampling-sensitivity" / "sampling-analysis.json"
+        ).read_text(encoding="utf-8")
+    )
+    expected = {
+        "qwen2.5-coder-1.5b": (37.6, 50.8),
+        "deepseek-coder-1.3b": (32.2, 41.3),
+        "starcoder2-3b": (2.3, 5.6),
+        "starcoder2-3b-no-trailing-newline": (29.8, 40.4),
+    }
+
+    for label, (pass_at_1, pass_at_5) in expected.items():
+        rates = report["results"][label]["pass_at_k"]["humaneval"]
+        assert report["results"][label]["n_samples"] == 20
+        assert round(100 * rates["pass_at_1"]["estimate"], 1) == pass_at_1
+        assert round(100 * rates["pass_at_5"]["estimate"], 1) == pass_at_5
+        assert f"{pass_at_1} [" in manuscript
+        assert f"{pass_at_5} [" in manuscript
+
+    assert "Seeds 23 and 37 were not run" in manuscript
+
+
 def test_manuscript_keeps_release_boundaries_explicit() -> None:
     manuscript = (ROOT / "paper" / "main.tex").read_text(encoding="utf-8").lower()
-    assert "has not been run and is not reported here" in manuscript
+    assert "it does not enter the primary endpoint" in manuscript
     assert "do not show that the published score is erroneous" in manuscript
     assert "10.5281/zenodo.22800651" in manuscript
 
