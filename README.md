@@ -1,6 +1,6 @@
 # Do Published HumanEval Rankings Survive Local Deployment?
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22800651.svg)](https://doi.org/10.5281/zenodo.22800651)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22800650.svg)](https://doi.org/10.5281/zenodo.22800650)
 
 This repository tests whether a published ordering of small, open code models is
 preserved on a single consumer GPU. The primary target is Table 5 of the
@@ -238,6 +238,7 @@ audit manuscript.
 
 Software and documentation are MIT licensed. Models, HumanEval, and EvalPlus
 retain their upstream licenses. Release v1.2.0 of the code, protocol, artifacts,
-and report is archived on Zenodo at
-[10.5281/zenodo.22800651](https://doi.org/10.5281/zenodo.22800651); citation
+and report are archived on Zenodo. The concept DOI
+[10.5281/zenodo.22800650](https://doi.org/10.5281/zenodo.22800650) always resolves to the latest
+release; v1.3.0 is [10.5281/zenodo.22848609](https://doi.org/10.5281/zenodo.22848609). Citation
 metadata is in [CITATION.cff](CITATION.cff).

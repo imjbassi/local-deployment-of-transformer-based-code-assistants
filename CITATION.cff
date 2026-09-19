@@ -17,8 +17,11 @@ keywords:
   - local inference
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.22800651
-    description: Zenodo archive of release v1.2.0
+    value: 10.5281/zenodo.22800650
+    description: Zenodo concept DOI resolving to the latest release
+  - type: doi
+    value: 10.5281/zenodo.22848609
+    description: Zenodo archive of release v1.3.0
 repository-code: "https://github.com/imjbassi/local-deployment-of-transformer-based-code-assistants"
 url: "https://github.com/imjbassi/local-deployment-of-transformer-based-code-assistants"
 abstract: >-

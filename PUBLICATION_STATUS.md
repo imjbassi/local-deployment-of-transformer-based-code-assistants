@@ -28,8 +28,9 @@ A paper or archival release requires all of the following:
    preserved and the closest adjacent pair differs by 5.37 percentage points.
 6. **Open:** obtain a second-person review of protocol-to-artifact mapping and
    the eventual manuscript.
-7. **Complete:** release v1.2.0 is archived on Zenodo as
-   [10.5281/zenodo.22800651](https://doi.org/10.5281/zenodo.22800651).
+7. **Complete:** releases are archived on Zenodo. The concept DOI
+   [10.5281/zenodo.22800650](https://doi.org/10.5281/zenodo.22800650) resolves to the latest
+   version; v1.3.0 is [10.5281/zenodo.22848609](https://doi.org/10.5281/zenodo.22848609).
 
 ## Additional control status
 
