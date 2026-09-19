@@ -1,15 +1,15 @@
 # Manuscript review
 
-Review date: 2026-09-18
-Scope: internal evidence, LaTeX, citation, and rendering review of version 1.4
+Review date: 2026-09-19
+Scope: internal evidence, LaTeX, citation, and rendering review of version 1.5
 
 ## Verdict
 
 The manuscript is suitable as a transparent technical report of the completed
 primary experiment and the post-hoc StarCoder2 stop-rule and five-model
-prompt-newline ablations, and the preregistered 20-sample sensitivity
-condition. It is not labeled peer reviewed. An independent second-person review
-remains an open publication gate.
+prompt-newline ablations, and all preregistered secondary conditions. It is not
+labeled peer reviewed. An independent second-person review remains the one open
+publication gate.
 
 The canonical source is `main.tex`, the bibliography is maintained in
 `references.bib`, and the checked-in PDF is compiled from those files with
@@ -43,6 +43,9 @@ Tectonic.
 | 20-sample pass@1 and pass@5 for four conditions | 13,120 completions, hardened run 35411593164, `sampling-analysis.json` | Verified |
 | Seeds 23 and 37 untriggered (closest pair 5.37 points) | `summary.json` seed_trigger block, computed from the same analysis | Verified |
 | All four sampling runs uninterrupted | Generation logs contain no resume markers | Verified |
+| Qwen ablations: 48.6% chat prompt, 24.4% 8-bit pass@1 | 6,560 completions, hardened run 35431439493, `summary.json` | Verified |
+| Paired differences $+11.07$ and $-13.17$ exclude zero | `paired_difference_vs_reference` over the same 164 tasks | Verified |
+| Each ablation took the intended path | Runners assert chat-template use and 8-bit loading at run time | Verified |
 | No-newline-`def` ablation: 17/164 HE, 15/164 HE+ | 164 retained records, hardened evaluator JSON, run 35077128303, and summary JSON | Verified |
 | Stock/optimized ablation equivalence | First 20 raw and sanitized records, byte-prefix comparison, and recorded hashes | Verified |
 | Checkpoint identities and revisions | `protocol/published_targets.json` | Verified |

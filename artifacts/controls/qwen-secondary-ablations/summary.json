@@ -1,0 +1,232 @@
+{
+  "experiment": "qwen_secondary_ablations",
+  "status": "complete",
+  "classification": "preregistered_secondary_conditions",
+  "model_key": "qwen2.5-coder-1.5b",
+  "reference_condition": {
+    "description": "20-sample seed-11 reference run: BF16 weights, forced base prompt",
+    "source": "artifacts/controls/sampling-sensitivity/qwen2.5-coder-1.5b-seed11",
+    "pass_at_k": {
+      "humaneval": {
+        "pass_at_1": {
+          "bootstrap_ci_95": [
+            0.31158536585365854,
+            0.4405487804878049
+          ],
+          "estimate": 0.375609756097561
+        },
+        "pass_at_5": {
+          "bootstrap_ci_95": [
+            0.43784806123990033,
+            0.5782107371189811
+          ],
+          "estimate": 0.507704935311737
+        }
+      },
+      "humaneval_plus": {
+        "pass_at_1": {
+          "bootstrap_ci_95": [
+            0.25426829268292683,
+            0.37835365853658537
+          ],
+          "estimate": 0.3146341463414634
+        },
+        "pass_at_5": {
+          "bootstrap_ci_95": [
+            0.36280881094414663,
+            0.5021583729769186
+          ],
+          "estimate": 0.4315263252284226
+        }
+      }
+    }
+  },
+  "shared_settings": {
+    "n_samples": 20,
+    "temperature": 0.2,
+    "top_p": 0.95,
+    "seed": 11,
+    "max_new_tokens": 512,
+    "evalplus_version": "0.3.1",
+    "dataset_version": "v0.1.10"
+  },
+  "results": {
+    "chat-prompt": {
+      "changed_factor": "force_base_prompt=False (EvalPlus chat-template prompt)",
+      "n_samples": 20,
+      "pass_at_k": {
+        "humaneval": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.4240853658536585,
+              0.5503048780487805
+            ],
+            "estimate": 0.48628048780487804
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.601679110347605,
+              0.7282078267764102
+            ],
+            "estimate": 0.6649940062674621
+          }
+        },
+        "humaneval_plus": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.37378048780487805,
+              0.5015243902439024
+            ],
+            "estimate": 0.4368902439024391
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.5355069659442725,
+              0.6714710916459009
+            ],
+            "estimate": 0.6031102909713307
+          }
+        }
+      },
+      "paired_difference_vs_reference": {
+        "humaneval": {
+          "pass_at_1": {
+            "k": 1,
+            "difference": 0.11067073170731706,
+            "paired_bootstrap_ci_95": [
+              0.04390243902439025,
+              0.1774390243902439
+            ],
+            "excludes_zero": true
+          },
+          "pass_at_5": {
+            "k": 5,
+            "difference": 0.15728907095572506,
+            "paired_bootstrap_ci_95": [
+              0.08523252850562561,
+              0.22665040021143248
+            ],
+            "excludes_zero": true
+          }
+        },
+        "humaneval_plus": {
+          "pass_at_1": {
+            "k": 1,
+            "difference": 0.12225609756097561,
+            "paired_bootstrap_ci_95": [
+              0.056402439024390245,
+              0.1896341463414634
+            ],
+            "excludes_zero": true
+          },
+          "pass_at_5": {
+            "k": 5,
+            "difference": 0.1715839657429082,
+            "paired_bootstrap_ci_95": [
+              0.09657775176822976,
+              0.24525063555589116
+            ],
+            "excludes_zero": true
+          }
+        }
+      },
+      "bitsandbytes_version": null,
+      "direct_completion": false
+    },
+    "int8": {
+      "changed_factor": "bitsandbytes 8-bit weights instead of BF16",
+      "n_samples": 20,
+      "pass_at_k": {
+        "humaneval": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.1871951219512195,
+              0.3042682926829268
+            ],
+            "estimate": 0.24390243902439024
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.27736272622014146,
+              0.4121277121246445
+            ],
+            "estimate": 0.3439332729240605
+          }
+        },
+        "humaneval_plus": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.17652439024390243,
+              0.29054878048780486
+            ],
+            "estimate": 0.23231707317073172
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.258608714666868,
+              0.3906651155327343
+            ],
+            "estimate": 0.3240465875053487
+          }
+        }
+      },
+      "paired_difference_vs_reference": {
+        "humaneval": {
+          "pass_at_1": {
+            "k": 1,
+            "difference": -0.13170731707317074,
+            "paired_bootstrap_ci_95": [
+              -0.17896341463414633,
+              -0.08658536585365853
+            ],
+            "excludes_zero": true
+          },
+          "pass_at_5": {
+            "k": 5,
+            "difference": -0.16377166238767651,
+            "paired_bootstrap_ci_95": [
+              -0.22626104357018806,
+              -0.10159494638677037
+            ],
+            "excludes_zero": true
+          }
+        },
+        "humaneval_plus": {
+          "pass_at_1": {
+            "k": 1,
+            "difference": -0.08231707317073171,
+            "paired_bootstrap_ci_95": [
+              -0.12286585365853658,
+              -0.04237804878048781
+            ],
+            "excludes_zero": true
+          },
+          "pass_at_5": {
+            "k": 5,
+            "difference": -0.10747973772307383,
+            "paired_bootstrap_ci_95": [
+              -0.16432344760754108,
+              -0.052223344408366686
+            ],
+            "excludes_zero": true
+          }
+        }
+      },
+      "bitsandbytes_version": "0.50.2",
+      "direct_completion": true
+    }
+  },
+  "uninterrupted_runs": true,
+  "seed_trigger": {
+    "rule": "EXPERIMENT_PLAN.md applies the same trigger as the reference condition: seeds 23 and 37 follow only on a rank reversal or an adjacent pair below five percentage points.",
+    "note": "Both ablations differ from the reference by more than five percentage points on HumanEval pass@1, and neither is a multi-model ranking, so no additional seeds were triggered.",
+    "triggered": false
+  },
+  "hardened_evaluation": {
+    "github_actions_run_id": 35431439493,
+    "evaluator_image": "sha256:1661b39a858c253ef3e145efec4e0626df64a4a747f7f588a942307dd7e18a59",
+    "network_disabled_for_untrusted_execution": true,
+    "evalplus_version": "0.3.1",
+    "dataset_version": "v0.1.10"
+  }
+}

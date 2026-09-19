@@ -23,9 +23,9 @@ A paper or archival release requires all of the following:
 4. **Complete:** the preregistered rank endpoint, paired uncertainty, and
    three-way decision were generated from task-level artifacts.
 5. **Complete:** the planned 20-sample sensitivity condition ran for the three
-   named checkpoints at seed 11. Its trigger for seeds 23 and 37 did not fire:
-   the ordering is preserved and the closest adjacent pair differs by 5.37
-   percentage points.
+   named checkpoints at seed 11, and the prompt and 8-bit ablations ran on
+   Qwen2.5-Coder-1.5B. No further seeds were triggered: the ordering is
+   preserved and the closest adjacent pair differs by 5.37 percentage points.
 6. **Open:** obtain a second-person review of protocol-to-artifact mapping and
    the eventual manuscript.
 7. **Complete:** release v1.2.0 is archived on Zenodo as
@@ -66,6 +66,12 @@ DeepSeek-Coder-1.3B, and StarCoder2-3B, with a post-hoc no-trailing-newline run
 for StarCoder2-3B. Sampling pass@1 is within about two points of greedy pass@1
 in every condition, and StarCoder2-3B stays at 2.3% under the stock prompt, so
 its primary result is not a greedy-decoding artifact.
+
+The two remaining preregistered ablations on Qwen2.5-Coder-1.5B are complete.
+Against the reference condition, the chat-template prompt adds 11.07 points of
+HumanEval pass@1 (paired 95% interval [4.39, 17.74]) and bitsandbytes 8-bit
+weights remove 13.17 points ([-17.90, -8.66]). Both are single-checkpoint
+sensitivity checks and do not alter the primary decision.
 
 Until the open gates pass, the defensible claim is limited to the completed
 primary condition and its stated interpretation boundary; do not describe the

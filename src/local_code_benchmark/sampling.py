@@ -79,6 +79,45 @@ def analyze_samples(
     return result
 
 
+def paired_pass_at_k_difference(
+    condition: dict[str, list[tuple[bool, bool]]],
+    baseline: dict[str, list[tuple[bool, bool]]],
+    *,
+    k: int = 1,
+    benchmark_index: int = 0,
+    bootstrap_replicates: int = 10_000,
+    seed: int = 2026,
+) -> dict[str, Any]:
+    """Compare two conditions on the same tasks.
+
+    Both conditions must cover the identical task set. The per-task pass@k
+    estimates are differenced task by task, so the bootstrap resamples tasks
+    while keeping each task's paired outcome together.
+    """
+    if set(condition) != set(baseline):
+        raise ValueError("both conditions must contain the identical task IDs")
+    tasks = sorted(condition)
+
+    def estimates(outcomes: dict[str, list[tuple[bool, bool]]]) -> list[float]:
+        n_samples = len(outcomes[tasks[0]])
+        return task_pass_at_k(
+            (
+                [outcomes[task][sample][benchmark_index] for sample in range(n_samples)]
+                for task in tasks
+            ),
+            k,
+        )
+
+    differences = [a - b for a, b in zip(estimates(condition), estimates(baseline), strict=True)]
+    interval = bootstrap_mean_ci(differences, replicates=bootstrap_replicates, seed=seed)
+    return {
+        "k": k,
+        "difference": sum(differences) / len(differences),
+        "paired_bootstrap_ci_95": list(interval),
+        "excludes_zero": interval[0] > 0 or interval[1] < 0,
+    }
+
+
 def parse_result(value: str) -> tuple[str, Path]:
     label, separator, raw_path = value.partition("=")
     if not separator or not label or not raw_path:

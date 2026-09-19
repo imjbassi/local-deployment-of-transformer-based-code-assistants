@@ -175,6 +175,17 @@ python scripts/sampling_sensitivity.py --model deepseek-coder-1.3b --seed 11 \
   --batch-size 2
 ```
 
+The preregistered prompt and 8-bit ablations on Qwen2.5-Coder-1.5B are complete.
+Against that reference run, the chat-template prompt adds 11.07 points of
+HumanEval pass@1 and bitsandbytes 8-bit weights remove 13.17; both paired
+intervals exclude zero. Artifacts are in
+`artifacts/controls/qwen-secondary-ablations/`.
+
+```bash
+python scripts/qwen_secondary_ablations.py --condition chat-prompt --seed 11
+python scripts/qwen_secondary_ablations.py --condition int8 --seed 11
+```
+
 ## Outputs
 
 Every run directory contains:

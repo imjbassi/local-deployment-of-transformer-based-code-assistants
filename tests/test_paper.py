@@ -81,6 +81,29 @@ def test_manuscript_sampling_table_matches_analysis() -> None:
     assert "Seeds 23 and 37 were not run" in manuscript
 
 
+def test_manuscript_qwen_ablations_match_artifacts() -> None:
+    manuscript = (ROOT / "paper" / "main.tex").read_text(encoding="utf-8")
+    summary = json.loads(
+        (
+            ROOT / "artifacts" / "controls" / "qwen-secondary-ablations" / "summary.json"
+        ).read_text(encoding="utf-8")
+    )
+    expected = {"chat-prompt": (48.6, 66.5, 11.07), "int8": (24.4, 34.4, -13.17)}
+
+    for label, (pass_at_1, pass_at_5, paired) in expected.items():
+        condition = summary["results"][label]
+        rates = condition["pass_at_k"]["humaneval"]
+        assert round(100 * rates["pass_at_1"]["estimate"], 1) == pass_at_1
+        assert round(100 * rates["pass_at_5"]["estimate"], 1) == pass_at_5
+        difference = condition["paired_difference_vs_reference"]["humaneval"]["pass_at_1"]
+        assert round(100 * difference["difference"], 2) == paired
+        assert difference["excludes_zero"] is True
+        assert f"{pass_at_1} & {pass_at_5}" in manuscript
+
+    assert "11.07" in manuscript
+    assert "13.17" in manuscript
+
+
 def test_manuscript_keeps_release_boundaries_explicit() -> None:
     manuscript = (ROOT / "paper" / "main.tex").read_text(encoding="utf-8").lower()
     assert "it does not enter the primary endpoint" in manuscript

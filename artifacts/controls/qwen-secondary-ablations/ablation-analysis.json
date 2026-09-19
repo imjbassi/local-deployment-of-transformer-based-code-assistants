@@ -1,0 +1,85 @@
+{
+  "condition": "sampling_sensitivity",
+  "results": {
+    "chat-prompt": {
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 2026,
+      "expected_tasks": 164,
+      "n_samples": 20,
+      "pass_at_k": {
+        "humaneval": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.4240853658536585,
+              0.5503048780487805
+            ],
+            "estimate": 0.48628048780487804
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.601679110347605,
+              0.7282078267764102
+            ],
+            "estimate": 0.6649940062674621
+          }
+        },
+        "humaneval_plus": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.37378048780487805,
+              0.5015243902439024
+            ],
+            "estimate": 0.4368902439024391
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.5355069659442725,
+              0.6714710916459009
+            ],
+            "estimate": 0.6031102909713307
+          }
+        }
+      }
+    },
+    "int8": {
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 2026,
+      "expected_tasks": 164,
+      "n_samples": 20,
+      "pass_at_k": {
+        "humaneval": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.1871951219512195,
+              0.3042682926829268
+            ],
+            "estimate": 0.24390243902439024
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.27736272622014146,
+              0.4121277121246445
+            ],
+            "estimate": 0.3439332729240605
+          }
+        },
+        "humaneval_plus": {
+          "pass_at_1": {
+            "bootstrap_ci_95": [
+              0.17652439024390243,
+              0.29054878048780486
+            ],
+            "estimate": 0.23231707317073172
+          },
+          "pass_at_5": {
+            "bootstrap_ci_95": [
+              0.258608714666868,
+              0.3906651155327343
+            ],
+            "estimate": 0.3240465875053487
+          }
+        }
+      }
+    }
+  }
+}

@@ -105,8 +105,13 @@ The 20-sample condition ran at seed 11 for Qwen2.5-Coder-1.5B,
 DeepSeek-Coder-1.3B, and StarCoder2-3B, with an additional post-hoc
 no-trailing-newline run for StarCoder2-3B. All four runs were uninterrupted.
 The seed-23 and seed-37 trigger did not fire: the ordering is preserved and the
-closest adjacent pair differs by 5.37 percentage points. The prompt and 8-bit
-ablations on Qwen2.5-Coder-1.5B remain unrun. Results are in `RESULTS.md`.
+closest adjacent pair differs by 5.37 percentage points.
+
+The prompt and 8-bit ablations on Qwen2.5-Coder-1.5B are also complete at seed
+11. Relative to the reference condition, the chat-template prompt adds 11.07
+percentage points of HumanEval pass@1 and 8-bit weights remove 13.17; both
+paired intervals exclude zero, and no further seeds were triggered. All
+preregistered secondary conditions are now closed. Results are in `RESULTS.md`.
 
 ## Completed post-hoc diagnostics
 

@@ -1,6 +1,10 @@
 import pytest
 
-from local_code_benchmark.sampling import analyze_samples, load_sample_outcomes
+from local_code_benchmark.sampling import (
+    analyze_samples,
+    load_sample_outcomes,
+    paired_pass_at_k_difference,
+)
 
 
 def evalplus_payload(statuses: dict[str, list[tuple[str, str]]]) -> dict:
@@ -46,6 +50,36 @@ def test_analyze_samples_matches_unbiased_estimator() -> None:
     low, high = humaneval["pass_at_1"]["bootstrap_ci_95"]
     assert low <= humaneval["pass_at_1"]["estimate"] <= high
     assert report["n_samples"] == 4
+
+
+def test_paired_difference_is_signed_and_paired() -> None:
+    # Every task improves, so no bootstrap resample can produce a zero mean.
+    better = {f"HumanEval/{i}": [(True, True)] * 4 for i in range(4)}
+    worse = {f"HumanEval/{i}": [(False, False)] * 4 for i in range(4)}
+
+    result = paired_pass_at_k_difference(better, worse, bootstrap_replicates=200, seed=3)
+    assert result["difference"] == pytest.approx(1.0)
+    assert result["excludes_zero"] is True
+
+    flipped = paired_pass_at_k_difference(worse, better, bootstrap_replicates=200, seed=3)
+    assert flipped["difference"] == pytest.approx(-1.0)
+
+
+def test_paired_difference_interval_can_include_zero() -> None:
+    # Half the tasks improve, so resampling the unchanged task twice gives zero.
+    condition = {"HumanEval/0": [(True, True)] * 4, "HumanEval/1": [(True, True)] * 4}
+    baseline = {"HumanEval/0": [(True, True)] * 4, "HumanEval/1": [(False, False)] * 4}
+
+    result = paired_pass_at_k_difference(condition, baseline, bootstrap_replicates=200, seed=3)
+    assert result["difference"] == pytest.approx(0.5)
+    assert result["excludes_zero"] is False
+
+
+def test_paired_difference_requires_matching_tasks() -> None:
+    with pytest.raises(ValueError, match="identical task IDs"):
+        paired_pass_at_k_difference(
+            {"HumanEval/0": [(True, True)]}, {"HumanEval/1": [(True, True)]}
+        )
 
 
 def test_analyze_samples_rejects_unexpected_task_count() -> None:

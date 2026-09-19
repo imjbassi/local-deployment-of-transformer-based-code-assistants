@@ -59,7 +59,7 @@
 \author{Jaiveer Bassi\\
 \small Independent Researcher, USA\\
 \small \href{mailto:jaiveerbassi@yahoo.com}{jaiveerbassi@yahoo.com}}
-\date{\small Technical report -- primary experiment, diagnostic ablations, and sampling condition\\Version 1.4, September 18, 2026}
+\date{\small Technical report -- primary experiment, diagnostic ablations, and sampling condition\\Version 1.5, September 19, 2026}
 
 \begin{document}
 \maketitle
@@ -303,11 +303,33 @@ Seeds 23 and 37 were not run. The plan triggers them only on a rank reversal or 
 
 DeepSeek-Coder-1.3B generated at batch size 2 rather than 20 because its multi-head key/value cache for 20 concurrent sequences exhausts the 12\,GB GPU, after which the driver spills into host memory. Batch size affects throughput only; sample count, temperature, top-p, prompt, stop texts, and token cap are identical across conditions.
 
+\subsection{Prompt and quantization ablations}
+
+The plan assigns two further single-factor conditions to Qwen2.5-Coder-1.5B at seed 11, holding the reference sampling settings fixed. The first stops forcing the base prompt: the checkpoint ships a chat template, so EvalPlus builds its instruction-style prompt using its own default instruction and response prefixes. The second loads bitsandbytes 8-bit weights in place of BF16. Each run verifies at load time that the intended path was taken, so a silent fallback to the reference condition fails rather than producing a misleading number. Differences are paired: the 164 tasks are resampled with each task's two per-task pass@1 estimates kept together.
+
+\begin{table}[t]
+\centering
+\caption{Qwen2.5-Coder-1.5B single-factor ablations against the 20-sample reference condition, with paired task-bootstrap 95\% intervals on the pass@1 difference.}
+\label{tab:qwen-ablations}
+\scriptsize
+\begin{tabularx}{\columnwidth}{@{}Xrrr@{}}
+\toprule
+Condition & pass@1 & pass@5 & Paired difference \\
+\midrule
+Reference (BF16, base prompt) & 37.6 & 50.8 & --- \\
+Chat-template prompt & 48.6 & 66.5 & $+11.07$ [4.39, 17.74] \\
+8-bit weights & 24.4 & 34.4 & $-13.17$ [$-17.90$, $-8.66$] \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Table~\ref{tab:qwen-ablations} shows that both intervals exclude zero. HumanEval+ moves in the same directions, to 43.7\% for the chat prompt ($+12.23$ [5.64, 18.96]) and 23.2\% for 8-bit ($-8.23$ [$-12.29$, $-4.24$]). These conditions cover one checkpoint and do not bear on the primary decision, but they bound how much ordinary deployment choices matter: a prompt-mode change and an 8-bit load move one checkpoint by roughly 11 and 13~\pp{}, which exceeds most adjacent gaps in the published table. The same reasoning that makes the trailing-newline result a pipeline property applies here.
+
 \section{Threats to Validity}
 
 \textbf{Target specification.} The published percentages and model identities are available in Qwen2.5-Coder Table~5, but the report does not specify every generation and post-processing detail for that table. The current public evaluation-code link associated with the report is not, by itself, an immutable reconstruction of the historical run. Our experiment therefore tests transfer to a disclosed condition, not faithful rerun of an undisclosed condition.
 
-\textbf{Single deployment stack.} We used one GPU, one precision, one inference library version, and one evaluator release. The result does not estimate variation across hardware, kernels, libraries, or quantization modes. It also does not support CPU performance claims.
+\textbf{Single deployment stack.} The primary run used one GPU, one precision, one inference library version, and one evaluator release, and does not estimate variation across hardware, kernels, or libraries; it also does not support CPU performance claims. The prompt and 8-bit ablations of Section~\ref{sec:sampling} probe two of those axes on a single checkpoint and are not a general characterization of prompt mode or quantization.
 
 \textbf{One greedy completion.} The primary endpoint measures deterministic greedy pass@1. The secondary 20-sample condition in Section~\ref{sec:sampling} characterizes sampling at one temperature and one seed for three checkpoints; it does not cover the remaining models, other temperatures, or repeated seeds. The task bootstrap quantifies uncertainty across the finite task set, not across sampler seeds.
 
@@ -332,7 +354,8 @@ The public repository~\citep{bassi2026repository} contains:
   \item the full stock StarCoder2 generation, hardened evaluator output, image identifier, and task-level comparison; and
   \item the complete newline-\code{def} stop ablation, 20-task stock-path equivalence prefix, hardened evaluator output, run identifier, and checksums; and
   \item the five-model trailing-newline ablation, including generations, hardened evaluator outputs, 820 task outcomes, analysis JSON, and checksums; and
-  \item the four 20-sample sensitivity runs, with 13,120 completions, hardened evaluator outputs, pass@$k$ analysis, and checksums.
+  \item the four 20-sample sensitivity runs, with 13,120 completions, hardened evaluator outputs, pass@$k$ analysis, and checksums; and
+  \item the Qwen2.5-Coder-1.5B prompt and 8-bit ablations, with generations, hardened evaluator outputs, paired analysis, and checksums.
 \end{itemize}
 
 The artifact directory contains model-generated Python and should be treated as untrusted data. Re-evaluation should use the documented disposable container rather than executing samples on a host system. The code, protocol, retained artifacts, and report for the v1.2.0 release are archived on Zenodo under DOI \href{https://doi.org/10.5281/zenodo.22800651}{10.5281/zenodo.22800651}.

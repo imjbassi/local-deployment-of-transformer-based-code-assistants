@@ -122,6 +122,35 @@ the driver spills into host memory and a single task exceeds 15 minutes. Batch
 size changes throughput only; the sample count, temperature, top-p, prompt,
 stop texts, and token cap are identical across conditions.
 
+## Prompt and 8-bit ablations (preregistered secondary conditions)
+
+Both remaining preregistered conditions ran on Qwen2.5-Coder-1.5B at seed 11
+with the reference sampling settings, changing one factor each. The
+chat-prompt condition stops forcing the base prompt, so EvalPlus builds its
+instruction-style prompt with its own default prefixes; the int8 condition
+loads bitsandbytes 8-bit weights instead of BF16. Hardened evaluation (GitHub
+Actions run 35431439493) gives:
+
+| Condition | pass@1 (95% CI) | pass@5 | Paired pass@1 difference |
+|---|---:|---:|---:|
+| Reference: BF16, base prompt | 37.6 [31.2, 44.1] | 50.8 | — |
+| Chat-template prompt | 48.6 [42.4, 55.0] | 66.5 | +11.07 [+4.39, +17.74] |
+| 8-bit weights | 24.4 [18.7, 30.4] | 34.4 | -13.17 [-17.90, -8.66] |
+
+Paired differences resample the 164 tasks while keeping each task's two
+outcomes together. Both intervals exclude zero. HumanEval+ shows the same
+directions: 43.7% for the chat prompt (+12.23 [+5.64, +18.96]) and 23.2% for
+8-bit (-8.23 [-12.29, -4.24]).
+
+These are one-model sensitivity checks and do not affect the primary decision.
+They do sharpen its interpretation: two ordinary deployment choices move a
+single checkpoint by about 11 and 13 points, which is larger than most gaps
+between adjacent models in the published table. A score is a property of the
+whole evaluation system, not of the checkpoint alone.
+
+No further seeds were triggered. Neither ablation is a multi-model ranking, and
+both differ from the reference by more than five percentage points.
+
 ## Artifacts and remaining work
 
 [`artifacts/primary`](artifacts/primary) contains raw and sanitized completions,
@@ -153,6 +182,10 @@ task-level outcomes, the ablation analysis, a summary, and checksums.
 The 20-sample generations, hardened evaluator outputs, pass@k analysis, summary,
 and checksums are in
 [`artifacts/controls/sampling-sensitivity`](artifacts/controls/sampling-sensitivity).
+
+The prompt and 8-bit generations, hardened evaluator outputs, paired analysis,
+summary, and checksums are in
+[`artifacts/controls/qwen-secondary-ablations`](artifacts/controls/qwen-secondary-ablations).
 
 An independent review has not yet been completed. The primary result is complete
 and auditable; an archival paper release remains gated as described in

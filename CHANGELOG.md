@@ -27,6 +27,13 @@ All notable changes to this project are documented here. The format follows
   and StarCoder2-3B stays at 2.3% under the stock prompt.
 - `local_code_benchmark.sampling` analysis module and a guard that fails a
   sampling run when any module is placed off the GPU.
+- Preregistered prompt and 8-bit ablations on Qwen2.5-Coder-1.5B at seed 11,
+  with generations, hardened evaluator outputs, paired task-bootstrap
+  differences, summary, and checksums. The chat-template prompt adds 11.07
+  points of HumanEval pass@1 and 8-bit weights remove 13.17; both intervals
+  exclude zero. All preregistered secondary conditions are now closed.
+- `paired_pass_at_k_difference` for task-paired comparisons between two
+  sampling conditions.
 
 ### Changed
 
