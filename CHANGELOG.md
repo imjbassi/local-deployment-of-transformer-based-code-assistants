@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-09-19
+
 ### Added
 
 - Post-hoc five-model ablation that omits only the trailing newline EvalPlus
@@ -37,9 +39,15 @@ All notable changes to this project are documented here. The format follows
 
 ### Changed
 
-- Manuscript version 1.3 attributes the StarCoder2 reversal to the trailing
-  prompt newline, replaces the "unresolved anomaly" framing, and no longer
-  describes the EvalPlus leaderboard value as an independent measurement.
+- The manuscript, now version 1.5, attributes the StarCoder2 reversal to the
+  trailing prompt newline, replaces the "unresolved anomaly" framing, and no
+  longer describes the EvalPlus leaderboard value as an independent
+  measurement. It adds sections for the sampling condition and the prompt and
+  8-bit ablations.
+- DeepSeek-Coder-1.3B generates at batch size 2 in sampling conditions. Its
+  multi-head key/value cache for 20 concurrent sequences exhausts a 12 GB GPU,
+  after which the driver spills into host memory. Batch size affects throughput
+  only.
 
 ## [1.2.0] - 2026-09-16
 
