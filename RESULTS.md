@@ -1,6 +1,7 @@
 # Primary results
 
-The preregistered five-model primary run completed on 2026-09-14. Each model
+The prespecified five-model primary run completed on 2026-09-14. The endpoint
+and decision rule were committed as `1025978` before aggregate inspection. Each model
 generated one greedy completion for all 164 HumanEval tasks in BF16 on an RTX
 4070. The same completions were scored against HumanEval and HumanEval+ with
 EvalPlus 0.3.1 in a network-isolated container.
@@ -15,16 +16,17 @@ EvalPlus 0.3.1 in a network-isolated container.
 
 ## Primary decision
 
-The published HumanEval order was not reproduced. Kendall's tau-b is 0.8, with
-a paired task-bootstrap 95% interval of [0.6, 0.8]. The local order from low to
+The published HumanEval order did not transfer to the pinned local pipeline.
+Kendall's tau-b is 0.8, with a paired task-resampling interval of [0.6, 0.8]. The local order from low to
 high is StarCoder2-3B, Qwen2.5-Coder-0.5B,
 DeepSeek-Coder-1.3B, Qwen2.5-Coder-1.5B, and Qwen2.5-Coder-3B.
 
 StarCoder2-3B reverses its published ordering with Qwen2.5-Coder-0.5B. The local
 paired pass@1 difference (StarCoder2 minus Qwen0.5B) is -21.95 percentage
-points, with a preregistered paired-bootstrap 95% interval of [-28.66, -15.85].
+points, with a prespecified paired task-resampling interval of [-28.66, -15.85].
 Because the interval excludes zero in the reversed direction, the primary
-decision is **failed to reproduce**.
+decision is **failed to transfer** (the archived JSON retains the historical
+machine-readable label `failed_to_reproduce`).
 
 ## Interpretation boundary
 
@@ -81,15 +83,40 @@ StarCoder2-3B moves from 2–3 passes to 49/164, within three tasks of its
 published HumanEval and HumanEval+ counts. The other checkpoints change by at
 most three tasks. Under this condition the published order is recovered exactly:
 Kendall's tau-b is 1.0 (paired task-bootstrap 95% interval [0.8, 1.0]), and the
-preregistered rule would classify the condition as reproduced. Because the
+prespecified rule would classify the condition as transferred. Because the
 condition was selected after the primary result, this does not replace the
 primary decision; it identifies the documented pipeline change on which that
 decision depends. Artifacts are in
 [`artifacts/controls/prompt-newline-ablation`](artifacts/controls/prompt-newline-ablation).
 
-## Stochastic sensitivity (preregistered secondary condition)
+### Completed 2×2 generation diagnostic
 
-The preregistered 20-sample condition (temperature 0.2, top-p 0.95, seed 11,
+A final post-hoc cell omitted both the trailing prompt newline and the exact
+`\ndef ` stop for StarCoder2-3B. Generation completed for all 164 tasks with
+the pinned checkpoint and settings. Text-only classification of raw suffixes
+gives:
+
+| Prompt / stop condition | Empty suffix | Any top-level `def` | Repeated entry-point `def` |
+|---|---:|---:|---:|
+| Newline / standard stop | 142 | 0 | 0 |
+| Newline / no `\ndef ` stop | 2 | 152 | 63 |
+| No newline / standard stop | 0 | 0 | 0 |
+| No newline / no `\ndef ` stop | 0 | 143 | 38 |
+
+The stop therefore hides a broad multi-definition continuation tendency in
+both prompt conditions, while newline removal eliminates the empty retained
+suffixes seen in the stock condition. Sanitization narrows the consequence:
+151/164 fourth-cell candidates are byte-identical to the hardened-evaluated
+no-newline baseline. The 13 changed candidates were all baseline failures, so
+static comparison preserves 49 HumanEval and 42 HumanEval+ passes and bounds
+the fourth cell at 49–62 and 42–55 passes. These bounds are not evaluator
+scores. The fourth cell still requires the same pinned, network-isolated
+container evaluation before a pass@1 value is reported. Generated Python was
+not executed on the host.
+
+## Stochastic sensitivity (prespecified secondary condition)
+
+The prespecified 20-sample condition (temperature 0.2, top-p 0.95, seed 11,
 BF16, 512 new tokens) is complete for the three planned checkpoints, plus a
 post-hoc no-trailing-newline run for StarCoder2-3B. All four runs were
 uninterrupted. Hardened evaluation (GitHub Actions run 35411593164) gives:
@@ -122,9 +149,9 @@ the driver spills into host memory and a single task exceeds 15 minutes. Batch
 size changes throughput only; the sample count, temperature, top-p, prompt,
 stop texts, and token cap are identical across conditions.
 
-## Prompt and 8-bit ablations (preregistered secondary conditions)
+## Prompt and 8-bit ablations (prespecified secondary conditions)
 
-Both remaining preregistered conditions ran on Qwen2.5-Coder-1.5B at seed 11
+Both remaining prespecified conditions ran on Qwen2.5-Coder-1.5B at seed 11
 with the reference sampling settings, changing one factor each. The
 chat-prompt condition stops forcing the base prompt, so EvalPlus builds its
 instruction-style prompt with its own default prefixes; the int8 condition
@@ -177,7 +204,10 @@ restoration change execution cost rather than outputs under the altered list.
 
 The prompt-newline ablation directory contains raw and sanitized generations
 for all five checkpoints, runner metadata, hardened evaluator outputs, 820
-task-level outcomes, the ablation analysis, a summary, and checksums.
+task-level outcomes, the ablation analysis, and a summary. It also contains the
+generated no-newline/no-`\ndef ` StarCoder2 cell, all-task continuation
+classification, sanitized-candidate comparison, explicit pending-evaluation
+status, and refreshed checksums.
 
 The 20-sample generations, hardened evaluator outputs, pass@k analysis, summary,
 and checksums are in

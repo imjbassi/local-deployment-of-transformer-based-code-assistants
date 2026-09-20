@@ -16,7 +16,9 @@ jobs:
         env:
           EVALPLUS_CPUS: "4"
         run: |
-          for samples in artifacts/controls/prompt-newline-ablation/*-no-trailing-newline.jsonl; do
+          for samples in \
+            artifacts/controls/prompt-newline-ablation/*-no-trailing-newline.jsonl \
+            artifacts/controls/prompt-newline-ablation/*-no-trailing-newline-no-new-def-stop.jsonl; do
             case "$samples" in *.raw.jsonl) continue ;; esac
             bash scripts/evaluate_in_docker.sh "$samples"
           done

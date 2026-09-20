@@ -1,9 +1,12 @@
 # Paper source and build
 
 The checked-in PDF reports the completed five-model primary experiment, stock
-control, and post-hoc StarCoder2 stop-rule ablation. It is a technical report,
-not a peer-reviewed publication, and it does not present the unrun stochastic
-sensitivity condition as a result.
+control, post-hoc StarCoder2 diagnostics, five-model prompt-newline condition,
+and completed sampling, prompt, and quantization sensitivity conditions. It is
+a technical report, not a peer-reviewed publication. Manuscript version 1.7 is
+a document revision over archived software/artifact release v1.3.0. Version
+1.7 adds the post-hoc fourth newline-by-stop generation cell and text-only
+mechanism analysis; its hardened functional score remains pending.
 
 ## Contents
 
@@ -41,4 +44,6 @@ pdftoppm -png \
 The LaTeX source contains no derived benchmark logic. Values in the manuscript
 must remain traceable to `artifacts/primary/primary-analysis.json`,
 `artifacts/primary/outcomes.jsonl`,
-`artifacts/controls/stop-ablation/summary.json`, or a cited source.
+`artifacts/controls/stop-ablation/summary.json`,
+`artifacts/controls/prompt-newline-ablation/factorial-continuation-analysis.json`,
+or a cited source.

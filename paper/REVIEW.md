@@ -1,15 +1,16 @@
 # Manuscript review
 
 Review date: 2026-09-19
-Scope: internal evidence, LaTeX, citation, and rendering review of version 1.5
+Scope: internal evidence, LaTeX, citation, and rendering review of version 1.7
 
 ## Verdict
 
 The manuscript is suitable as a transparent technical report of the completed
-primary experiment and the post-hoc StarCoder2 stop-rule and five-model
-prompt-newline ablations, and all preregistered secondary conditions. It is not
-labeled peer reviewed. An independent second-person review remains the one open
-publication gate.
+primary experiment, post-hoc StarCoder2 diagnostics, five-model prompt-newline
+condition, and prespecified secondary conditions. It is framed as a rank-transfer
+study rather than an exact historical reproduction. It is not labeled peer
+reviewed. An independent second-person review remains the one open publication
+gate.
 
 The canonical source is `main.tex`, the bibliography is maintained in
 `references.bib`, and the checked-in PDF is compiled from those files with
@@ -20,7 +21,7 @@ Tectonic.
 - Tectonic 0.17.0 completed the LaTeX and BibTeX passes successfully.
 - The final log contains no overfull boxes, unresolved citations, unresolved
   references, or LaTeX errors.
-- All six PDF pages were rendered with Poppler and inspected at 130 DPI.
+- All eight PDF pages were rendered with Poppler and inspected at 130 DPI.
 - Both full-width tables, the vector result figure, headers, footers, hyperlinks,
   column transitions, and the balanced bibliography render without clipping or
   overlap.
@@ -40,6 +41,7 @@ Tectonic.
 | Leaderboard values match StarCoder2 report | StarCoder2 technical report Table 9 (arXiv 2402.19173v1) | Verified against primary source |
 | EvalPlus prompt-boundary history | evalplus/evalplus commits `3ff1e38` (2024-03-17) and `4df7001` (2024-08-03) | Verified against upstream repository |
 | Prompt-newline ablation: StarCoder2 49/164 HE, 42/164 HE+; tau-b 1.0 [0.8, 1.0] | Five-model generations, hardened run 35235307019, `outcomes.jsonl`, `ablation-analysis.json` | Verified |
+| Prompt-newline paired transitions: 46 HE fail-to-pass, 0 pass-to-fail; 40 HE+ fail-to-pass, 1 pass-to-fail | Primary and prompt-newline `outcomes.jsonl`, joined by model and task | Verified |
 | 20-sample pass@1 and pass@5 for four conditions | 13,120 completions, hardened run 35411593164, `sampling-analysis.json` | Verified |
 | Seeds 23 and 37 untriggered (closest pair 5.37 points) | `summary.json` seed_trigger block, computed from the same analysis | Verified |
 | All four sampling runs uninterrupted | Generation logs contain no resume markers | Verified |
@@ -48,6 +50,8 @@ Tectonic.
 | Each ablation took the intended path | Runners assert chat-template use and 8-bit loading at run time | Verified |
 | No-newline-`def` ablation: 17/164 HE, 15/164 HE+ | 164 retained records, hardened evaluator JSON, run 35077128303, and summary JSON | Verified |
 | Stock/optimized ablation equivalence | First 20 raw and sanitized records, byte-prefix comparison, and recorded hashes | Verified |
+| Fourth factorial cell: 164 retained raw/sanitized records; 143 raw suffixes contain top-level definitions and 38 repeat the entry point | `factorial-continuation-analysis.json`, condition metadata, and checksums | Verified as text-only analysis |
+| Fourth-cell static bounds: 49--62 HE and 42--55 HE+ | 151/164 sanitized candidates byte-identical to the evaluated no-newline cell; all 13 differences were baseline failures | Verified as static comparison; hardened score pending |
 | Checkpoint identities and revisions | `protocol/published_targets.json` | Verified |
 | BF16, RTX 4070, package and evaluator versions | hardware, package-freeze, and evaluator-image artifacts | Verified |
 | Published scores | Qwen2.5-Coder technical report, Table 5 | Verified against primary source |
@@ -55,32 +59,42 @@ Tectonic.
 
 ## Language and inference controls
 
-- The title and abstract specify a local deployment reproduction, not a general
-  model-quality ranking.
-- The result is phrased as failure to reproduce under the declared condition;
-  it is not framed as proof that a published score is false.
+- The title and abstract specify rank transfer to one disclosed pipeline, not an
+  exact historical reproduction or general model-quality ranking.
+- The result is phrased as failure to transfer under the declared condition;
+  the archived JSON retains its historical `failed_to_reproduce` label.
+- The manuscript identifies commit `1025978` as the pre-result specification
+  and does not claim an independent preregistration record.
 - Exact counts accompany rounded percentages.
-- The task bootstrap is not described as generation-seed uncertainty.
-- No latency, throughput, CPU, pass@5, quantization, or preregistered
-  secondary-condition result is claimed.
-- Both ablations are explicitly post hoc. The prompt-newline result is reported
-  as identifying the condition on which the primary decision depends; it does
-  not replace that decision, and the report states that the code behind the
-  published values is not public.
+- Task-bootstrap intervals are described as task-composition stability, not
+  uncertainty about the fully enumerated benchmark or generation seeds.
+- No latency, throughput, CPU, or cross-hardware result is claimed. Sampling,
+  prompt, and quantization results are explicitly scoped to their measured
+  checkpoints, conditions, and seeds.
+- The newline and stop diagnostics are explicitly post hoc. Newline removal is
+  reported as sufficient within the pinned pipeline, not as proof of the
+  unpublished historical source configuration.
+- The 2×2 generation factorial and all-task repeated-definition classification
+  are complete. The fourth cell's hardened score and pre-truncation logits are
+  disclosed as open mechanism tests.
 - The report identifies the 2024 target as historical rather than calling the
   selected models current state of the art.
 
 ## Citation review
 
 References distinguish HumanEval, the EvalPlus paper, leaderboard and setup,
-Qwen2.5-Coder, StarCoder2, and DeepSeek-Coder. All links resolve to official
-paper, project, model-card, or repository pages. External percentages are
-identified by source in Table 2.
+Qwen2.5-Coder, StarCoder2, DeepSeek-Coder, BigCodeBench, LiveCodeBench, and
+empirical-reproducibility work. All links resolve to primary paper, project,
+model-card, or repository pages. External percentages are identified by source
+in Table 2.
 
 ## Open gates before venue submission
 
 1. Obtain a second-person protocol-to-artifact and manuscript review.
-2. Select a venue and adapt length, anonymization, formatting, and disclosure
+2. Score the generated no-newline/no-stop cell in the pinned hardened evaluator;
+   retain pre-truncation logits if the tokenizer-and-stop mechanism is to be
+   promoted beyond an explanatory local counterfactual.
+3. Select a venue and adapt length, anonymization, formatting, and disclosure
    statements to its current author instructions.
 
 These items limit a venue-submission claim, but they do not invalidate the

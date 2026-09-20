@@ -1,4 +1,4 @@
-# Do Published HumanEval Rankings Survive Local Deployment?
+# Do Published HumanEval Rankings Transfer Across Evaluation Pipelines?
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22800650.svg)](https://doi.org/10.5281/zenodo.22800650)
 
@@ -9,24 +9,32 @@ unsupported values in this repository's historical manuscript.
 
 ## Evidence status
 
-The preregistered primary run is complete for all five models and 164 tasks. The
-published ordering failed to reproduce (Kendall's tau-b = 0.8; paired
-task-bootstrap 95% interval [0.6, 0.8]) because StarCoder2-3B reversed its
-ordering with Qwen2.5-Coder-0.5B. A post-hoc diagnosis traced that reversal to
-the trailing newline EvalPlus 0.3.1 appends to base-model prompts: removing only
-that newline raises StarCoder2-3B from 3/164 to 49/164 and recovers the
-published order for all five models (tau-b = 1.0). See
+The primary run is complete for all five models and 164 tasks. Its endpoint and
+decision rule were prespecified in commit `1025978` before aggregate results
+were inspected. The published ordering failed to transfer to the pinned local
+pipeline (Kendall's tau-b = 0.8; paired task-resampling interval [0.6, 0.8])
+because StarCoder2-3B reversed its ordering with Qwen2.5-Coder-0.5B. In a
+post-hoc counterfactual, removing only the trailing newline EvalPlus 0.3.1
+appends to base-model prompts raises StarCoder2-3B from 3/164 to 49/164 and
+recovers the published order for all five models (tau-b = 1.0). This establishes
+sufficiency within the pinned local pipeline, not the unpublished historical
+configuration used for the source table. See
 [RESULTS.md](RESULTS.md) for the measured scores, decision rule, interpretation
 boundary, and remaining release gates. The exact published targets remain
 machine-readable in [protocol/published_targets.json](protocol/published_targets.json).
 
+The post-hoc StarCoder2 newline-by-`\ndef ` generation factorial is now complete
+for all 164 tasks. Its fourth cell has text-only continuation analysis and
+static score bounds, but no hardened pass@1 score yet; generated Python was not
+executed on the host.
+
 The evidence-backed technical report, its canonical LaTeX and BibTeX sources,
 Tectonic build scripts, and internal claim review are in [paper](paper). The rendered PDF is
-[Do Published HumanEval Rankings Survive Local Deployment?](paper/output/pdf/Do_Published_HumanEval_Rankings_Survive_Local_Deployment.pdf).
+[Do Published HumanEval Rankings Transfer Across Evaluation Pipelines?](paper/output/pdf/Do_Published_HumanEval_Rankings_Survive_Local_Deployment.pdf).
 
 ## Primary comparison
 
-The five exact base checkpoints reported together in Qwen2.5-Coder Table 5 are:
+The five base-model identifiers reported together in Qwen2.5-Coder Table 5 are:
 
 | Checkpoint | Published HumanEval | Published HumanEval+ |
 |---|---:|---:|
@@ -162,7 +170,32 @@ for model in qwen2.5-coder-0.5b starcoder2-3b deepseek-coder-1.3b \
 done
 ```
 
-The preregistered 20-sample condition (temperature 0.2, top-p 0.95, seed 11) is
+The diagnostic runner can reproduce the no-newline/no-`\ndef ` factorial cell
+for StarCoder2-3B. This condition is post hoc and must be scored through the
+same hardened evaluator before a pass@1 value enters the report:
+
+```bash
+python scripts/prompt_newline_ablation.py \
+  --model starcoder2-3b \
+  --remove-new-def-stop
+```
+
+After all four raw-generation files are present, classify continuation behavior
+without importing or executing generated code:
+
+```bash
+python scripts/analyze_starcoder2_factorial.py \
+  --stock artifacts/primary/humaneval/starcoder2-3b.raw.jsonl \
+  --no-new-def-stop artifacts/controls/stop-ablation/starcoder2-no-new-def-stop.raw.jsonl \
+  --no-trailing-newline artifacts/controls/prompt-newline-ablation/starcoder2-3b-no-trailing-newline.raw.jsonl \
+  --neither artifacts/controls/prompt-newline-ablation/starcoder2-3b-no-trailing-newline-no-new-def-stop.raw.jsonl \
+  --no-trailing-newline-sanitized artifacts/controls/prompt-newline-ablation/starcoder2-3b-no-trailing-newline.jsonl \
+  --neither-sanitized artifacts/controls/prompt-newline-ablation/starcoder2-3b-no-trailing-newline-no-new-def-stop.jsonl \
+  --no-trailing-newline-eval artifacts/controls/prompt-newline-ablation/starcoder2-3b-no-trailing-newline_eval_results.json \
+  --output artifacts/controls/prompt-newline-ablation/factorial-continuation-analysis.json
+```
+
+The prespecified 20-sample condition (temperature 0.2, top-p 0.95, seed 11) is
 complete for Qwen2.5-Coder-1.5B, DeepSeek-Coder-1.3B, and StarCoder2-3B, with a
 post-hoc no-trailing-newline run for StarCoder2-3B. Sampling pass@1 stays within
 about two points of greedy pass@1, and StarCoder2-3B remains at 2.3% under the
@@ -175,7 +208,7 @@ python scripts/sampling_sensitivity.py --model deepseek-coder-1.3b --seed 11 \
   --batch-size 2
 ```
 
-The preregistered prompt and 8-bit ablations on Qwen2.5-Coder-1.5B are complete.
+The prespecified prompt and 8-bit ablations on Qwen2.5-Coder-1.5B are complete.
 Against that reference run, the chat-template prompt adds 11.07 points of
 HumanEval pass@1 and bitsandbytes 8-bit weights remove 13.17; both paired
 intervals exclude zero. Artifacts are in

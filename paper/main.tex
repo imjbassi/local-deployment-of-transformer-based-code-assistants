@@ -20,6 +20,7 @@
 
 \pgfplotsset{compat=1.18}
 \definecolor{paperblue}{HTML}{1D5273}
+\definecolor{papermid}{HTML}{5F8FA8}
 \definecolor{paperlight}{HTML}{A9C0CF}
 \definecolor{papergrid}{HTML}{D8E1E7}
 \hypersetup{
@@ -27,9 +28,9 @@
   linkcolor=paperblue,
   citecolor=paperblue,
   urlcolor=paperblue,
-  pdftitle={Do Published HumanEval Rankings Survive Local Deployment?},
+  pdftitle={Do Published HumanEval Rankings Transfer Across Evaluation Pipelines?},
   pdfauthor={Jaiveer Bassi},
-  pdfsubject={Five-model HumanEval ranking reproduction on a consumer GPU}
+  pdfsubject={Five-model HumanEval rank-transfer study on a consumer GPU}
 }
 
 \pagestyle{fancy}
@@ -54,19 +55,19 @@
 \newcommand{\code}[1]{\texttt{#1}}
 \newcommand{\pp}{percentage points}
 
-\title{\vspace{-1.5em}\textbf{Do Published HumanEval Rankings Survive Local Deployment?}\\
-\large A Five-Model Reproduction on a Consumer GPU}
+\title{\vspace{-1.5em}\textbf{Do Published HumanEval Rankings Transfer Across Evaluation Pipelines?}\\
+\large A Five-Model Rank-Transfer Study on a Consumer GPU}
 \author{Jaiveer Bassi\\
 \small Independent Researcher, USA\\
 \small \href{mailto:jaiveerbassi@yahoo.com}{jaiveerbassi@yahoo.com}}
-\date{\small Technical report -- primary experiment, diagnostic ablations, and sampling condition\\Version 1.5, September 19, 2026}
+\date{\small Technical report -- primary experiment, diagnostic ablations, and sampling condition\\Version 1.7, September 19, 2026}
 
 \begin{document}
 \maketitle
 \thispagestyle{fancy}
 
 \begin{abstract}
-Published benchmark tables are often reused as if model rankings were properties of the checkpoints alone. In practice, a score also depends on prompt construction, decoding, stopping, software versions, and execution policy. We tested whether the HumanEval ordering of five open base checkpoints reported together in Table~5 of the Qwen2.5-Coder technical report survives a uniform local deployment condition. Each checkpoint produced one greedy completion for all 164 HumanEval tasks in BF16, at batch size one, on a single NVIDIA RTX~4070. EvalPlus~0.3.1 scored the same completions against HumanEval and HumanEval+ inside a network-isolated container. Four models retained their relative order, but StarCoder2-3B's reported HumanEval score of 31.7\% corresponded to 1.8\% locally, reversing its ordering with Qwen2.5-Coder-0.5B. Kendall's tau-b between published and local HumanEval rankings was 0.8 (task-bootstrap 95\% interval: 0.6 to 0.8). The paired local pass@1 difference for StarCoder2-3B minus Qwen2.5-Coder-0.5B was -21.95~\pp{} (task-bootstrap 95\% interval: -28.66 to -15.85), satisfying the preregistered failure-to-reproduce rule. An unmodified-EvalPlus StarCoder2 control scored 1.2\% (2/164). Post-hoc diagnostics located the cause. EvalPlus~0.3.1 appends a newline to each stripped base-model prompt, a change introduced upstream in August 2024. StarCoder2's tokenizer normally merges that newline with the following indentation; the isolated newline token leads the model to restart the function, which the \code{\textbackslash ndef } stop then truncates to an empty body. Removing only that newline, with every stop retained, raised StarCoder2-3B to 29.9\% (49/164) on HumanEval and 25.6\% (42/164) on HumanEval+, within three tasks of its published values, while the other four checkpoints moved by at most three tasks. Under that condition the published order was recovered exactly (tau-b = 1.0; 95\% interval: 0.8 to 1.0). These results do not show that the published score is erroneous; they show that one prompt byte determines whether this published ordering transfers.
+Published benchmark tables are often reused as if model rankings were properties of checkpoints alone, although scores also depend on prompts, decoding, stopping, software, and execution policy. We tested whether the HumanEval ordering of five open base-model identifiers in Table~5 of the Qwen2.5-Coder report transfers to one fully disclosed local pipeline. This is a rank-transfer study, not an exact rerun of the source evaluation, whose immutable inference stack and checkpoint revisions are unavailable. Each locally pinned checkpoint produced one greedy completion for all 164 tasks in BF16 on an NVIDIA RTX~4070; EvalPlus~0.3.1 scored HumanEval and HumanEval+ in a network-isolated container. StarCoder2-3B scored 1.8\% locally rather than the displayed 31.7\%, reversing its order with Qwen2.5-Coder-0.5B. Kendall's tau-b was 0.8 (task-resampling interval: 0.6 to 0.8), and the paired difference was -21.95~\pp{} [-28.66, -15.85], meeting our prespecified failure-to-transfer rule. An unmodified-EvalPlus control scored 1.2\% (2/164). In a post-hoc counterfactual, removing only the trailing newline that EvalPlus appends to stripped base-model prompts raised StarCoder2-3B to 29.9\% (49/164) on HumanEval and 25.6\% (42/164) on HumanEval+, while the other four models moved by at most three tasks. The published order was then recovered (tau-b = 1.0; interval: 0.8 to 1.0). Within this pinned pipeline, that byte was sufficient to explain most of the discrepancy and the observed reversal; the experiment does not establish the unpublished historical source configuration.
 \end{abstract}
 
 \noindent\textbf{Keywords:} code language models; HumanEval; EvalPlus; reproducibility; local inference; functional correctness
@@ -77,37 +78,39 @@ HumanEval measures whether generated Python functions satisfy hidden tests and r
 
 That interpretation can be fragile. Functional-correctness results depend on more than weights: prompt templates, stopping strings, generation length, precision, library behavior, and sanitization can all change the executable completion. These choices matter especially for base models, whose training formats and preferred continuation patterns differ.
 
-We reproduce an external and inspectable target: the ordering of five base checkpoints in Table~5 of the Qwen2.5-Coder technical report~\citep{hui2024qwen25coder}. The target contains Qwen2.5-Coder at 0.5B, 1.5B, and 3B parameters, DeepSeek-Coder-1.3B, and StarCoder2-3B. The model families are documented separately by their developers~\citep{hui2024qwen25coder,lozhkov2024starcoder2,guo2024deepseekcoder}. Our question is deliberately narrower than exact score replication: does the published HumanEval ordering survive when all five checkpoints are run through one pinned local stack on a consumer GPU?
+We use an external and inspectable target: the ordering of five base-model identifiers in Table~5 of the Qwen2.5-Coder technical report~\citep{hui2024qwen25coder}. The target contains Qwen2.5-Coder at 0.5B, 1.5B, and 3B parameters, DeepSeek-Coder-1.3B, and StarCoder2-3B. The model families are documented separately by their developers~\citep{hui2024qwen25coder,lozhkov2024starcoder2,guo2024deepseekcoder}. Our question is deliberately narrower than exact score replication: does the displayed HumanEval order transfer when locally pinned revisions are run through one disclosed stack on a consumer GPU?
 
-The contribution is a completed five-model primary experiment with a predeclared rank endpoint, task-level paired uncertainty, exact checkpoint revisions, raw and sanitized completions, full evaluator outputs, and environment metadata. The principal finding is one statistically resolved rank reversal, followed by a post-hoc diagnosis that attributes it to one documented prompt-construction change in the evaluator. The repository contains the evidence needed to audit that finding at task level~\citep{bassi2026repository}.
+The contribution is a completed five-model primary experiment with a prespecified rank endpoint, paired task-resampling analysis, locally pinned checkpoint revisions, raw and sanitized completions, full evaluator outputs, and environment metadata. The principal finding is one resolved rank reversal, followed by a post-hoc counterfactual showing that one documented prompt-construction choice is sufficient to recover the source order in this pipeline. The repository contains the evidence needed to audit that finding at task level~\citep{bassi2026repository}.
 
 \section{Related Work}
 
-HumanEval introduced execution-based functional correctness for 164 handwritten Python synthesis tasks and the pass@$k$ family of estimators~\citep{chen2021humaneval}. EvalPlus subsequently expanded the tests associated with HumanEval and showed that test insufficiency can change both absolute scores and model orderings~\citep{liu2023evalplus}. Our study uses the released HumanEval+ tests but asks a different question: whether a published order transfers across deployment conditions when checkpoint identity and functional tests are held fixed.
+HumanEval introduced execution-based functional correctness for 164 handwritten Python synthesis tasks and the pass@$k$ family of estimators~\citep{chen2021humaneval}. EvalPlus subsequently expanded the tests associated with HumanEval and showed that test insufficiency can change both absolute scores and model orderings~\citep{liu2023evalplus}. Broader successors expose other limits of short, static function benchmarks: BigCodeBench emphasizes complex instructions and calls across many libraries~\citep{zhuo2024bigcodebench}, while LiveCodeBench continually adds contest problems to reduce contamination and measure capabilities beyond direct generation~\citep{jain2024livecodebench}. Our study does not propose another benchmark. It isolates the transport of one published order across evaluation pipelines while holding model identifiers and functional tests fixed.
 
-The Qwen2.5-Coder report compares several open base models under one table, including all five checkpoints studied here~\citep{hui2024qwen25coder}. StarCoder2 and DeepSeek-Coder are independently documented model families with different training corpora, objectives, and evaluation practices~\citep{lozhkov2024starcoder2,guo2024deepseekcoder}. The EvalPlus leaderboard also lists StarCoder2-3B at 31.7\% HumanEval and 27.4\% HumanEval+ as greedy direct code completion~\citep{evalplus2026leaderboard,evalplus2026setup}. Those values are identical to Table~9 of the StarCoder2 report~\citep{lozhkov2024starcoder2}, and the leaderboard row was added on 29 February 2024, before EvalPlus code generation supported StarCoder2. We therefore treat them as one measurement rather than independent replications. We do not construct a new leaderboard or claim contemporary model coverage. We treat the published table as a concrete external reproduction target and focus on the otherwise underreported inference boundary between weights and executable benchmark candidates.
+Reproducibility also has distinct levels. Sharing code can make one execution repeatable without showing that an empirical conclusion persists across reasonable implementations and environments~\citep{bouthillier2019reproducible}. That distinction motivates our emphasis on prompt bytes, stopping, sanitization, and versioned artifacts: the object being transferred is an ordering produced by an evaluation system, not a property of weights alone.
+
+The Qwen2.5-Coder report compares several open base models under one table, including all five model identifiers studied here~\citep{hui2024qwen25coder}. StarCoder2 and DeepSeek-Coder are independently documented model families with different training corpora, objectives, and evaluation practices~\citep{lozhkov2024starcoder2,guo2024deepseekcoder}. The EvalPlus leaderboard also lists StarCoder2-3B at 31.7\% HumanEval and 27.4\% HumanEval+ as greedy direct code completion~\citep{evalplus2026leaderboard,evalplus2026setup}. Those values are identical to Table~9 of the StarCoder2 report~\citep{lozhkov2024starcoder2}, and the leaderboard row was added on 29 February 2024, before EvalPlus code generation supported StarCoder2. We therefore treat them as one measurement rather than independent replications. We do not construct a new leaderboard or claim contemporary model coverage. We treat the published table as a concrete external rank-transfer target and focus on the otherwise underreported inference boundary between weights and executable benchmark candidates.
 
 \section{Research Question and Decision Rule}
 
-The primary question is: \textbf{Does the HumanEval ordering of the five selected checkpoints in Qwen2.5-Coder Table~5 survive the specified local deployment condition?} HumanEval+ is co-reported as a robustness outcome, not substituted for the primary endpoint.
+The primary question is: \textbf{Does the HumanEval ordering of the five selected model identifiers in Qwen2.5-Coder Table~5 transfer to the specified local evaluation pipeline?} HumanEval+ is co-reported as a robustness outcome, not substituted for the primary endpoint.
 
-The primary estimand is Kendall's tau-b between the published HumanEval order and the local greedy pass@1 order. We bootstrap tau-b and compare each adjacent pair in the published order using paired resampling over the 164 tasks. Each resample preserves all five model outcomes for a selected task. We use 10,000 bootstrap replicates and fixed analysis seed 2026.
+The primary observed statistic is Kendall's tau-b between the published HumanEval order and the local greedy pass@1 order. We also compare each adjacent pair in the published order using paired resampling over the 164 tasks. Each resample preserves all five model outcomes for a selected task. We use 10,000 percentile-bootstrap replicates and fixed analysis seed 2026. Because all HumanEval tasks are evaluated, these intervals do not quantify uncertainty about the finite benchmark itself; they describe stability to perturbing task composition, or, under an additional exchangeability assumption, uncertainty for a hypothetical population of similar tasks. The four adjacent intervals are not multiplicity-adjusted.
 
-The predeclared decision has three outcomes:
+The prespecified decision has three outcomes:
 
 \begin{itemize}
-  \item \textbf{Reproduced:} the point ordering is identical, with tau-b equal to 1 and no adjacent published pair reversed locally.
-  \item \textbf{Failed to reproduce:} at least one pair is reversed and the paired 95\% bootstrap interval for that pass@1 difference excludes zero in the reversed direction.
+  \item \textbf{Transferred:} the point ordering is identical, with tau-b equal to 1 and no adjacent published pair reversed locally.
+  \item \textbf{Failed to transfer:} at least one pair is reversed and the paired 95\% task-resampling interval for that pass@1 difference excludes zero in the reversed direction.
   \item \textbf{Inconclusive:} every other outcome, including unresolved ties or reversals whose interval includes zero.
 \end{itemize}
 
-This endpoint tests rank transfer, not equality of percentages. Absolute score differences are descriptive because the source paper does not expose every decoding, stopping, and software detail needed to reconstruct Table~5 from the paper alone.
+This rule and the primary condition were prespecified in repository commit \code{1025978} before aggregate correctness results were inspected; we use ``prespecified'' rather than claiming an independent registry record. The endpoint tests rank transfer, not equality of percentages. Absolute score differences are descriptive because the source paper links model artifacts and evaluation code but does not identify immutable checkpoint revisions or every decoding, stopping, and software detail needed to reconstruct Table~5.
 
 \section{Methods}
 
 \subsection{Models and immutable inputs}
 
-Table~\ref{tab:models} lists the exact base checkpoints and revisions. Revisions were resolved and frozen before aggregate correctness results were inspected.
+Table~\ref{tab:models} lists the local base-model revisions. They correspond to the published model identifiers and were resolved and frozen before aggregate correctness results were inspected; the source report does not establish that these are the historical revisions used for Table~5.
 
 \begin{table*}[t]
 \centering
@@ -129,7 +132,7 @@ Qwen2.5-Coder-3B & Qwen/Qwen2.5-Coder-3B & 09d9bc5d376b0cfa0100a0694ea7de7232525
 
 \subsection{Generation condition}
 
-All five models used the EvalPlus base-model HumanEval prompt, with base mode forced even when a tokenizer exposed a chat template. Generation was greedy with one completion per task, a maximum of 512 new tokens, batch size one, and BF16 weights. The models ran sequentially on one NVIDIA GeForce RTX~4070 with 12,282~MiB dedicated memory in WSL Ubuntu on Windows. The generation environment used PyTorch~2.8.0+cu128 and Transformers~4.57.6. No latency or throughput conclusion is drawn from the correctness run.
+All five models used the EvalPlus base-model HumanEval prompt, with base mode forced even when a tokenizer exposed a chat template. EvalPlus~0.3.1 was selected before aggregate inspection as a fixed, public release supporting HumanEval and HumanEval+; it is an auditable local target, not a claim about the unpublished historical Qwen pipeline. Generation was greedy with one completion per task, a maximum of 512 new tokens, batch size one, and BF16 weights. The models ran sequentially on one NVIDIA GeForce RTX~4070 with 12,282~MiB dedicated memory in WSL Ubuntu on Windows. The generation environment used PyTorch~2.8.0+cu128 and Transformers~4.57.6. Hardware is reported to delimit the stack; no latency, throughput, or cross-hardware conclusion is drawn.
 
 The primary design uses no repeated random seeds. Conditional on the frozen inputs and software stack, greedy decoding is deterministic; repeated identical runs would measure system nondeterminism rather than sampling variance. The separately specified 20-sample sensitivity condition is reported as a secondary result in Section~\ref{sec:sampling}; it does not enter the primary endpoint.
 
@@ -147,7 +150,7 @@ The provider's mutable stop list could also acquire duplicate strings when model
 
 \subsection{Analysis}
 
-Pass@1 is the proportion of 164 tasks for which the single completion passed. At one completion per task this is a direct proportion, not the multi-sample estimator introduced with HumanEval~\citep{chen2021humaneval}. Bootstrap intervals are computed on paired task outcomes. The analysis program rejects missing, duplicate, non-Boolean, or mismatched task records before aggregation.
+Pass@1 is the proportion of 164 tasks for which the single completion passed. At one completion per task this is a direct proportion, not the multi-sample estimator introduced with HumanEval~\citep{chen2021humaneval}. Task-resampling intervals are computed on paired outcomes and are interpreted as composition-stability analyses, not uncertainty about the fully observed benchmark. The analysis program rejects missing, duplicate, non-Boolean, or mismatched task records before aggregation.
 
 \section{Results}
 
@@ -173,11 +176,11 @@ Qwen2.5-Coder-3B & 52.4\% & --- & 52.4\% (86/164) & 42.7\% & --- & 42.7\% (70/16
 
 The StarCoder2 discrepancy is not confined to the Qwen comparison table. The EvalPlus leaderboard reports the same 31.7\% HumanEval and 27.4\% HumanEval+ values for greedy direct completion~\citep{evalplus2026leaderboard,evalplus2026setup}. Those values match the StarCoder2 report's own Table~9~\citep{lozhkov2024starcoder2}, so all three published sources trace to one measurement. Our unmodified-EvalPlus result of 1.2\% nevertheless conflicts with that measurement under the same evaluator family and nominal mode, which requires a pipeline-level explanation (Section~\ref{sec:diagnostic}).
 
-The published HumanEval order from low to high was Qwen2.5-Coder-0.5B, StarCoder2-3B, DeepSeek-Coder-1.3B, Qwen2.5-Coder-1.5B, and Qwen2.5-Coder-3B. Locally, StarCoder2-3B moved below Qwen2.5-Coder-0.5B; the other four positions retained their relative order. Kendall's tau-b was 0.8, with a paired task-bootstrap 95\% interval of [0.6, 0.8].
+The published HumanEval order from low to high was Qwen2.5-Coder-0.5B, StarCoder2-3B, DeepSeek-Coder-1.3B, Qwen2.5-Coder-1.5B, and Qwen2.5-Coder-3B. Locally, StarCoder2-3B moved below Qwen2.5-Coder-0.5B; the other four positions retained their relative order. Kendall's tau-b was 0.8, with a paired task-resampling 95\% interval of [0.6, 0.8]. With only five models, tau-b is coarse; the paired differences below carry more information about the reversal.
 
-For the reversed adjacent pair, the local difference for StarCoder2-3B minus Qwen2.5-Coder-0.5B was -21.95~\pp{}, with paired-bootstrap 95\% interval [-28.66, -15.85]. The interval excludes zero in the reversed direction. The primary decision is therefore \textbf{failed to reproduce}.
+For the reversed adjacent pair, the local difference for StarCoder2-3B minus Qwen2.5-Coder-0.5B was -21.95~\pp{}, with paired task-resampling interval [-28.66, -15.85]. The interval excludes zero in the reversed direction. The primary decision is therefore \textbf{failed to transfer}.
 
-The other adjacent local HumanEval differences, in published low-to-high order, were: DeepSeek-Coder-1.3B minus StarCoder2-3B, +32.32 points [25.61, 39.63]; Qwen2.5-Coder-1.5B minus DeepSeek-Coder-1.3B, +4.88 points [-2.44, 12.20]; and Qwen2.5-Coder-3B minus Qwen2.5-Coder-1.5B, +13.41 points [5.49, 21.34]. These intervals are descriptive and do not alter the predeclared decision once a resolved reversal is present.
+The other adjacent local HumanEval differences, in published low-to-high order, were: DeepSeek-Coder-1.3B minus StarCoder2-3B, +32.32 points [25.61, 39.63]; Qwen2.5-Coder-1.5B minus DeepSeek-Coder-1.3B, +4.88 points [-2.44, 12.20]; and Qwen2.5-Coder-3B minus Qwen2.5-Coder-1.5B, +13.41 points [5.49, 21.34]. These unadjusted intervals are descriptive and do not alter the prespecified decision once a resolved reversal is present.
 
 \begin{figure*}[t]
 \centering
@@ -194,7 +197,7 @@ The other adjacent local HumanEval differences, in published low-to-high order, 
   xtick=data,
   x tick label style={font=\small},
   y tick label style={font=\small},
-  legend style={at={(0.5,1.02)},anchor=south,legend columns=2,draw=none},
+  legend style={at={(0.5,1.02)},anchor=south,legend columns=3,draw=none},
   legend image code/.code={\draw[#1] (0cm,-0.08cm) rectangle (0.24cm,0.08cm);},
   grid=major,
   grid style={draw=papergrid},
@@ -208,10 +211,14 @@ The other adjacent local HumanEval differences, in published low-to-high order, 
   (Qwen-0.5B,23.8) (StarCoder2-3B,1.8) (DeepSeek-1.3B,34.1)
   (Qwen-1.5B,39.0) (Qwen-3B,52.4)
 };
-\legend{Published,Local}
+\addplot[fill=papermid,draw=papermid] coordinates {
+  (Qwen-0.5B,22.6) (StarCoder2-3B,29.9) (DeepSeek-1.3B,32.9)
+  (Qwen-1.5B,40.9) (Qwen-3B,51.8)
+};
+\legend{Published,Primary local,Local without newline}
 \end{axis}
 \end{tikzpicture}
-\caption{Published and local HumanEval pass@1. The StarCoder2-3B divergence determines the rank-reproduction outcome.}
+\caption{Published and local HumanEval pass@1. Removing the trailing prompt newline is a post-hoc condition; within the pinned local pipeline it recovers the displayed order.}
 \label{fig:results}
 \end{figure*}
 
@@ -230,7 +237,7 @@ We then ran a clearly labeled post-hoc secondary ablation that removed only \cod
 
 \begin{table}[t]
 \centering
-\caption{StarCoder2-3B controls and post-hoc ablations. Each ablation changes one factor from the stock condition.}
+\caption{StarCoder2-3B primary result, stock control, post-hoc single-factor conditions, and published reference. The published row is not an experimental condition.}
 \label{tab:ablation}
 \scriptsize
 \begin{tabularx}{\columnwidth}{@{}Xrr@{}}
@@ -252,42 +259,66 @@ Removing the stop recovered 9.15~\pp{} on HumanEval and 7.93~\pp{} on HumanEval+
 
 EvalPlus~0.3.1 passes \code{task["prompt"].strip() + "\textbackslash n"} to direct-completion models. Its history shows that this boundary has changed: a commit on 17 March 2024 titled ``fix: starcoder l2r inference'' stripped the prompt, and a commit on 3 August 2024 re-appended the newline~\citep{evalplus2026setup}. Both followed the StarCoder2 report. In StarCoder2's tokenizer, the newline after a closing docstring is normally merged with the following blank lines and indentation into one token. A prompt ending in an isolated newline token places the model at a boundary it rarely sees inside a function, and at HumanEval/0 it begins a new top-level definition.
 
-A second post-hoc ablation retained every stop text and changed only the model input, omitting that final newline. The stored candidate remained \code{prompt + completion}, so sanitization and evaluation were unchanged. Because a prompt change could affect every model, we ran it for all five checkpoints and applied the preregistered analysis code descriptively. Table~\ref{tab:newline} reports the hardened evaluation.
+A second post-hoc ablation retained every stop text and changed only the model input, omitting that final newline. The stored candidate remained \code{prompt + completion}, so sanitization and evaluation were unchanged. Because a prompt change could affect every model, we ran it for all five checkpoints and applied the prespecified analysis code descriptively. Table~\ref{tab:newline} reports the hardened evaluation and paired task transitions.
+
+\begin{table*}[t]
+\centering
+\caption{Passes out of 164 and paired task transitions after removing the trailing prompt newline. F$\rightarrow$P and P$\rightarrow$F denote fail-to-pass and pass-to-fail transitions.}
+\label{tab:newline}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}Xrrrrrrrr@{}}
+\toprule
+ & \multicolumn{4}{c}{HumanEval} & \multicolumn{4}{c}{HumanEval+} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+Model & Primary & No newline & F$\rightarrow$P & P$\rightarrow$F & Primary & No newline & F$\rightarrow$P & P$\rightarrow$F \\
+\midrule
+Qwen2.5-Coder-0.5B & 39 & 37 & 0 & 2 & 33 & 31 & 0 & 2 \\
+StarCoder2-3B & 3 & 49 & 46 & 0 & 3 & 42 & 40 & 1 \\
+DeepSeek-Coder-1.3B & 56 & 54 & 1 & 3 & 47 & 46 & 2 & 3 \\
+Qwen2.5-Coder-1.5B & 64 & 67 & 10 & 7 & 56 & 56 & 6 & 6 \\
+Qwen2.5-Coder-3B & 86 & 85 & 6 & 7 & 70 & 71 & 7 & 6 \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+StarCoder2-3B rose from 2--3 passes to 49/164 (29.9\%) on HumanEval and 42/164 (25.6\%) on HumanEval+, three tasks below both published values. On HumanEval, 46 StarCoder tasks changed from fail to pass and none changed from pass to fail; on HumanEval+, 40 improved and one regressed. The other checkpoints changed by at most three net tasks, although their paired transitions show offsetting gains and losses. The local order matched the published order exactly: Kendall's tau-b was 1.0, with a paired task-resampling interval of [0.8, 1.0]. Adjacent differences in published order were +7.32 points [1.83, 12.80] for StarCoder2-3B minus Qwen2.5-Coder-0.5B, +3.05 [-2.44, 8.54] for DeepSeek-Coder-1.3B minus StarCoder2-3B, +7.93 [0.61, 15.24] for Qwen2.5-Coder-1.5B minus DeepSeek-Coder-1.3B, and +10.98 [3.66, 18.29] for Qwen2.5-Coder-3B minus Qwen2.5-Coder-1.5B. Applied descriptively, the prespecified rule would return \emph{transferred}. Because the condition was chosen after the primary result, it does not replace the primary decision. It shows sufficiency within this pipeline, not the historical configuration that produced the published score.
+
+\subsection{Newline-by-stop generation factorial}
+
+We subsequently completed the missing fourth generation cell by omitting both the trailing prompt newline and the exact \code{\textbackslash ndef } stop, with the same checkpoint, revision, precision, greedy decoder, sanitizer, and 512-token cap. Table~\ref{tab:factorial} classifies all retained raw suffixes as text; generated Python was not imported or executed. Counts under the standard stop are necessarily post-truncation: a matching top-level \code{def} is removed before serialization.
 
 \begin{table}[t]
 \centering
-\caption{Passes out of 164 for all five checkpoints in the primary condition and without the trailing prompt newline.}
-\label{tab:newline}
+\caption{Text-only classification of 164 StarCoder2 raw suffixes in the post-hoc 2$\times$2 generation factorial. ``Repeat'' means a top-level definition of the task entry point.}
+\label{tab:factorial}
 \scriptsize
-\begin{tabularx}{\columnwidth}{@{}Xrrrr@{}}
+\begin{tabularx}{\columnwidth}{@{}Xrrr@{}}
 \toprule
- & \multicolumn{2}{c}{Primary} & \multicolumn{2}{c}{No newline} \\
-Model & HE & HE+ & HE & HE+ \\
+Condition & Empty & Any \code{def} & Repeat \\
 \midrule
-Qwen2.5-Coder-0.5B & 39 & 33 & 37 & 31 \\
-StarCoder2-3B & 3 & 3 & 49 & 42 \\
-DeepSeek-Coder-1.3B & 56 & 47 & 54 & 46 \\
-Qwen2.5-Coder-1.5B & 64 & 56 & 67 & 56 \\
-Qwen2.5-Coder-3B & 86 & 70 & 85 & 71 \\
+Newline, standard stop & 142 & 0 & 0 \\
+Newline, no \code{\textbackslash ndef } stop & 2 & 152 & 63 \\
+No newline, standard stop & 0 & 0 & 0 \\
+No newline, no \code{\textbackslash ndef } stop & 0 & 143 & 38 \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-StarCoder2-3B rose from 2--3 passes to 49/164 (29.9\%) on HumanEval and 42/164 (25.6\%) on HumanEval+, three tasks below both published values. The other checkpoints changed by at most three tasks. The local order matched the published order exactly: Kendall's tau-b was 1.0, with a paired task-bootstrap 95\% interval of [0.8, 1.0]. Adjacent differences in published order were +7.32 points [1.83, 12.80] for StarCoder2-3B minus Qwen2.5-Coder-0.5B, +3.05 [-2.44, 8.54] for DeepSeek-Coder-1.3B minus StarCoder2-3B, +7.93 [0.61, 15.24] for Qwen2.5-Coder-1.5B minus DeepSeek-Coder-1.3B, and +10.98 [3.66, 18.29] for Qwen2.5-Coder-3B minus Qwen2.5-Coder-1.5B. Applied to these outcomes, the preregistered rule would return \emph{reproduced}. Because the condition was chosen after the primary result, it does not replace the primary decision; it identifies the documented evaluator change on which that decision depends.
+Removing the newline eliminates empty retained suffixes even with the standard stop. Removing the stop exposes long multi-definition continuations in both prompt conditions, so the stop masks a broad continuation tendency rather than a HumanEval/0-only event. Sanitization makes the functional implication much narrower: 151/164 candidates in the no-newline/no-stop cell are byte-identical to the already evaluated no-newline candidates. The 13 changed candidates were all failures in that baseline, so static comparison preserves its 49 HumanEval and 42 HumanEval+ passes and bounds the fourth cell at 49--62 and 42--55 passes. These are not evaluation results. The fourth cell awaits the same pinned, network-isolated evaluator before a pass@1 value is reported.
 
 \section{Stochastic Sensitivity}
 \label{sec:sampling}
 
-The preregistered secondary condition draws 20 samples per task at temperature 0.2 with top-p 0.95, seed 11, BF16 weights, and the same prompt, stop texts, 512-token cap, and evaluator as the primary run. It covers the three resource-matched checkpoints named in the plan. We add one post-hoc run: StarCoder2-3B without the trailing prompt newline, so the diagnosis of Section~\ref{sec:diagnostic} can be checked outside greedy decoding. All four runs completed without interruption, and pass@$k$ uses the unbiased estimator~\citep{chen2021humaneval} with paired task-bootstrap intervals.
+The prespecified secondary condition draws 20 samples per task at temperature 0.2 with top-p 0.95, seed 11, BF16 weights, and the same prompt, stop texts, 512-token cap, and evaluator as the primary run. It covers the three resource-matched checkpoints named in the plan. We add one post-hoc run: StarCoder2-3B without the trailing prompt newline, so the counterfactual of Section~\ref{sec:diagnostic} can be checked outside greedy decoding. All four runs completed without interruption, and pass@$k$ uses the unbiased estimator~\citep{chen2021humaneval} with paired task-resampling intervals.
 
 \begin{table}[t]
 \centering
-\caption{Twenty-sample pass@$k$ on HumanEval with paired task-bootstrap 95\% intervals, beside the corresponding greedy pass@1.}
+\caption{Twenty-sample HumanEval pass@$k$ (\%) with paired task-resampling intervals, beside greedy pass@1 (\%).}
 \label{tab:sampling}
 \scriptsize
 \begin{tabularx}{\columnwidth}{@{}Xrrr@{}}
 \toprule
-Condition & pass@1 & pass@5 & Greedy \\
+Condition & pass@1 (\%) & pass@5 (\%) & Greedy (\%) \\
 \midrule
 Qwen2.5-Coder-1.5B & 37.6 [31.2, 44.1] & 50.8 [43.8, 57.8] & 39.0 \\
 DeepSeek-Coder-1.3B & 32.2 [25.9, 38.7] & 41.3 [34.2, 48.6] & 34.1 \\
@@ -297,79 +328,84 @@ StarCoder2-3B, no newline & 29.8 [23.7, 36.2] & 40.4 [33.4, 47.4] & 29.9 \\
 \end{tabularx}
 \end{table}
 
-Table~\ref{tab:sampling} shows that sampling pass@1 falls within about two points of greedy pass@1 in every condition, so the primary greedy measurements are not unusual draws. StarCoder2-3B remains at 2.3\% under the stock prompt with 20 samples per task; its primary result is therefore not an artifact of greedy decoding, and the trailing-newline condition recovers it here as it does under greedy decoding. HumanEval+ pass@1 follows the same pattern at 31.5\%, 27.8\%, 2.3\%, and 26.1\%.
+Table~\ref{tab:sampling} shows that sampled pass@1 is numerically within about two points of greedy pass@1 in every reported condition. Greedy decoding and temperature-0.2 sampling are different estimands, so proximity does not make the greedy output a random draw or establish its typicality. StarCoder2-3B nevertheless remains at 2.3\% under the stock prompt across 20 samples per task, and the no-newline condition raises it under both decoding regimes. HumanEval+ pass@1 follows the same numerical pattern at 31.5\%, 27.8\%, 2.3\%, and 26.1\%.
 
 Seeds 23 and 37 were not run. The plan triggers them only on a rank reversal or an adjacent pair below five \pp{}; the seed-11 ordering is preserved and the closest adjacent pair differs by 5.37~\pp{}. That margin is narrow, so the untriggered condition should not be read as a wide separation.
 
 DeepSeek-Coder-1.3B generated at batch size 2 rather than 20 because its multi-head key/value cache for 20 concurrent sequences exhausts the 12\,GB GPU, after which the driver spills into host memory. Batch size affects throughput only; sample count, temperature, top-p, prompt, stop texts, and token cap are identical across conditions.
 
-\subsection{Prompt and quantization ablations}
+\subsection{Additional single-checkpoint sensitivity}
 
 The plan assigns two further single-factor conditions to Qwen2.5-Coder-1.5B at seed 11, holding the reference sampling settings fixed. The first stops forcing the base prompt: the checkpoint ships a chat template, so EvalPlus builds its instruction-style prompt using its own default instruction and response prefixes. The second loads bitsandbytes 8-bit weights in place of BF16. Each run verifies at load time that the intended path was taken, so a silent fallback to the reference condition fails rather than producing a misleading number. Differences are paired: the 164 tasks are resampled with each task's two per-task pass@1 estimates kept together.
 
 \begin{table}[t]
 \centering
-\caption{Qwen2.5-Coder-1.5B single-factor ablations against the 20-sample reference condition, with paired task-bootstrap 95\% intervals on the pass@1 difference.}
+\caption{Qwen2.5-Coder-1.5B single-factor sensitivity conditions against the 20-sample reference, with paired task-resampling intervals on the pass@1 difference.}
 \label{tab:qwen-ablations}
 \scriptsize
-\begin{tabularx}{\columnwidth}{@{}Xrrr@{}}
+\begin{tabularx}{\columnwidth}{@{}Xcr@{}}
 \toprule
-Condition & pass@1 & pass@5 & Paired difference \\
+Condition & \shortstack{pass@1 / pass@5\\(\%)} & \shortstack{$\Delta$ pass@1 [interval]\\(points)} \\
 \midrule
-Reference (BF16, base prompt) & 37.6 & 50.8 & --- \\
-Chat-template prompt & 48.6 & 66.5 & $+11.07$ [4.39, 17.74] \\
-8-bit weights & 24.4 & 34.4 & $-13.17$ [$-17.90$, $-8.66$] \\
+Reference (BF16, base prompt) & 37.6 / 50.8 & --- \\
+Chat-template prompt & 48.6 / 66.5 & $+11.07$ [4.39, 17.74] \\
+8-bit weights & 24.4 / 34.4 & $-13.17$ [$-17.90$, $-8.66$] \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-Table~\ref{tab:qwen-ablations} shows that both intervals exclude zero. HumanEval+ moves in the same directions, to 43.7\% for the chat prompt ($+12.23$ [5.64, 18.96]) and 23.2\% for 8-bit ($-8.23$ [$-12.29$, $-4.24$]). These conditions cover one checkpoint and do not bear on the primary decision, but they bound how much ordinary deployment choices matter: a prompt-mode change and an 8-bit load move one checkpoint by roughly 11 and 13~\pp{}, which exceeds most adjacent gaps in the published table. The same reasoning that makes the trailing-newline result a pipeline property applies here.
+Table~\ref{tab:qwen-ablations} shows that both intervals exclude zero. HumanEval+ moves in the same directions, to 43.7\% for the chat prompt ($+12.23$ [5.64, 18.96]) and 23.2\% for 8-bit ($-8.23$ [$-12.29$, $-4.24$]). These conditions cover one checkpoint at one seed and do not bear on the primary decision. They show that these two choices materially affect Qwen2.5-Coder-1.5B in this stack; they do not bound prompt or quantization effects for other checkpoints or pipelines.
 
 \section{Threats to Validity}
 
-\textbf{Target specification.} The published percentages and model identities are available in Qwen2.5-Coder Table~5, but the report does not specify every generation and post-processing detail for that table. The current public evaluation-code link associated with the report is not, by itself, an immutable reconstruction of the historical run. Our experiment therefore tests transfer to a disclosed condition, not faithful rerun of an undisclosed condition.
+\textbf{Target specification.} The published percentages and model identifiers are available in Qwen2.5-Coder Table~5, but the report does not specify every generation and post-processing detail or immutable checkpoint revision for that table. The current public evaluation-code link associated with the report is not, by itself, an immutable reconstruction of the historical run. Our pinned revisions therefore correspond to the named artifacts but are not proven to be the historical snapshots. The experiment tests transfer to a disclosed condition, not a faithful rerun of an undisclosed condition.
 
 \textbf{Single deployment stack.} The primary run used one GPU, one precision, one inference library version, and one evaluator release, and does not estimate variation across hardware, kernels, or libraries; it also does not support CPU performance claims. The prompt and 8-bit ablations of Section~\ref{sec:sampling} probe two of those axes on a single checkpoint and are not a general characterization of prompt mode or quantization.
 
-\textbf{One greedy completion.} The primary endpoint measures deterministic greedy pass@1. The secondary 20-sample condition in Section~\ref{sec:sampling} characterizes sampling at one temperature and one seed for three checkpoints; it does not cover the remaining models, other temperatures, or repeated seeds. The task bootstrap quantifies uncertainty across the finite task set, not across sampler seeds.
+\textbf{One greedy completion.} The primary endpoint measures deterministic greedy pass@1. The secondary 20-sample condition in Section~\ref{sec:sampling} characterizes sampling at one temperature and one seed for three checkpoints; it does not cover the remaining models, other temperatures, or repeated seeds. Greedy and sampled pass@1 are different estimands. The task bootstrap perturbs task composition, not sampler seeds.
+
+\textbf{Statistical scope.} HumanEval is fully enumerated here. Task-resampling intervals require an exchangeability interpretation for inference beyond these 164 tasks and otherwise serve as stability summaries. Kendall's tau-b is discrete with five models, and the four adjacent intervals are not multiplicity-adjusted. The large StarCoder2 reversal is not close to zero, but the intervals should not be read as simultaneous family-wise coverage.
 
 \textbf{Benchmark scope.} HumanEval contains 164 Python tasks. HumanEval+ adds tests but not independent tasks, so it does not increase the task-level sample size. We did not audit benchmark contamination, language generality, security, maintainability, or real repository-level coding ability.
 
-\textbf{Diagnostic scope.} The StarCoder2 probe and both ablations were selected after observing the primary outcome and are explanatory rather than confirmatory. The prompt-newline condition closes all but three tasks of the StarCoder2 gap, but the code that produced the published values is not public, so we cannot show that it used the same prompt boundary; the small residual may reflect other library or tokenizer differences. We tested one newline condition, not every prompt variant.
+\textbf{Diagnostic scope.} The StarCoder2 probe and ablations were selected after observing the primary outcome and are explanatory rather than confirmatory. The prompt-newline condition closes all but three tasks of the StarCoder2 gap, but the code that produced the published values is not public, so we cannot show that it used the same prompt boundary; the small residual may reflect other library or tokenizer differences. The retained generations now complete the 2$\times$2 newline-by-stop design and classify top-level definitions across all 164 tasks. However, the no-newline/no-stop cell has not been executed in the pinned hardened evaluator, and no pre-truncation logits were retained. The text counts and static score bounds therefore refine the local mechanism account without making it complete or identifying the historical source configuration.
 
-\textbf{Temporal scope.} We reproduce a 2024 comparison using frozen revisions of the named historical checkpoints because the research question concerns transfer of that published ordering. This is not a claim that the five models represent the strongest code models available in 2026.
+\textbf{Secondary-condition scope.} The chat-prompt and 8-bit sensitivity conditions cover only Qwen2.5-Coder-1.5B at one seed. They demonstrate effects for that checkpoint and stack, not general prompt-mode or quantization effects.
+
+\textbf{Temporal scope.} We study transfer of a 2024 comparison using locally frozen revisions corresponding to its named models. This is not a claim that the five models represent the strongest code models available in 2026.
 
 \section{Reproducibility and Artifact Availability}
 
 The public repository~\citep{bassi2026repository} contains:
 
 \begin{itemize}
-  \item the preregistered question, endpoint, decision rule, and conditional secondary plan;
+  \item the prespecified question, endpoint, decision rule, and conditional secondary plan from commit \code{1025978};
   \item five immutable checkpoint revisions and the published target table in JSON;
   \item raw and sanitized completions for all 820 model-task pairs;
   \item five complete evaluator result files and 820 Boolean task outcomes;
   \item the generated analysis JSON, runtime package freeze, GPU metadata, Git state, evaluator image identifier, and SHA-256 checksums;
-  \item the generation, validation, consolidation, analysis, and hardened evaluation code; and
-  \item equivalence records for the generation-wrapper changes, including two-task stock controls for all five models; and
-  \item the full stock StarCoder2 generation, hardened evaluator output, image identifier, and task-level comparison; and
-  \item the complete newline-\code{def} stop ablation, 20-task stock-path equivalence prefix, hardened evaluator output, run identifier, and checksums; and
-  \item the five-model trailing-newline ablation, including generations, hardened evaluator outputs, 820 task outcomes, analysis JSON, and checksums; and
+  \item the generation, validation, consolidation, analysis, and hardened evaluation code;
+  \item equivalence records for the generation-wrapper changes, including two-task stock controls for all five models;
+  \item the full stock StarCoder2 generation, hardened evaluator output, image identifier, and task-level comparison;
+  \item the complete newline-\code{def} stop ablation, 20-task stock-path equivalence prefix, hardened evaluator output, run identifier, and checksums;
+  \item the five-model trailing-newline ablation, including generations, hardened evaluator outputs, 820 task outcomes, analysis JSON, and checksums;
+  \item the generated fourth newline-by-stop cell, all-task text classification, sanitized-candidate comparison and static score bounds, explicitly marked as awaiting hardened evaluation;
   \item the four 20-sample sensitivity runs, with 13,120 completions, hardened evaluator outputs, pass@$k$ analysis, and checksums; and
   \item the Qwen2.5-Coder-1.5B prompt and 8-bit ablations, with generations, hardened evaluator outputs, paired analysis, and checksums.
 \end{itemize}
 
-The artifact directory contains model-generated Python and should be treated as untrusted data. Re-evaluation should use the documented disposable container rather than executing samples on a host system. The code, protocol, retained artifacts, and report are archived on Zenodo. The concept DOI \href{https://doi.org/10.5281/zenodo.22800650}{10.5281/zenodo.22800650} resolves to the latest release; the version described here is v1.3.0, archived under DOI \href{https://doi.org/10.5281/zenodo.22848609}{10.5281/zenodo.22848609}.
+The artifact directory contains model-generated Python and should be treated as untrusted data. Re-evaluation should use the documented disposable container rather than executing samples on a host system. Software and artifact release v1.3.0 is archived under DOI \href{https://doi.org/10.5281/zenodo.22848609}{10.5281/zenodo.22848609}; the concept DOI \href{https://doi.org/10.5281/zenodo.22800650}{10.5281/zenodo.22800650} resolves to the latest release. Version 1.7 adds the post-hoc fourth generation cell and text analysis; its hardened score is pending.
 
 \section{Conclusion}
 
-The published five-model HumanEval ordering did not survive our uniform local deployment condition. A single resolved reversal reduced Kendall's tau-b to 0.8 (task-bootstrap 95\% interval: 0.6 to 0.8) and met the preregistered failure-to-reproduce rule. The result was driven by StarCoder2-3B, and its 1.2\% unmodified-EvalPlus control confirms that our wrapper did not cause it. Post-hoc diagnosis traced the reversal to a single byte: the trailing newline EvalPlus~0.3.1 appends to base-model prompts. Without it, StarCoder2-3B scored 29.9\%, three tasks below its published value, and the published order was recovered exactly.
+The published five-model HumanEval ordering did not transfer to our specified local pipeline. A single resolved reversal reduced Kendall's tau-b to 0.8 (task-resampling interval: 0.6 to 0.8) and met the prespecified failure-to-transfer rule. The result was driven by StarCoder2-3B, and its 1.2\% unmodified-EvalPlus control shows that the optimized wrapper is not sufficient to explain the low score. In a post-hoc counterfactual, removing the trailing newline EvalPlus~0.3.1 appends to base-model prompts raised StarCoder2-3B to 29.9\%, three tasks below its published value, and recovered the displayed order.
 
-The practical lesson is not that published tables are unusable. It is that their order should not be treated as checkpoint metadata. An evaluator revision changed one prompt boundary, left four models nearly untouched, and reduced a fifth from about 30\% to about 2\%. For base code models, the benchmark result is a property of the complete evaluation system. Reports should preserve exact prompt bytes, decoding, stopping, sanitization, evaluator version, checkpoint revision, and task-level outputs together, and evaluator changes to prompt construction should be checked for tokenizer boundary effects across model families.
+The practical lesson is not that published tables are unusable. It is that their order should not be treated as checkpoint metadata. Within this pinned stack, one prompt-boundary choice left four models nearly unchanged and moved a fifth from about 2\% to about 30\%. That establishes a large local pipeline effect, not the unpublished historical cause of the source score. For base code models, benchmark results are properties of complete evaluation systems. Reports should preserve exact prompt bytes, decoding, stopping, sanitization, evaluator version, checkpoint revision, and task-level outputs; prompt-construction changes should be checked for tokenizer-boundary effects across model families.
 
 % Keep the bibliography on the final text page rather than spilling a few
 % entries onto an otherwise empty page.
-\footnotesize
-\setlength{\bibsep}{0.3em}
+\scriptsize
+\setlength{\bibsep}{0.15em}
 \bibliographystyle{plainnat}
 \bibliography{references}
 

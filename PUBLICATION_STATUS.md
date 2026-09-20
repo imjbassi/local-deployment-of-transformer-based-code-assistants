@@ -2,8 +2,9 @@
 
 ## Current state
 
-The five-model primary experiment and preregistered analysis are complete. The
-primary decision is `failed_to_reproduce`; measured values and interpretation
+The five-model primary experiment and prespecified analysis are complete. The
+primary decision is failed to transfer; the archived analysis retains its
+historical machine-readable label `failed_to_reproduce`. Measured values and interpretation
 limits are in `RESULTS.md`, with auditable artifacts in `artifacts/primary`.
 
 The repository now includes a versioned technical report of the completed
@@ -20,8 +21,9 @@ A paper or archival release requires all of the following:
    disposable, network-isolated container.
 3. **Complete for the primary run:** model revisions, environment metadata,
    raw/sanitized completions, evaluator outputs, and checksums are checked in.
-4. **Complete:** the preregistered rank endpoint, paired uncertainty, and
-   three-way decision were generated from task-level artifacts.
+4. **Complete:** the rank endpoint and decision rule were prespecified in
+   commit `1025978`; paired task-resampling stability and the three-way decision
+   were generated from task-level artifacts.
 5. **Complete:** the planned 20-sample sensitivity condition ran for the three
    named checkpoints at seed 11, and the prompt and 8-bit ablations ran on
    Qwen2.5-Coder-1.5B. No further seeds were triggered: the ordering is
@@ -62,13 +64,22 @@ recovered (tau-b = 1.0, 95% interval [0.8, 1.0]). The EvalPlus leaderboard's
 StarCoder2 values match the StarCoder2 technical report and are not an
 independent measurement.
 
-The preregistered 20-sample condition is complete for Qwen2.5-Coder-1.5B,
+The missing StarCoder2 no-newline/no-`\ndef ` generation cell is now complete
+for all 164 tasks. Text-only analysis finds top-level definitions in 143 raw
+suffixes, including 38 repetitions of the task entry point. Sanitization leaves
+151/164 candidates byte-identical to the hardened-evaluated no-newline cell;
+the 13 changed candidates were all baseline failures. This preserves 49
+HumanEval and 42 HumanEval+ known passes and gives static bounds of 49–62 and
+42–55. The new cell has not yet run in the pinned hardened evaluator, so these
+are not pass@1 results. The local evaluation workflow now includes this file.
+
+The prespecified 20-sample condition is complete for Qwen2.5-Coder-1.5B,
 DeepSeek-Coder-1.3B, and StarCoder2-3B, with a post-hoc no-trailing-newline run
 for StarCoder2-3B. Sampling pass@1 is within about two points of greedy pass@1
 in every condition, and StarCoder2-3B stays at 2.3% under the stock prompt, so
 its primary result is not a greedy-decoding artifact.
 
-The two remaining preregistered ablations on Qwen2.5-Coder-1.5B are complete.
+The two remaining prespecified ablations on Qwen2.5-Coder-1.5B are complete.
 Against the reference condition, the chat-template prompt adds 11.07 points of
 HumanEval pass@1 (paired 95% interval [4.39, 17.74]) and bitsandbytes 8-bit
 weights remove 13.17 points ([-17.90, -8.66]). Both are single-checkpoint

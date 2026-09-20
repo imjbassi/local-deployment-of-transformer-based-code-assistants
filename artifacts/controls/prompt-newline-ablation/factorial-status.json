@@ -1,0 +1,32 @@
+{
+  "condition": "starcoder2_no_trailing_newline_no_new_def_stop",
+  "classification": "post_hoc_mechanism_diagnostic",
+  "generation": {
+    "status": "complete",
+    "tasks": 164,
+    "model_revision": "733247c55e3f73af49ce8e9c7949bf14af205928",
+    "prompt": "task['prompt'].strip()",
+    "removed_stop_text": "\ndef ",
+    "greedy": true,
+    "max_new_tokens": 512,
+    "dtype": "bfloat16"
+  },
+  "text_only_analysis": {
+    "status": "complete",
+    "raw_top_level_definition_count": 143,
+    "raw_repeated_entry_point_count": 38,
+    "sanitized_candidates_identical_to_no_newline_baseline": 151,
+    "sanitized_candidates_different_from_no_newline_baseline": 13,
+    "preserved_baseline_humaneval_passes": 49,
+    "preserved_baseline_humaneval_plus_passes": 42,
+    "static_humaneval_score_bounds": [49, 62],
+    "static_humaneval_plus_score_bounds": [42, 55]
+  },
+  "hardened_evaluation": {
+    "status": "pending",
+    "reason": "The local host has no Docker-compatible runtime for the pinned evaluator image.",
+    "workflow": ".github/workflows/prompt-newline-ablation-evaluation.yml",
+    "interpretation": "Static bounds are not a hardened functional-correctness score."
+  },
+  "safety": "Generated Python was retained as untrusted text and was not executed on the host."
+}

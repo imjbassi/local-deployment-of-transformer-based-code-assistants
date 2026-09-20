@@ -1,5 +1,11 @@
 # Experiment plan
 
+> **Versioning note.** The primary endpoint and decision rule were prespecified
+> in commit `1025978` before aggregate correctness results were inspected. This
+> living file was updated afterward to record completed secondary conditions and
+> post-hoc diagnostics; the cited commit, rather than the current file, is the
+> immutable pre-result specification.
+
 ## Question and target
 
 **Primary question:** Does the HumanEval ordering of five small base models in
@@ -94,7 +100,7 @@ wall time.
 With 164 paired binary tasks, the smallest resolvable adjacent differences are
 limited by benchmark size. The two closest published HumanEval scores differ by
 3.1 percentage points, so an inconclusive adjacent comparison is expected and is
-not converted into a positive reproduction claim. The paired bootstrap improves
+not converted into a positive transfer claim. The paired bootstrap improves
 precision relative to independent intervals but cannot create information not
 present in 164 tasks. HumanEval+ adds tests, not independent tasks, so it does not
 increase the task-level sample size.
@@ -111,24 +117,33 @@ The prompt and 8-bit ablations on Qwen2.5-Coder-1.5B are also complete at seed
 11. Relative to the reference condition, the chat-template prompt adds 11.07
 percentage points of HumanEval pass@1 and 8-bit weights remove 13.17; both
 paired intervals exclude zero, and no further seeds were triggered. All
-preregistered secondary conditions are now closed. Results are in `RESULTS.md`.
+prespecified secondary conditions are now closed. Results are in `RESULTS.md`.
 
 ## Completed post-hoc diagnostics
 
 After the primary outcome and stock-EvalPlus control were known, one secondary
 ablation removed the exact `\ndef ` generation stop for StarCoder2-3B. This was
-not preregistered and does not alter the primary decision. All other logical
+not prespecified and does not alter the primary decision. All other logical
 generation and evaluation settings were retained. The faster generation path
 was accepted only after its first 20 raw and sanitized records matched a stock
 path under the same altered stop list byte-for-byte. It explained only part of
 the StarCoder2 gap.
 
-A second secondary ablation, also not preregistered, retained every stop text
+A second secondary ablation, also not prespecified, retained every stop text
 and changed only the model input to omit the trailing newline EvalPlus 0.3.1
 appends to `task["prompt"].strip()`. It was run for all five checkpoints with
 the same verified generation path and scored in the same hardened evaluator.
-The preregistered analysis code was applied to its 820 outcomes descriptively.
+The prespecified analysis code was applied to its 820 outcomes descriptively.
 Both results and their bounded interpretation are reported in `RESULTS.md`.
+
+A third mechanism-only diagnostic completed the missing StarCoder2
+no-newline/no-`\ndef ` generation cell for all 164 tasks. It uses the same
+post-hoc classification as the other diagnostic cells and does not enter the
+primary endpoint. Raw suffixes are classified as text, and sanitized outputs
+are compared byte-for-byte with the hardened-evaluated no-newline condition.
+The new cell has not yet been executed by the pinned hardened evaluator, so the
+reported 49–62 HumanEval and 42–55 HumanEval+ ranges are static bounds, not
+pass@1 measurements.
 
 ## Analysis order
 

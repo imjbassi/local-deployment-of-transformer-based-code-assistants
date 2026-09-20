@@ -18,6 +18,7 @@ REPOSITORY = Path(__file__).resolve().parents[1]
 TARGETS = REPOSITORY / "protocol" / "published_targets.json"
 OUTPUT_ROOT = REPOSITORY / "results" / "controls" / "prompt-newline-ablation"
 REMOVED_SUFFIX = "\n"
+REMOVED_STOP = "\ndef "
 
 
 def parse_args() -> argparse.Namespace:
@@ -39,6 +40,14 @@ def parse_args() -> argparse.Namespace:
         type=int,
         metavar=("START", "END"),
         help="Optional half-open HumanEval task range used for a probe run.",
+    )
+    parser.add_argument(
+        "--remove-new-def-stop",
+        action="store_true",
+        help=(
+            "Also remove EvalPlus's exact newline-def stop. This completes the "
+            "fourth no-newline/no-stop cell of the diagnostic factorial."
+        ),
     )
     return parser.parse_args()
 
@@ -101,7 +110,12 @@ def main() -> None:
         raise ValueError(f"unknown model key: {args.model}")
     snapshot = snapshot_download(repo_id=target["model_id"], revision=target["revision"])
 
-    output = (args.output or OUTPUT_ROOT / f"{args.model}-no-trailing-newline.jsonl").resolve()
+    suffix = (
+        "no-trailing-newline-no-new-def-stop"
+        if args.remove_new_def_stop
+        else "no-trailing-newline"
+    )
+    output = (args.output or OUTPUT_ROOT / f"{args.model}-{suffix}.jsonl").resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
     model = make_model(
         model=snapshot,
@@ -114,9 +128,21 @@ def main() -> None:
         dtype="bfloat16",
     )
     model.eos = list(dict.fromkeys(model.eos))
+    stops_before_factorial_change = list(model.eos)
+    if args.remove_new_def_stop:
+        model.eos = [stop for stop in model.eos if stop != REMOVED_STOP]
+        if len(stops_before_factorial_change) - len(model.eos) != 1:
+            raise RuntimeError(
+                f"Expected exactly one {REMOVED_STOP!r} stop entry; "
+                f"got {stops_before_factorial_change!r}"
+            )
 
     metadata = {
-        "experiment": "no_trailing_prompt_newline",
+        "experiment": (
+            "no_trailing_prompt_newline_no_new_def_stop"
+            if args.remove_new_def_stop
+            else "no_trailing_prompt_newline"
+        ),
         "model_key": args.model,
         "post_hoc": True,
         "evalplus_version": version,
@@ -132,6 +158,8 @@ def main() -> None:
         "generation_path": "verified_primary_decode_once_with_hook_restoration",
         "model_prompt": 'task["prompt"].strip()',
         "stock_model_prompt": 'task["prompt"].strip() + "\\n"',
+        "removed_stop_text": REMOVED_STOP if args.remove_new_def_stop else None,
+        "stop_texts_before_factorial_change": stops_before_factorial_change,
         "stop_texts": list(model.eos),
         "id_range": args.id_range,
         "output": str(output),
