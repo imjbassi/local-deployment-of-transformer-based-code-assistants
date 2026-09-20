@@ -108,11 +108,10 @@ both prompt conditions, while newline removal eliminates the empty retained
 suffixes seen in the stock condition. Sanitization narrows the consequence:
 151/164 fourth-cell candidates are byte-identical to the hardened-evaluated
 no-newline baseline. The 13 changed candidates were all baseline failures, so
-static comparison preserves 49 HumanEval and 42 HumanEval+ passes and bounds
-the fourth cell at 49–62 and 42–55 passes. These bounds are not evaluator
-scores. The fourth cell still requires the same pinned, network-isolated
-container evaluation before a pass@1 value is reported. Generated Python was
-not executed on the host.
+static comparison gave pre-evaluation bounds of 49–62 HumanEval and 42–55
+HumanEval+ passes. The pinned hardened evaluator scored the fourth cell at
+50/164 and 43/164: one fail-to-pass and no pass-to-fail transition on each
+suite. Generated Python was not executed on the host.
 
 ## Stochastic sensitivity (prespecified secondary condition)
 
@@ -206,8 +205,8 @@ The prompt-newline ablation directory contains raw and sanitized generations
 for all five checkpoints, runner metadata, hardened evaluator outputs, 820
 task-level outcomes, the ablation analysis, and a summary. It also contains the
 generated no-newline/no-`\ndef ` StarCoder2 cell, all-task continuation
-classification, sanitized-candidate comparison, explicit pending-evaluation
-status, and refreshed checksums.
+classification, sanitized-candidate comparison, hardened evaluator output,
+workflow provenance, and refreshed checksums.
 
 The 20-sample generations, hardened evaluator outputs, pass@k analysis, summary,
 and checksums are in

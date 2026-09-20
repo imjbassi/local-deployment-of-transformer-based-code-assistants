@@ -28,8 +28,9 @@ A paper or archival release requires all of the following:
    named checkpoints at seed 11, and the prompt and 8-bit ablations ran on
    Qwen2.5-Coder-1.5B. No further seeds were triggered: the ordering is
    preserved and the closest adjacent pair differs by 5.37 percentage points.
-6. **Open:** obtain a second-person review of protocol-to-artifact mapping and
-   the eventual manuscript.
+6. **Open, review packet prepared:** obtain a second-person review of
+   protocol-to-artifact mapping and the manuscript using
+   `paper/INDEPENDENT_REVIEW_PACKET.md`.
 7. **Complete:** releases are archived on Zenodo. The concept DOI
    [10.5281/zenodo.22800650](https://doi.org/10.5281/zenodo.22800650) resolves to the latest
    version; v1.3.0 is [10.5281/zenodo.22848609](https://doi.org/10.5281/zenodo.22848609).
@@ -64,14 +65,14 @@ recovered (tau-b = 1.0, 95% interval [0.8, 1.0]). The EvalPlus leaderboard's
 StarCoder2 values match the StarCoder2 technical report and are not an
 independent measurement.
 
-The missing StarCoder2 no-newline/no-`\ndef ` generation cell is now complete
+The StarCoder2 no-newline/no-`\ndef ` generation cell is complete
 for all 164 tasks. Text-only analysis finds top-level definitions in 143 raw
 suffixes, including 38 repetitions of the task entry point. Sanitization leaves
 151/164 candidates byte-identical to the hardened-evaluated no-newline cell;
-the 13 changed candidates were all baseline failures. This preserves 49
-HumanEval and 42 HumanEval+ known passes and gives static bounds of 49–62 and
-42–55. The new cell has not yet run in the pinned hardened evaluator, so these
-are not pass@1 results. The local evaluation workflow now includes this file.
+the 13 changed candidates were all baseline failures. Pre-evaluation bounds
+were 49–62 HumanEval and 42–55 HumanEval+ passes. The pinned hardened evaluator
+scored the cell at 50/164 and 43/164, with one fail-to-pass and no pass-to-fail
+transition on each suite relative to the no-newline/standard-stop cell.
 
 The prespecified 20-sample condition is complete for Qwen2.5-Coder-1.5B,
 DeepSeek-Coder-1.3B, and StarCoder2-3B, with a post-hoc no-trailing-newline run
@@ -85,6 +86,10 @@ HumanEval pass@1 (paired 95% interval [4.39, 17.74]) and bitsandbytes 8-bit
 weights remove 13.17 points ([-17.90, -8.66]). Both are single-checkpoint
 sensitivity checks and do not alter the primary decision.
 
-Until the open gates pass, the defensible claim is limited to the completed
+FORGE 2027's Data and Benchmarking Track is the selected submission target;
+formatting, anonymity, artifact, and deadline requirements are recorded under
+`paper/venues/forge-2027/`. The four-page anonymous submission is not yet built.
+
+Until the independent review and venue-formatting gates pass, the defensible claim is limited to the completed
 primary condition and its stated interpretation boundary; do not describe the
 repository as a finished or peer-reviewed paper.

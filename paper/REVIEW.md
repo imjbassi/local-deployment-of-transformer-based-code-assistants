@@ -1,7 +1,7 @@
 # Manuscript review
 
 Review date: 2026-09-19
-Scope: internal evidence, LaTeX, citation, and rendering review of version 1.7
+Scope: internal evidence, LaTeX, citation, and rendering review of version 1.8
 
 ## Verdict
 
@@ -51,7 +51,7 @@ Tectonic.
 | No-newline-`def` ablation: 17/164 HE, 15/164 HE+ | 164 retained records, hardened evaluator JSON, run 35077128303, and summary JSON | Verified |
 | Stock/optimized ablation equivalence | First 20 raw and sanitized records, byte-prefix comparison, and recorded hashes | Verified |
 | Fourth factorial cell: 164 retained raw/sanitized records; 143 raw suffixes contain top-level definitions and 38 repeat the entry point | `factorial-continuation-analysis.json`, condition metadata, and checksums | Verified as text-only analysis |
-| Fourth-cell static bounds: 49--62 HE and 42--55 HE+ | 151/164 sanitized candidates byte-identical to the evaluated no-newline cell; all 13 differences were baseline failures | Verified as static comparison; hardened score pending |
+| Fourth-cell hardened score: 50/164 HE and 43/164 HE+ | Evaluator output, image digest, successful workflow run 35492816775, and task-level transitions | Verified |
 | Checkpoint identities and revisions | `protocol/published_targets.json` | Verified |
 | BF16, RTX 4070, package and evaluator versions | hardware, package-freeze, and evaluator-image artifacts | Verified |
 | Published scores | Qwen2.5-Coder technical report, Table 5 | Verified against primary source |
@@ -74,9 +74,9 @@ Tectonic.
 - The newline and stop diagnostics are explicitly post hoc. Newline removal is
   reported as sufficient within the pinned pipeline, not as proof of the
   unpublished historical source configuration.
-- The 2×2 generation factorial and all-task repeated-definition classification
-  are complete. The fourth cell's hardened score and pre-truncation logits are
-  disclosed as open mechanism tests.
+- The 2×2 generation factorial, hardened evaluation, and all-task
+  repeated-definition classification are complete. Pre-truncation logits remain
+  an optional deeper mechanism test rather than a missing score.
 - The report identifies the 2024 target as historical rather than calling the
   selected models current state of the art.
 
@@ -91,8 +91,7 @@ in Table 2.
 ## Open gates before venue submission
 
 1. Obtain a second-person protocol-to-artifact and manuscript review.
-2. Score the generated no-newline/no-stop cell in the pinned hardened evaluator;
-   retain pre-truncation logits if the tokenizer-and-stop mechanism is to be
+2. Retain pre-truncation logits if the tokenizer-and-stop mechanism is to be
    promoted beyond an explanatory local counterfactual.
 3. Select a venue and adapt length, anonymization, formatting, and disclosure
    statements to its current author instructions.

@@ -99,7 +99,13 @@ def test_manuscript_factorial_diagnostic_matches_artifacts() -> None:
         "humaneval_plus": [42, 55],
     }
     assert "49--62" in manuscript
-    assert "not evaluation results" in manuscript
+    assert report["hardened_evaluation"]["scores"] == {
+        "humaneval": 50,
+        "humaneval_plus": 43,
+    }
+    assert "50/164" in manuscript
+    assert "43/164" in manuscript
+    assert "Hardened evaluation then scored the fourth cell" in manuscript
 
 
 def test_manuscript_sampling_table_matches_analysis() -> None:

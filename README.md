@@ -23,10 +23,10 @@ configuration used for the source table. See
 boundary, and remaining release gates. The exact published targets remain
 machine-readable in [protocol/published_targets.json](protocol/published_targets.json).
 
-The post-hoc StarCoder2 newline-by-`\ndef ` generation factorial is now complete
-for all 164 tasks. Its fourth cell has text-only continuation analysis and
-static score bounds, but no hardened pass@1 score yet; generated Python was not
-executed on the host.
+The post-hoc StarCoder2 newline-by-`\ndef ` generation factorial is complete
+for all 164 tasks. Its fourth cell scores 50/164 on HumanEval and 43/164 on
+HumanEval+ in the hardened evaluator; generated Python was not executed on the
+host.
 
 The evidence-backed technical report, its canonical LaTeX and BibTeX sources,
 Tectonic build scripts, and internal claim review are in [paper](paper). The rendered PDF is

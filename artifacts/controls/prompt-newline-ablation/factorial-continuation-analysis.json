@@ -4,7 +4,7 @@
   "safety": "text-only analysis; generated code was not imported or executed",
   "conditions": {
     "stock": {
-      "path": "/mnt/c/Users/jaive.DESKTOP-3TNM9JL/Desktop/Local-Deployment-of-Transformer-based-Code-Assistants-main/artifacts/primary/humaneval/starcoder2-3b.raw.jsonl",
+      "path": "C:\\Users\\jaive.DESKTOP-3TNM9JL\\Desktop\\Local-Deployment-of-Transformer-based-Code-Assistants-main\\artifacts\\primary\\humaneval\\starcoder2-3b.raw.jsonl",
       "trailing_prompt_newline": true,
       "new_def_stop": true,
       "tasks": 164,
@@ -181,7 +181,7 @@
       }
     },
     "no_new_def_stop": {
-      "path": "/mnt/c/Users/jaive.DESKTOP-3TNM9JL/Desktop/Local-Deployment-of-Transformer-based-Code-Assistants-main/artifacts/controls/stop-ablation/starcoder2-no-new-def-stop.raw.jsonl",
+      "path": "C:\\Users\\jaive.DESKTOP-3TNM9JL\\Desktop\\Local-Deployment-of-Transformer-based-Code-Assistants-main\\artifacts\\controls\\stop-ablation\\starcoder2-no-new-def-stop.raw.jsonl",
       "trailing_prompt_newline": true,
       "new_def_stop": false,
       "tasks": 164,
@@ -526,7 +526,7 @@
       }
     },
     "no_trailing_newline": {
-      "path": "/mnt/c/Users/jaive.DESKTOP-3TNM9JL/Desktop/Local-Deployment-of-Transformer-based-Code-Assistants-main/artifacts/controls/prompt-newline-ablation/starcoder2-3b-no-trailing-newline.raw.jsonl",
+      "path": "C:\\Users\\jaive.DESKTOP-3TNM9JL\\Desktop\\Local-Deployment-of-Transformer-based-Code-Assistants-main\\artifacts\\controls\\prompt-newline-ablation\\starcoder2-3b-no-trailing-newline.raw.jsonl",
       "trailing_prompt_newline": false,
       "new_def_stop": true,
       "tasks": 164,
@@ -560,7 +560,7 @@
       }
     },
     "no_trailing_newline_no_new_def_stop": {
-      "path": "/mnt/c/Users/jaive.DESKTOP-3TNM9JL/Desktop/Local-Deployment-of-Transformer-based-Code-Assistants-main/artifacts/controls/prompt-newline-ablation/starcoder2-3b-no-trailing-newline-no-new-def-stop.raw.jsonl",
+      "path": "C:\\Users\\jaive.DESKTOP-3TNM9JL\\Desktop\\Local-Deployment-of-Transformer-based-Code-Assistants-main\\artifacts\\controls\\prompt-newline-ablation\\starcoder2-3b-no-trailing-newline-no-new-def-stop.raw.jsonl",
       "trailing_prompt_newline": false,
       "new_def_stop": false,
       "tasks": 164,
@@ -884,9 +884,9 @@
     }
   },
   "sanitized_comparison": {
-    "baseline_path": "/mnt/c/Users/jaive.DESKTOP-3TNM9JL/Desktop/Local-Deployment-of-Transformer-based-Code-Assistants-main/artifacts/controls/prompt-newline-ablation/starcoder2-3b-no-trailing-newline.jsonl",
-    "factorial_path": "/mnt/c/Users/jaive.DESKTOP-3TNM9JL/Desktop/Local-Deployment-of-Transformer-based-Code-Assistants-main/artifacts/controls/prompt-newline-ablation/starcoder2-3b-no-trailing-newline-no-new-def-stop.jsonl",
-    "baseline_eval_path": "/mnt/c/Users/jaive.DESKTOP-3TNM9JL/Desktop/Local-Deployment-of-Transformer-based-Code-Assistants-main/artifacts/controls/prompt-newline-ablation/starcoder2-3b-no-trailing-newline_eval_results.json",
+    "baseline_path": "C:\\Users\\jaive.DESKTOP-3TNM9JL\\Desktop\\Local-Deployment-of-Transformer-based-Code-Assistants-main\\artifacts\\controls\\prompt-newline-ablation\\starcoder2-3b-no-trailing-newline.jsonl",
+    "factorial_path": "C:\\Users\\jaive.DESKTOP-3TNM9JL\\Desktop\\Local-Deployment-of-Transformer-based-Code-Assistants-main\\artifacts\\controls\\prompt-newline-ablation\\starcoder2-3b-no-trailing-newline-no-new-def-stop.jsonl",
+    "baseline_eval_path": "C:\\Users\\jaive.DESKTOP-3TNM9JL\\Desktop\\Local-Deployment-of-Transformer-based-Code-Assistants-main\\artifacts\\controls\\prompt-newline-ablation\\starcoder2-3b-no-trailing-newline_eval_results.json",
     "identical_candidates": 151,
     "different_candidates": 13,
     "different_task_ids": [
@@ -923,5 +923,24 @@
       ]
     },
     "interpretation": "Static byte comparison only. Bounds are not a hardened evaluation result; the upper endpoint assumes every changed candidate passes."
+  },
+  "hardened_evaluation": {
+    "status": "complete",
+    "baseline_eval_path": "C:\\Users\\jaive.DESKTOP-3TNM9JL\\Desktop\\Local-Deployment-of-Transformer-based-Code-Assistants-main\\artifacts\\controls\\prompt-newline-ablation\\starcoder2-3b-no-trailing-newline_eval_results.json",
+    "factorial_eval_path": "C:\\Users\\jaive.DESKTOP-3TNM9JL\\Desktop\\Local-Deployment-of-Transformer-based-Code-Assistants-main\\artifacts\\controls\\prompt-newline-ablation\\starcoder2-3b-no-trailing-newline-no-new-def-stop_eval_results.json",
+    "scores": {
+      "humaneval": 50,
+      "humaneval_plus": 43
+    },
+    "transitions_vs_no_trailing_newline": {
+      "humaneval": {
+        "fail_to_pass": 1,
+        "pass_to_fail": 0
+      },
+      "humaneval_plus": {
+        "fail_to_pass": 1,
+        "pass_to_fail": 0
+      }
+    }
   }
 }

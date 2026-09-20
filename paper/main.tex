@@ -60,7 +60,7 @@
 \author{Jaiveer Bassi\\
 \small Independent Researcher, USA\\
 \small \href{mailto:jaiveerbassi@yahoo.com}{jaiveerbassi@yahoo.com}}
-\date{\small Technical report -- primary experiment, diagnostic ablations, and sampling condition\\Version 1.7, September 19, 2026}
+\date{\small Technical report -- primary experiment, diagnostic ablations, and sampling condition\\Version 1.8, September 20, 2026}
 
 \begin{document}
 \maketitle
@@ -304,7 +304,7 @@ No newline, no \code{\textbackslash ndef } stop & 0 & 143 & 38 \\
 \end{tabularx}
 \end{table}
 
-Removing the newline eliminates empty retained suffixes even with the standard stop. Removing the stop exposes long multi-definition continuations in both prompt conditions, so the stop masks a broad continuation tendency rather than a HumanEval/0-only event. Sanitization makes the functional implication much narrower: 151/164 candidates in the no-newline/no-stop cell are byte-identical to the already evaluated no-newline candidates. The 13 changed candidates were all failures in that baseline, so static comparison preserves its 49 HumanEval and 42 HumanEval+ passes and bounds the fourth cell at 49--62 and 42--55 passes. These are not evaluation results. The fourth cell awaits the same pinned, network-isolated evaluator before a pass@1 value is reported.
+Removing the newline eliminates empty retained suffixes even with the standard stop. Removing the stop exposes long multi-definition continuations in both prompt conditions, so the stop masks a broad continuation tendency rather than a HumanEval/0-only event. Sanitization makes the functional implication much narrower: 151/164 candidates in the no-newline/no-stop cell are byte-identical to the already evaluated no-newline candidates. The 13 changed candidates were all failures in that baseline, so static comparison predicted bounds of 49--62 HumanEval and 42--55 HumanEval+ passes. Hardened evaluation then scored the fourth cell at 50/164 (30.5\%) and 43/164 (26.2\%), respectively: one fail-to-pass and no pass-to-fail transition on each suite relative to the no-newline/standard-stop cell. Thus removing the newline accounts for nearly all of the functional recovery; removing the stop mainly reveals otherwise truncated continuation text and changes only one additional task outcome.
 
 \section{Stochastic Sensitivity}
 \label{sec:sampling}
@@ -368,7 +368,7 @@ Table~\ref{tab:qwen-ablations} shows that both intervals exclude zero. HumanEval
 
 \textbf{Benchmark scope.} HumanEval contains 164 Python tasks. HumanEval+ adds tests but not independent tasks, so it does not increase the task-level sample size. We did not audit benchmark contamination, language generality, security, maintainability, or real repository-level coding ability.
 
-\textbf{Diagnostic scope.} The StarCoder2 probe and ablations were selected after observing the primary outcome and are explanatory rather than confirmatory. The prompt-newline condition closes all but three tasks of the StarCoder2 gap, but the code that produced the published values is not public, so we cannot show that it used the same prompt boundary; the small residual may reflect other library or tokenizer differences. The retained generations now complete the 2$\times$2 newline-by-stop design and classify top-level definitions across all 164 tasks. However, the no-newline/no-stop cell has not been executed in the pinned hardened evaluator, and no pre-truncation logits were retained. The text counts and static score bounds therefore refine the local mechanism account without making it complete or identifying the historical source configuration.
+\textbf{Diagnostic scope.} The StarCoder2 probe and ablations were selected after observing the primary outcome and are explanatory rather than confirmatory. The prompt-newline condition closes all but three tasks of the StarCoder2 gap, but the code that produced the published values is not public, so we cannot show that it used the same prompt boundary; the small residual may reflect other library or tokenizer differences. The retained generations and hardened scores complete the 2$\times$2 newline-by-stop design across all 164 tasks. No pre-truncation logits were retained, so the factorial establishes a local behavioral interaction without identifying the historical source configuration or fully resolving the tokenizer-level mechanism.
 
 \textbf{Secondary-condition scope.} The chat-prompt and 8-bit sensitivity conditions cover only Qwen2.5-Coder-1.5B at one seed. They demonstrate effects for that checkpoint and stack, not general prompt-mode or quantization effects.
 
@@ -389,12 +389,12 @@ The public repository~\citep{bassi2026repository} contains:
   \item the full stock StarCoder2 generation, hardened evaluator output, image identifier, and task-level comparison;
   \item the complete newline-\code{def} stop ablation, 20-task stock-path equivalence prefix, hardened evaluator output, run identifier, and checksums;
   \item the five-model trailing-newline ablation, including generations, hardened evaluator outputs, 820 task outcomes, analysis JSON, and checksums;
-  \item the generated fourth newline-by-stop cell, all-task text classification, sanitized-candidate comparison and static score bounds, explicitly marked as awaiting hardened evaluation;
+  \item the fourth newline-by-stop cell, all-task text classification, sanitized-candidate comparison, hardened evaluator output, image identifier, and workflow run;
   \item the four 20-sample sensitivity runs, with 13,120 completions, hardened evaluator outputs, pass@$k$ analysis, and checksums; and
   \item the Qwen2.5-Coder-1.5B prompt and 8-bit ablations, with generations, hardened evaluator outputs, paired analysis, and checksums.
 \end{itemize}
 
-The artifact directory contains model-generated Python and should be treated as untrusted data. Re-evaluation should use the documented disposable container rather than executing samples on a host system. Software and artifact release v1.3.0 is archived under DOI \href{https://doi.org/10.5281/zenodo.22848609}{10.5281/zenodo.22848609}; the concept DOI \href{https://doi.org/10.5281/zenodo.22800650}{10.5281/zenodo.22800650} resolves to the latest release. Version 1.7 adds the post-hoc fourth generation cell and text analysis; its hardened score is pending.
+The artifact directory contains model-generated Python and should be treated as untrusted data. Re-evaluation should use the documented disposable container rather than executing samples on a host system. Software and artifact release v1.3.0 is archived under DOI \href{https://doi.org/10.5281/zenodo.22848609}{10.5281/zenodo.22848609}; the concept DOI \href{https://doi.org/10.5281/zenodo.22800650}{10.5281/zenodo.22800650} resolves to the latest release. Version 1.8 adds the post-hoc fourth generation cell, text analysis, and its hardened 50/164 HumanEval and 43/164 HumanEval+ scores.
 
 \section{Conclusion}
 

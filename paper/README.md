@@ -3,10 +3,11 @@
 The checked-in PDF reports the completed five-model primary experiment, stock
 control, post-hoc StarCoder2 diagnostics, five-model prompt-newline condition,
 and completed sampling, prompt, and quantization sensitivity conditions. It is
-a technical report, not a peer-reviewed publication. Manuscript version 1.7 is
+a technical report, not a peer-reviewed publication. Manuscript version 1.8 is
 a document revision over archived software/artifact release v1.3.0. Version
-1.7 adds the post-hoc fourth newline-by-stop generation cell and text-only
-mechanism analysis; its hardened functional score remains pending.
+1.8 adds the post-hoc fourth newline-by-stop generation cell, text-only
+mechanism analysis, and hardened functional scores (50/164 HumanEval and
+43/164 HumanEval+).
 
 ## Contents
 

@@ -27,6 +27,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--no-trailing-newline-sanitized", type=Path, required=True)
     parser.add_argument("--neither-sanitized", type=Path, required=True)
     parser.add_argument("--no-trailing-newline-eval", type=Path, required=True)
+    parser.add_argument("--neither-eval", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     return parser.parse_args()
 
@@ -160,6 +161,49 @@ def compare_sanitized(
     }
 
 
+def summarize_hardened_evaluation(
+    *, baseline_eval_path: Path, factorial_eval_path: Path
+) -> dict[str, Any]:
+    def outcomes(path: Path) -> dict[str, tuple[bool, bool]]:
+        rows = json.loads(path.read_text(encoding="utf-8"))["eval"]
+        return {
+            task_id: (
+                result[0]["base_status"] == "pass",
+                result[0]["base_status"] == "pass"
+                and result[0]["plus_status"] == "pass",
+            )
+            for task_id, result in rows.items()
+        }
+
+    baseline = outcomes(baseline_eval_path)
+    factorial = outcomes(factorial_eval_path)
+    if set(baseline) != set(factorial):
+        raise ValueError("hardened evaluator outputs do not contain the same tasks")
+
+    benchmarks = {"humaneval": 0, "humaneval_plus": 1}
+    scores: dict[str, int] = {}
+    transitions: dict[str, dict[str, int]] = {}
+    for benchmark, index in benchmarks.items():
+        scores[benchmark] = sum(result[index] for result in factorial.values())
+        transitions[benchmark] = {
+            "fail_to_pass": sum(
+                not baseline[task_id][index] and factorial[task_id][index]
+                for task_id in baseline
+            ),
+            "pass_to_fail": sum(
+                baseline[task_id][index] and not factorial[task_id][index]
+                for task_id in baseline
+            ),
+        }
+    return {
+        "status": "complete",
+        "baseline_eval_path": str(baseline_eval_path),
+        "factorial_eval_path": str(factorial_eval_path),
+        "scores": scores,
+        "transitions_vs_no_trailing_newline": transitions,
+    }
+
+
 def main() -> None:
     args = parse_args()
     tasks = get_human_eval_plus(version="v0.1.10")
@@ -186,6 +230,10 @@ def main() -> None:
             baseline_path=args.no_trailing_newline_sanitized.resolve(),
             factorial_path=args.neither_sanitized.resolve(),
             baseline_eval_path=args.no_trailing_newline_eval.resolve(),
+        ),
+        "hardened_evaluation": summarize_hardened_evaluation(
+            baseline_eval_path=args.no_trailing_newline_eval.resolve(),
+            factorial_eval_path=args.neither_eval.resolve(),
         ),
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

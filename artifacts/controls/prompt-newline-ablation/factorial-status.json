@@ -23,10 +23,17 @@
     "static_humaneval_plus_score_bounds": [42, 55]
   },
   "hardened_evaluation": {
-    "status": "pending",
-    "reason": "The local host has no Docker-compatible runtime for the pinned evaluator image.",
+    "status": "complete",
     "workflow": ".github/workflows/prompt-newline-ablation-evaluation.yml",
-    "interpretation": "Static bounds are not a hardened functional-correctness score."
+    "workflow_run": "https://github.com/imjbassi/local-deployment-of-transformer-based-code-assistants/actions/runs/35492816775",
+    "evaluator_image": "sha256:4c78cf164be611391ce6766583417d91f0c4388edd983bd58dca0982f5f90d60",
+    "humaneval_passes": 50,
+    "humaneval_plus_passes": 43,
+    "transitions_vs_no_trailing_newline": {
+      "humaneval": {"fail_to_pass": 1, "pass_to_fail": 0},
+      "humaneval_plus": {"fail_to_pass": 1, "pass_to_fail": 0}
+    },
+    "interpretation": "Removing the stop changes one additional baseline failure to a pass on both suites; the trailing-newline effect remains dominant."
   },
   "safety": "Generated Python was retained as untrusted text and was not executed on the host."
 }
