@@ -44,8 +44,8 @@ Official instructions:
 - [x] Condense the manuscript within the four-main-page plus one-reference-page
   maximum (the current draft uses two main pages and one reference page).
 - [x] Build with the exact IEEE conference class and inspect every rendered page.
-- [ ] Run an anonymity search over PDF text, metadata, sources, and supplement.
-- [ ] Build and checksum a history-free anonymous artifact archive.
+- [x] Run an anonymity search over PDF text, metadata, sources, and supplement.
+- [x] Build and checksum a history-free anonymous artifact archive.
 - [ ] Obtain the independent review in `paper/INDEPENDENT_REVIEW_PACKET.md`.
 - [ ] Recheck the official instructions immediately before submission.
 
@@ -53,10 +53,17 @@ This directory records a selected venue and a concrete formatting/anonymization
 specification. The canonical eight-page technical report remains the complete
 archival version; it should not be uploaded as the double-anonymous submission.
 
-The current draft is `output/forge-2027-anonymous-draft.pdf`. Build it from this
+The current draft is `output/forge-2027-anonymous-draft.pdf`, and the companion
+archive is `output/forge-2027-anonymous-artifact.zip`. Build the paper from this
 directory with:
 
 ```powershell
 tectonic -X compile main.tex --outdir build --keep-logs
 Copy-Item build/main.pdf output/forge-2027-anonymous-draft.pdf -Force
+```
+
+Build the artifact archive from the repository root with:
+
+```powershell
+.\paper\venues\forge-2027\build_anonymous_artifact.ps1
 ```
