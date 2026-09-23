@@ -59,7 +59,7 @@ def build(output: Path, allow_dirty: bool) -> None:
         "archive_root": ARCHIVE_ROOT,
         "manuscript_version": "1.9",
         "release_version": "v1.9.0",
-        "version_doi": "10.5281/zenodo.22922348",
+        "version_doi": "10.5281/zenodo.22926448",
         "concept_doi": "10.5281/zenodo.22800650",
         "source_commit": git("rev-parse", "HEAD"),
         "source_dirty": bool(status),

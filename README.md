@@ -273,7 +273,7 @@ audit manuscript.
 Software and documentation are MIT licensed. Models, HumanEval, and EvalPlus
 retain their upstream licenses. Release v1.9.0 of the code, protocol, artifacts,
 and report is archived as
-[10.5281/zenodo.22922348](https://doi.org/10.5281/zenodo.22922348). The concept DOI
+[10.5281/zenodo.22926448](https://doi.org/10.5281/zenodo.22926448). The concept DOI
 [10.5281/zenodo.22800650](https://doi.org/10.5281/zenodo.22800650) always resolves to the latest
 release; the earlier v1.3.0 archive remains at
 [10.5281/zenodo.22848609](https://doi.org/10.5281/zenodo.22848609). Citation

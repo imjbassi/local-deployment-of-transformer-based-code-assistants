@@ -12,7 +12,7 @@ from pathlib import Path
 VENUE = Path(__file__).resolve().parent
 ROOT = VENUE.parents[2]
 IDENTITY = re.compile(
-    r"jaive|bassi|DESKTOP-3TNM9JL|22922348|22848609|22800650", re.I
+    r"jaive|bassi|DESKTOP-3TNM9JL|22926448|22922348|22848609|22800650", re.I
 )
 
 
@@ -29,7 +29,7 @@ def scrub(text: str) -> str:
         r"https://github.com/imjbassi/[^\s\"<>]+", "<WITHHELD_REPOSITORY_URL>", text, flags=re.I
     )
     text = re.sub(
-        r"10\.5281/zenodo\.(?:22922348|22848609|22800650)",
+        r"10\.5281/zenodo\.(?:22926448|22922348|22848609|22800650)",
         "<WITHHELD_DOI>",
         text,
     )

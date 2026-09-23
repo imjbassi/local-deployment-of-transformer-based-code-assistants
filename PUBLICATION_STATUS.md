@@ -36,7 +36,7 @@ A paper or archival release requires all of the following:
    version; v1.3.0 is [10.5281/zenodo.22848609](https://doi.org/10.5281/zenodo.22848609).
    `scripts/build_publication_release.py` produces the deterministic matching
    archive for manuscript v1.9 / release v1.9.0, assigned version DOI
-   [10.5281/zenodo.22922348](https://doi.org/10.5281/zenodo.22922348).
+   [10.5281/zenodo.22926448](https://doi.org/10.5281/zenodo.22926448).
 
 ## Additional control status
 

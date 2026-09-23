@@ -53,7 +53,7 @@ prompt boundaries are part of a reproducible benchmark specification.
 - **Licensing/provenance:** repository software is MIT-licensed; bundled or
   derived material retains its recorded upstream licensing and provenance in
   the supplement. The matching public v1.9.0 archive is assigned version DOI
-  <https://doi.org/10.5281/zenodo.22922348>.
+  <https://doi.org/10.5281/zenodo.22926448>.
 - **Public repository/report disclosure:** confirmed. Disclose the public
   repository at
   <https://github.com/imjbassi/local-deployment-of-transformer-based-code-assistants>

@@ -70,7 +70,7 @@ Acceptance remains a reviewer judgment about novelty and significance.
   through the venue system. Nothing has been submitted.
 - **Archival release:** the matching history-free v1.9.0 archive is built with
   `scripts/build_publication_release.py` and assigned version DOI
-  `10.5281/zenodo.22922348`. The earlier DOI does not contain this revision.
+  `10.5281/zenodo.22926448`. The earlier DOI does not contain this revision.
 - **Scientific scope:** five historical base models, one GPU/software stack,
   one benchmark, and post-hoc diagnostics limit generality. New benchmarks,
   more seeds, or a token/logit study could strengthen a broader paper, but are

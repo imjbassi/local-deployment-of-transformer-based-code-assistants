@@ -20,7 +20,7 @@ identifiers:
     value: 10.5281/zenodo.22800650
     description: Zenodo concept DOI resolving to the latest release
   - type: doi
-    value: 10.5281/zenodo.22922348
+    value: 10.5281/zenodo.22926448
     description: Zenodo archive of release v1.9.0
   - type: doi
     value: 10.5281/zenodo.22848609

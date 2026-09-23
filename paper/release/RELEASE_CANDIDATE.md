@@ -14,7 +14,7 @@ every packaged repository file. It intentionally excludes Git history,
 ignored caches, build directories, credentials, and other untracked files.
 
 The final ZIP is archived under the reserved version DOI
-`10.5281/zenodo.22922348`; the concept DOI remains
+`10.5281/zenodo.22926448`; the concept DOI remains
 `10.5281/zenodo.22800650`. DOI `10.5281/zenodo.22848609` identifies the earlier
 v1.3.0 archive and does not contain manuscript v1.9.
 
