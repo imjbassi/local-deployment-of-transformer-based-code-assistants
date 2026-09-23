@@ -31,9 +31,12 @@ A paper or archival release requires all of the following:
 6. **Open, review packet prepared:** obtain a second-person review of
    protocol-to-artifact mapping and the manuscript using
    `paper/INDEPENDENT_REVIEW_PACKET.md`.
-7. **Earlier release archived; current revision still to archive:** the concept DOI
+7. **Release candidate prepared; current revision still to archive:** the concept DOI
    [10.5281/zenodo.22800650](https://doi.org/10.5281/zenodo.22800650) resolves to the latest
    version; v1.3.0 is [10.5281/zenodo.22848609](https://doi.org/10.5281/zenodo.22848609).
+   `scripts/build_publication_release.py` produces a deterministic, matching
+   manuscript-v1.9 candidate, but it is not archival until it is deposited and
+   its final version DOI and tag are recorded.
 
 ## Additional control status
 
@@ -91,7 +94,9 @@ formatting, anonymity, artifact, and deadline requirements are recorded under
 `paper/venues/forge-2027/`. The submission draft is built (three main-text
 pages and one references page), and the expanded anonymous supplement has been
 tested from a fresh extraction. See `paper/PUBLICATION_CRITIQUE.md` for the
-2026-09-22 audit and remaining author/external decisions.
+2026-09-22 audit, `paper/venues/forge-2027/SUBMISSION_METADATA.md` for the
+human-owned declarations, and `paper/release/RELEASE_CANDIDATE.md` for the
+archival handoff.
 
 Until the independent review and final author checks pass, the defensible claim is limited to the completed
 primary condition and its stated interpretation boundary; do not describe the

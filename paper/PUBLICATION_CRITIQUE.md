@@ -40,6 +40,11 @@ Acceptance remains a reviewer judgment about novelty and significance.
 6. **Readiness and provenance overstatement.** Corrected stale status text,
    removed an unsupported claim of completed human verification from the AI
    disclosure, and distinguished the old v1.3.0 DOI from the current manuscript.
+7. **Release/submission ambiguity.** Added a deterministic public-release
+   candidate builder, a release-boundary checklist, and a venue metadata
+   worksheet. The public candidate and anonymous review supplement are now
+   explicitly separate packages, and `CITATION.cff` remains at v1.3.0 until a
+   new archive actually exists.
 
 ## Verification
 
@@ -60,10 +65,13 @@ Acceptance remains a reviewer judgment about novelty and significance.
   this audit. This is the project's chosen quality gate, not a stated FORGE
   requirement. This assistant's checks do not satisfy it.
 - **Author submission checks:** approve the final text, AI disclosure,
-  temporary anonymous attribution, conflicts and other submission declarations.
-  Submit the paper and ZIP through the venue system. Nothing has been submitted.
-- **Archival release:** archive the final accepted/reviewed revision with its
-  matching artifacts; do not cite the earlier DOI as containing this revision.
+  temporary anonymous attribution, conflicts and other submission declarations
+  listed in `venues/forge-2027/SUBMISSION_METADATA.md`. Submit the paper and ZIP
+  through the venue system. Nothing has been submitted.
+- **Archival release:** the matching history-free release candidate can now be
+  built with `scripts/build_publication_release.py`. Publish it only after the
+  independent review and final author approval, then update citation metadata;
+  do not cite the earlier DOI as containing this revision.
 - **Scientific scope:** five historical base models, one GPU/software stack,
   one benchmark, and post-hoc diagnostics limit generality. New benchmarks,
   more seeds, or a token/logit study could strengthen a broader paper, but are

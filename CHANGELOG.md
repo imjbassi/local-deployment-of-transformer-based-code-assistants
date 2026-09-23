@@ -6,6 +6,25 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Publication-readiness evidence audit, FORGE 2027 anonymous manuscript and
+  tested anonymous supplement, exact paired sensitivity analysis, submission
+  metadata worksheet, and a deterministic public-release archive builder.
+- Complete hardened results and analysis for the fourth cell of the
+  StarCoder2 newline-by-stop factorial.
+
+### Changed
+
+- The technical report is now manuscript version 1.9. It distinguishes the
+  archived v1.3.0 software/artifact release from the current manuscript and
+  narrows mechanism, anonymity, verification, and readiness claims to the
+  evidence actually retained.
+- Correction to the v1.3.0 note below: changing generation batch size can also
+  change floating-point execution and RNG consumption. The retained sampling
+  runs support their reported conditions but do not establish batch-size
+  invariance.
+
 ## [1.3.0] - 2026-09-19
 
 ### Added

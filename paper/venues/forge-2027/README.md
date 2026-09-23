@@ -47,6 +47,8 @@ Official instructions:
 - [x] Build and checksum a history-free anonymous artifact archive.
 - [x] Build a wheel and run implementation tests from a fresh archive extraction.
 - [x] Recompute both rank analyses from the extracted task outcomes.
+- [x] Prepare the paper metadata, disclosures, artifact statement, and explicit
+  author-decision checklist in `SUBMISSION_METADATA.md`.
 - [ ] Obtain the independent review in `paper/INDEPENDENT_REVIEW_PACKET.md`.
 - [ ] Recheck the official instructions immediately before submission.
 - [ ] Author confirms final content, attribution/licensing, conflicts, and
@@ -75,3 +77,7 @@ Build the artifact archive from the repository root with:
 ```powershell
 .\paper\venues\forge-2027\build_anonymous_artifact.ps1
 ```
+
+The separate identified public-release candidate is documented in
+`../../release/RELEASE_CANDIDATE.md`; it is not a substitute for the anonymous
+review supplement.
