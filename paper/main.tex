@@ -60,7 +60,7 @@
 \author{Jaiveer Bassi\\
 \small Independent Researcher, USA\\
 \small \href{mailto:jaiveerbassi@yahoo.com}{jaiveerbassi@yahoo.com}}
-\date{\small Technical report -- primary experiment, diagnostic ablations, and sampling condition\\Version 1.8, September 20, 2026}
+\date{\small Technical report -- primary experiment, diagnostic ablations, and sampling condition\\Version 1.9, September 22, 2026}
 
 \begin{document}
 \maketitle
@@ -285,6 +285,13 @@ StarCoder2-3B rose from 2--3 passes to 49/164 (29.9\%) on HumanEval and 42/164 (
 
 \subsection{Newline-by-stop generation factorial}
 
+The definition classifier is lexical: it matches an unindented \code{def} at
+the start of a line and compares the following name with the task entry point.
+It does not parse an AST and can match lines inside multiline strings. Thus
+the reported counts describe definition-like text, not verified executable
+definitions. The baseline is the optimized primary run; the unmodified-provider
+control is a separate condition.
+
 We subsequently completed the missing fourth generation cell by omitting both the trailing prompt newline and the exact \code{\textbackslash ndef } stop, with the same checkpoint, revision, precision, greedy decoder, sanitizer, and 512-token cap. Table~\ref{tab:factorial} classifies all retained raw suffixes as text; generated Python was not imported or executed. Counts under the standard stop are necessarily post-truncation: a matching top-level \code{def} is removed before serialization.
 
 \begin{table}[t]
@@ -332,7 +339,7 @@ Table~\ref{tab:sampling} shows that sampled pass@1 is numerically within about t
 
 Seeds 23 and 37 were not run. The plan triggers them only on a rank reversal or an adjacent pair below five \pp{}; the seed-11 ordering is preserved and the closest adjacent pair differs by 5.37~\pp{}. That margin is narrow, so the untriggered condition should not be read as a wide separation.
 
-DeepSeek-Coder-1.3B generated at batch size 2 rather than 20 because its multi-head key/value cache for 20 concurrent sequences exhausts the 12\,GB GPU, after which the driver spills into host memory. Batch size affects throughput only; sample count, temperature, top-p, prompt, stop texts, and token cap are identical across conditions.
+DeepSeek-Coder-1.3B generated at batch size 2 rather than 20 because its multi-head key/value cache for 20 concurrent sequences exhausts the 12\,GB GPU, after which the driver spills into host memory. Sample count, temperature, top-p, prompt, stop texts, and token cap are identical across conditions. Batch size can affect numerical behavior and random-number consumption; we did not establish sample identity across batch sizes, so this is an additional limitation of cross-model sampling comparisons.
 
 \subsection{Additional single-checkpoint sensitivity}
 
@@ -368,6 +375,15 @@ Table~\ref{tab:qwen-ablations} shows that both intervals exclude zero. HumanEval
 
 \textbf{Benchmark scope.} HumanEval contains 164 Python tasks. HumanEval+ adds tests but not independent tasks, so it does not increase the task-level sample size. We did not audit benchmark contamination, language generality, security, maintainability, or real repository-level coding ability.
 
+\textbf{Multiplicity sensitivity.} A post-hoc check of the primary reversed
+pair finds 37 tasks passed only by Qwen-0.5B and one only by StarCoder2.
+The two-sided exact McNemar probability is $2.84\times10^{-10}$, or
+$1.14\times10^{-9}$ after Bonferroni adjustment for the four adjacent pairs.
+This additional analysis leaves the prespecified decision intact. It assumes
+a paired-task inference model and does not establish representative sampling
+of real programming tasks. Counts and calculations are reproducible with
+\code{scripts/audit\_paper\_evidence.py}.
+
 \textbf{Diagnostic scope.} The StarCoder2 probe and ablations were selected after observing the primary outcome and are explanatory rather than confirmatory. The prompt-newline condition closes all but three tasks of the StarCoder2 gap, but the code that produced the published values is not public, so we cannot show that it used the same prompt boundary; the small residual may reflect other library or tokenizer differences. The retained generations and hardened scores complete the 2$\times$2 newline-by-stop design across all 164 tasks. No pre-truncation logits were retained, so the factorial establishes a local behavioral interaction without identifying the historical source configuration or fully resolving the tokenizer-level mechanism.
 
 \textbf{Secondary-condition scope.} The chat-prompt and 8-bit sensitivity conditions cover only Qwen2.5-Coder-1.5B at one seed. They demonstrate effects for that checkpoint and stack, not general prompt-mode or quantization effects.
@@ -397,6 +413,12 @@ The public repository~\citep{bassi2026repository} contains:
 The artifact directory contains model-generated Python and should be treated as untrusted data. Re-evaluation should use the documented disposable container rather than executing samples on a host system. Software and artifact release v1.3.0 is archived under DOI \href{https://doi.org/10.5281/zenodo.22848609}{10.5281/zenodo.22848609}; the concept DOI \href{https://doi.org/10.5281/zenodo.22800650}{10.5281/zenodo.22800650} resolves to the latest release. Version 1.8 adds the post-hoc fourth generation cell, text analysis, and its hardened 50/164 HumanEval and 43/164 HumanEval+ scores.
 
 \section{Conclusion}
+
+\noindent\textbf{Release boundary.} The cited v1.3.0 DOI identifies an earlier
+software/artifact release; it must not be read as archiving every addition in
+this manuscript revision. The current repository and review supplement contain
+the completed factorial and subsequent review fixes. A matching archival
+release should accompany the final publication.
 
 The published five-model HumanEval ordering did not transfer to our specified local pipeline. A single resolved reversal reduced Kendall's tau-b to 0.8 (task-resampling interval: 0.6 to 0.8) and met the prespecified failure-to-transfer rule. The result was driven by StarCoder2-3B, and its 1.2\% unmodified-EvalPlus control shows that the optimized wrapper is not sufficient to explain the low score. In a post-hoc counterfactual, removing the trailing newline EvalPlus~0.3.1 appends to base-model prompts raised StarCoder2-3B to 29.9\%, three tasks below its published value, and recovered the displayed order.
 

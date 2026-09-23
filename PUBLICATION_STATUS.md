@@ -31,7 +31,7 @@ A paper or archival release requires all of the following:
 6. **Open, review packet prepared:** obtain a second-person review of
    protocol-to-artifact mapping and the manuscript using
    `paper/INDEPENDENT_REVIEW_PACKET.md`.
-7. **Complete:** releases are archived on Zenodo. The concept DOI
+7. **Earlier release archived; current revision still to archive:** the concept DOI
    [10.5281/zenodo.22800650](https://doi.org/10.5281/zenodo.22800650) resolves to the latest
    version; v1.3.0 is [10.5281/zenodo.22848609](https://doi.org/10.5281/zenodo.22848609).
 
@@ -88,8 +88,11 @@ sensitivity checks and do not alter the primary decision.
 
 FORGE 2027's Data and Benchmarking Track is the selected submission target;
 formatting, anonymity, artifact, and deadline requirements are recorded under
-`paper/venues/forge-2027/`. The four-page anonymous submission is not yet built.
+`paper/venues/forge-2027/`. The submission draft is built (three main-text
+pages and one references page), and the expanded anonymous supplement has been
+tested from a fresh extraction. See `paper/PUBLICATION_CRITIQUE.md` for the
+2026-09-22 audit and remaining author/external decisions.
 
-Until the independent review and venue-formatting gates pass, the defensible claim is limited to the completed
+Until the independent review and final author checks pass, the defensible claim is limited to the completed
 primary condition and its stated interpretation boundary; do not describe the
 repository as a finished or peer-reviewed paper.

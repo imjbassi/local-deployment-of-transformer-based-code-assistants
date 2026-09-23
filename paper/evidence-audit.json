@@ -1,0 +1,75 @@
+{
+  "counts_he_heplus": {
+    "qwen2.5-coder-0.5b": [
+      39,
+      33
+    ],
+    "starcoder2-3b": [
+      3,
+      3
+    ],
+    "deepseek-coder-1.3b": [
+      56,
+      47
+    ],
+    "qwen2.5-coder-1.5b": [
+      64,
+      56
+    ],
+    "qwen2.5-coder-3b": [
+      86,
+      70
+    ],
+    "stock": [
+      2,
+      2
+    ],
+    "newline_no_stop": [
+      17,
+      15
+    ],
+    "no_newline_stop": [
+      49,
+      42
+    ],
+    "no_newline_no_stop": [
+      50,
+      43
+    ]
+  },
+  "post_hoc_multiplicity_sensitivity": [
+    {
+      "higher": "starcoder2-3b",
+      "lower": "qwen2.5-coder-0.5b",
+      "higher_only_pass": 1,
+      "lower_only_pass": 37,
+      "exact_two_sided_mcnemar_p": 2.837623469531536e-10,
+      "bonferroni_four_pairs_p": 1.1350493878126144e-09
+    },
+    {
+      "higher": "deepseek-coder-1.3b",
+      "lower": "starcoder2-3b",
+      "higher_only_pass": 53,
+      "lower_only_pass": 0,
+      "exact_two_sided_mcnemar_p": 2.220446049250313e-16,
+      "bonferroni_four_pairs_p": 8.881784197001252e-16
+    },
+    {
+      "higher": "qwen2.5-coder-1.5b",
+      "lower": "deepseek-coder-1.3b",
+      "higher_only_pass": 23,
+      "lower_only_pass": 15,
+      "exact_two_sided_mcnemar_p": 0.2558750795433298,
+      "bonferroni_four_pairs_p": 1.0
+    },
+    {
+      "higher": "qwen2.5-coder-3b",
+      "lower": "qwen2.5-coder-1.5b",
+      "higher_only_pass": 34,
+      "lower_only_pass": 12,
+      "exact_two_sided_mcnemar_p": 0.0016414913408482334,
+      "bonferroni_four_pairs_p": 0.006565965363392934
+    }
+  ],
+  "interpretation": "Additional paired-task sensitivity; original decision unchanged."
+}

@@ -64,6 +64,9 @@ order was identical ($\tau_b=1$) and no adjacent pair reversed. We declared
 failure if a pair reversed and its paired 95\% interval excluded zero in the
 reversed direction; other outcomes were inconclusive. The question, endpoint,
 and rule were committed before aggregate correctness was inspected.
+The supplement retains the specification text. This repository record is not
+an independent preregistration. The four adjacent intervals are unadjusted;
+they are task-composition summaries, not simultaneous confidence statements.
 
 \subsection{Frozen pipeline and safety}
 We resolved the five public identifiers to immutable model revisions. All used
@@ -89,7 +92,7 @@ decision was \emph{failed to transfer}. HumanEval+ preserved the same local
 order. Exact percentage equality was never the endpoint.
 
 \begin{table}[t]
-\caption{Published and local greedy pass@1. HE+: HumanEval+.}
+\caption{Published pass@1 (\%) and local passes out of 164. HE+: HumanEval+.}
 \label{tab:primary}
 \centering
 \footnotesize
@@ -111,11 +114,19 @@ A full StarCoder2 run through the unmodified EvalPlus generation path scored
 2/164 on both suites. The optimized wrapper therefore does not explain the low
 score or reversal.
 
+As an additional, post-hoc multiplicity sensitivity check, the reversed pair
+has 37 tasks passed only by Qwen-0.5B and one passed only by StarCoder2.
+A two-sided exact McNemar test gives $p=2.84\times10^{-10}$; Bonferroni
+adjustment across all four prespecified adjacent pairs gives
+$p=1.14\times10^{-9}$. This supports the robustness of the reversal under a
+paired-task inference model; it does not replace the original decision rule
+or imply a random sample of deployed programming tasks.
+
 \section{Mechanism Audit}
 The retained StarCoder2 suffix for HumanEval/0 began by repeating the complete
 function signature and docstring. EvalPlus registers the exact text
 \verb|\ndef | as a generation stop for direct HumanEval completion, truncating
-at that boundary and leaving an empty candidate body. Across 164 stock tasks,
+at that boundary and leaving an empty candidate body. Across 164 primary tasks,
 142 retained suffixes were empty.
 
 EvalPlus 0.3.1 constructs base prompts as
@@ -131,7 +142,7 @@ primary decision or identify the unpublished historical source configuration.
 We then completed the $2\times2$ newline-by-\verb|\ndef | stop factorial
 (Table~\ref{tab:factorial}). Removing the newline eliminated empty suffixes.
 Removing the stop exposed multi-definition continuation text in both prompt
-conditions: without either intervention, 143 suffixes contained a top-level
+conditions: with both the trailing newline and the exact stop removed, 143 suffixes contained a top-level
 definition and 38 repeated the task entry point. Sanitization made the
 functional effect far smaller. Of 164 no-newline/no-stop candidates, 151 were
 byte-identical to the evaluated no-newline/standard-stop candidates; all 13
@@ -142,7 +153,7 @@ stop mostly controls otherwise truncated continuation text.
 
 \begin{table}[t]
 \caption{StarCoder2 $2\times2$ factorial over 164 tasks. ``Def'' and ``repeat''
-classify raw suffix text; HE is hardened pass@1.}
+classify raw suffix text; HE is the number passing HumanEval.}
 \label{tab:factorial}
 \centering
 \small
@@ -157,6 +168,70 @@ No newline, no stop & 0 & 143 & 38 & 50 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+These definition counts are lexical: the classifier matches an unindented
+\texttt{def} at the start of a line, and ``repeat'' matches the task entry-point
+name. It is not an AST or execution-based classification and can match text
+inside multiline strings. Zeros under the standard stop are post-truncation
+observations, not evidence that the decoder never attempted another definition.
+The newline/stop cell uses the optimized primary run (3 passes); the separate
+unmodified-provider control has 2 passes and is not substituted into that cell.
+
+\begin{table}[t]
+\caption{All-model prompt-boundary check: primary versus no-newline passes.
+Each denominator is 164; the condition is post hoc.}
+\label{tab:newline}
+\centering\small
+\begin{tabular}{lrr}
+\toprule
+Model & HE (primary $\to$ altered) & HE+ \\
+\midrule
+Qwen-0.5B & $39\to37$ & $33\to31$ \\
+StarCoder2-3B & $3\to49$ & $3\to42$ \\
+DeepSeek-1.3B & $56\to54$ & $47\to46$ \\
+Qwen-1.5B & $64\to67$ & $56\to56$ \\
+Qwen-3B & $86\to85$ & $70\to71$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:newline} reports all five counterfactual counts rather than only
+the outlier. Net changes can mask offsetting transitions: for example,
+Qwen-1.5B gains ten HumanEval tasks and loses seven. For StarCoder2, the
+HumanEval+ change comprises 40 gains and one loss.
+
+\subsection{Sampling sensitivity}
+The retained secondary experiment draws 20 samples per task at temperature
+0.2, top-p 0.95, seed 11, and the same 512-token cap. HumanEval sampled pass@1
+is 37.6\% for Qwen-1.5B, 32.2\% for DeepSeek-1.3B, and 2.3\% for StarCoder2
+under the stock prompt. A post-hoc StarCoder2 no-newline condition reaches
+29.8\%; corresponding pass@5 values are 50.8\%, 41.3\%, 5.6\%, and 40.4\%.
+The prompt effect therefore appears under both measured decoding regimes.
+These are single-seed results, not estimates of variation across seeds.
+The protocol's extra-seed trigger was not met: the closest adjacent sampled
+pair differed by 5.37 points, above the five-point threshold, with no reversal
+of the primary local order among those three models.
+
+\section{Positioning and Reuse}
+EvalPlus demonstrates that test adequacy changes functional-correctness
+measurements~\cite{liu2023evalplus}; broader benchmarks target library use and
+contamination-aware evaluation~\cite{zhuo2024bigcodebench,jain2024livecodebench}.
+Our audit holds task tests fixed and varies the boundary between prompts and
+executable candidates. The contribution is the measured size and ranking
+consequence of this interaction, with a complete task-level counterfactual,
+rather than a claim that prompt sensitivity itself is new.
+Distinguishing repeated execution from reproducible conclusions follows
+Bouthillier et al.~\cite{bouthillier2019reproducible}.
+The upstream provider is itself versioned software~\cite{evalplus2026setup};
+its historical prompt changes make the pipeline, including literal prompt
+bytes, an essential unit of comparison.
+
+The artifact supports three levels of reuse: recounting recorded evaluator
+outcomes without executing generated code; regenerating rank analysis from
+paired task outcomes; and regenerating/evaluating candidates using pinned
+model revisions and the container launcher. The first two need no GPU.
+The Dockerfile alone is insufficient isolation: the launcher applies the
+network, mount, capability, memory, and process restrictions at runtime.
 
 \balance
 \section{Implications and Threats}
@@ -188,9 +263,10 @@ pipeline. A one-byte prompt-boundary change raised StarCoder2 from 3/164 to
 more pass. Portable benchmark rankings therefore require portable evaluation
 pipelines, not model names and aggregate percentages alone.
 
-\paragraph*{AI-use disclosure.} A generative AI assistant was used to draft and
-edit text and code; the author verified all claims, citations, computations,
-and artifacts.
+\paragraph*{AI-use disclosure.} A generative AI assistant assisted with drafting,
+editing, code, and artifact checks. Automated checks reconcile the reported
+counts with retained evaluator outputs. The author remains responsible for
+the content, citations, and final submission.
 
 \newpage
 \bibliographystyle{IEEEtran}

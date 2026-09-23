@@ -1,7 +1,11 @@
 # Manuscript review
 
-Review date: 2026-09-19
-Scope: internal evidence, LaTeX, citation, and rendering review of version 1.8
+Review date: 2026-09-22
+Scope: internal evidence, LaTeX, citation, and rendering review of version 1.9
+
+The previous review overstated submission readiness: it did not test the
+extracted supplement, which omitted controls and the required license file.
+Those defects are corrected. See `PUBLICATION_CRITIQUE.md` for the audit.
 
 ## Verdict
 
@@ -21,7 +25,8 @@ Tectonic.
 - Tectonic 0.17.0 completed the LaTeX and BibTeX passes successfully.
 - The final log contains no overfull boxes, unresolved citations, unresolved
   references, or LaTeX errors.
-- All eight PDF pages were rendered with Poppler and inspected at 130 DPI.
+- All eight report pages and four submission-draft pages were rendered with
+  Poppler and inspected after the revision.
 - Both full-width tables, the vector result figure, headers, footers, hyperlinks,
   column transitions, and the balanced bibliography render without clipping or
   overlap.
@@ -93,8 +98,9 @@ in Table 2.
 1. Obtain a second-person protocol-to-artifact and manuscript review.
 2. Retain pre-truncation logits if the tokenizer-and-stop mechanism is to be
    promoted beyond an explanatory local counterfactual.
-3. Select a venue and adapt length, anonymization, formatting, and disclosure
-   statements to its current author instructions.
+3. Author verifies final declarations and the anonymous attribution before
+   submitting the completed FORGE draft and supplement. The current report
+   revision still needs a matching archival release before final publication.
 
 These items limit a venue-submission claim, but they do not invalidate the
 checked-in primary result or this explicitly scoped technical report.

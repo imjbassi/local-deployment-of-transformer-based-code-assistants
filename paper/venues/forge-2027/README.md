@@ -11,7 +11,7 @@ direct fit than a general empirical software-engineering venue.
 Official instructions:
 <https://conf.researchr.org/track/forge-2027/forge-2027-data-and-benchmarking-track>
 
-## Submission constraints (checked 2026-09-20)
+## Submission constraints (checked 2026-09-22)
 
 - Deadline: 15 November 2026, Anywhere on Earth.
 - Format: `IEEEtran`, `10pt,conference`, without `compsoc` or `compsocconf`.
@@ -35,19 +35,27 @@ Official instructions:
 - Supply a history-free anonymous artifact archive. Exclude `.git`, absolute
   paths, user names, credentials, and model-generated code that is not needed for
   the claims retained in the four-page paper.
-- Include this neutral disclosure without identifying the author: “A generative
-  AI assistant was used to draft and edit text and code; the author verified all
-  claims, citations, computations, and artifacts.”
+- Disclose AI assistance and the scope of automated verification without
+  asserting that an independent person has reviewed or signed off the work.
 
 ## Release checklist
 
 - [x] Condense the manuscript within the four-main-page plus one-reference-page
-  maximum (the current draft uses two main pages and one reference page).
+  maximum (the current draft uses three main pages and one reference page).
 - [x] Build with the exact IEEE conference class and inspect every rendered page.
 - [x] Run an anonymity search over PDF text, metadata, sources, and supplement.
 - [x] Build and checksum a history-free anonymous artifact archive.
+- [x] Build a wheel and run implementation tests from a fresh archive extraction.
+- [x] Recompute both rank analyses from the extracted task outcomes.
 - [ ] Obtain the independent review in `paper/INDEPENDENT_REVIEW_PACKET.md`.
 - [ ] Recheck the official instructions immediately before submission.
+- [ ] Author confirms final content, attribution/licensing, conflicts, and
+  submission declarations; upload through the submission system.
+
+Direct-identifier removal is not a guarantee against matching the manuscript
+to the existing public report or GitHub repository. The draft itself has been
+publicly shared. Do not use the author-owned repository URL as an anonymous
+artifact URL.
 
 This directory records a selected venue and a concrete formatting/anonymization
 specification. The canonical eight-page technical report remains the complete
