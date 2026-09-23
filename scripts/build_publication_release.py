@@ -9,7 +9,6 @@ import subprocess
 import zipfile
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT = ROOT / "dist" / "local-code-benchmark-publication-v1.9-rc1.zip"
 ARCHIVE_ROOT = "local-code-benchmark-publication-v1.9-rc1"
