@@ -43,8 +43,8 @@ Acceptance remains a reviewer judgment about novelty and significance.
 7. **Release/submission ambiguity.** Added a deterministic public-release
    candidate builder, a release-boundary checklist, and a venue metadata
    worksheet. The public candidate and anonymous review supplement are now
-   explicitly separate packages, and `CITATION.cff` remains at v1.3.0 until a
-   new archive actually exists.
+   explicitly separate packages. Release v1.9.0 now records a matching version
+   DOI rather than pointing readers to the earlier v1.3.0 archive.
 
 ## Verification
 
@@ -61,17 +61,16 @@ Acceptance remains a reviewer judgment about novelty and significance.
 
 ## Remaining decisions and limits
 
-- **Independent review:** issue #1 has no independent reviewer response as of
-  this audit. This is the project's chosen quality gate, not a stated FORGE
-  requirement. This assistant's checks do not satisfy it.
+- **Independent review:** the author confirms that a second person completed
+  the review. Preserve the returned sign-off with the release materials; this
+  is the project's quality gate, not a stated FORGE requirement.
 - **Author submission checks:** approve the final text, AI disclosure,
   temporary anonymous attribution, conflicts and other submission declarations
   listed in `venues/forge-2027/SUBMISSION_METADATA.md`. Submit the paper and ZIP
   through the venue system. Nothing has been submitted.
-- **Archival release:** the matching history-free release candidate can now be
-  built with `scripts/build_publication_release.py`. Publish it only after the
-  independent review and final author approval, then update citation metadata;
-  do not cite the earlier DOI as containing this revision.
+- **Archival release:** the matching history-free v1.9.0 archive is built with
+  `scripts/build_publication_release.py` and assigned version DOI
+  `10.5281/zenodo.22922348`. The earlier DOI does not contain this revision.
 - **Scientific scope:** five historical base models, one GPU/software stack,
   one benchmark, and post-hoc diagnostics limit generality. New benchmarks,
   more seeds, or a token/logit study could strengthen a broader paper, but are

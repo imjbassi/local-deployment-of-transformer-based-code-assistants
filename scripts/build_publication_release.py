@@ -1,4 +1,4 @@
-"""Build a deterministic public release candidate from Git-tracked files."""
+"""Build the deterministic v1.9.0 public release from Git-tracked files."""
 
 from __future__ import annotations
 
@@ -10,8 +10,8 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_OUTPUT = ROOT / "dist" / "local-code-benchmark-publication-v1.9-rc1.zip"
-ARCHIVE_ROOT = "local-code-benchmark-publication-v1.9-rc1"
+DEFAULT_OUTPUT = ROOT / "dist" / "local-code-benchmark-publication-v1.9.0.zip"
+ARCHIVE_ROOT = "local-code-benchmark-publication-v1.9.0"
 ZIP_TIME = (2026, 9, 23, 0, 0, 0)
 
 
@@ -58,7 +58,9 @@ def build(output: Path, allow_dirty: bool) -> None:
         "archive_format": 1,
         "archive_root": ARCHIVE_ROOT,
         "manuscript_version": "1.9",
-        "release_candidate": "v1.9-rc1",
+        "release_version": "v1.9.0",
+        "version_doi": "10.5281/zenodo.22922348",
+        "concept_doi": "10.5281/zenodo.22800650",
         "source_commit": git("rev-parse", "HEAD"),
         "source_dirty": bool(status),
         "tracked_file_count": len(files),

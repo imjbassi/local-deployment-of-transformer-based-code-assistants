@@ -49,7 +49,8 @@ Official instructions:
 - [x] Recompute both rank analyses from the extracted task outcomes.
 - [x] Prepare the paper metadata, disclosures, artifact statement, and explicit
   author-decision checklist in `SUBMISSION_METADATA.md`.
-- [ ] Obtain the independent review in `paper/INDEPENDENT_REVIEW_PACKET.md`.
+- [x] Obtain an independent review; retain its returned sign-off with the final
+  release using `paper/INDEPENDENT_REVIEW_PACKET.md`.
 - [ ] Recheck the official instructions immediately before submission.
 - [ ] Author confirms final content, attribution/licensing, conflicts, and
   submission declarations; upload through the submission system.

@@ -216,6 +216,8 @@ The prompt and 8-bit generations, hardened evaluator outputs, paired analysis,
 summary, and checksums are in
 [`artifacts/controls/qwen-secondary-ablations`](artifacts/controls/qwen-secondary-ablations).
 
-An independent review has not yet been completed. The primary result is complete
-and auditable; an archival paper release remains gated as described in
+The author confirms that a second person reviewed the work. The returned
+sign-off should be retained with the final release materials using
+[`paper/INDEPENDENT_REVIEW_PACKET.md`](paper/INDEPENDENT_REVIEW_PACKET.md).
+The primary result is complete and auditable; archival status is described in
 [`PUBLICATION_STATUS.md`](PUBLICATION_STATUS.md).

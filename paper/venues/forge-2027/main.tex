@@ -13,21 +13,20 @@
 \maketitle
 
 \begin{abstract}
-Published benchmark tables are often reused as though model rankings were
-properties of checkpoints alone. We test whether the HumanEval order of five
-open base-model identifiers in the Qwen2.5-Coder report transfers to one fully
-disclosed local pipeline. Each frozen checkpoint produced one greedy completion
-for all 164 tasks in BF16 on a consumer GPU; EvalPlus 0.3.1 scored HumanEval and
-HumanEval+ in a network-isolated container. The published order failed to
-transfer: StarCoder2-3B scored 3/164 rather than the displayed 31.7\%, reversing
-its order with Qwen2.5-Coder-0.5B. Kendall's $\tau_b$ was 0.8 and the paired
-StarCoder2-minus-Qwen difference was $-21.95$ percentage points (task-resampling
-interval $[-28.66,-15.85]$). A stock EvalPlus control scored 2/164. In a post-hoc
-counterfactual, deleting only the trailing newline appended to stripped
-base-model prompts raised StarCoder2 to 49/164 and restored the five-model
-order. A completed $2\times2$ newline-by-stop factorial scored its fourth cell
-at 50/164. The result shows that an apparently innocuous prompt byte can change
-a base-model score by about 28 points and reverse a portable-looking rank.
+A trailing newline appended to stripped HumanEval prompts changed
+StarCoder2-3B from 3/164 to 49/164 passes in our pinned EvalPlus 0.3.1 pipeline
+and reversed a five-model ranking. We found this one-byte effect in a post-hoc
+mechanism audit following a prespecified rank-transfer study; it establishes
+sufficiency in this pipeline, not the unpublished historical configuration.
+Each frozen checkpoint produced one greedy completion for all 164 tasks in BF16
+on a consumer GPU, and a network-isolated container scored HumanEval and
+HumanEval+. Under the stock boundary, StarCoder2 scored 3/164 rather than the
+displayed 31.7\%, reversing order with Qwen2.5-Coder-0.5B. Kendall's $\tau_b$
+was 0.8 and the paired difference was $-21.95$ percentage points
+($[-28.66,-15.85]$). Removing only the newline restored the displayed order;
+the other four models moved by at most three tasks. A completed $2\times2$
+newline-by-stop factorial scored its fourth cell at 50/164, showing that exact
+prompt boundaries are part of a reproducible benchmark specification.
 \end{abstract}
 
 \section{Introduction}

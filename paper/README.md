@@ -3,11 +3,12 @@
 The checked-in PDF reports the completed five-model primary experiment, stock
 control, post-hoc StarCoder2 diagnostics, five-model prompt-newline condition,
 and completed sampling, prompt, and quantization sensitivity conditions. It is
-a technical report, not a peer-reviewed publication. Manuscript version 1.9 is
-a document revision over archived software/artifact release v1.3.0. Version
-1.9 adds publication-review fixes, a multiplicity sensitivity analysis,
-clearer classifier and batching limitations, and a repaired review supplement.
-The completed fourth cell remains 50/164 HumanEval and 43/164 HumanEval+.
+a technical report, not a peer-reviewed publication. Manuscript version 1.9
+is archived with its matching software and evidence as release v1.9.0 under
+DOI `10.5281/zenodo.22922348`. It adds publication-review fixes, a multiplicity
+sensitivity analysis, clearer classifier and batching limitations, and a
+repaired review supplement. The completed fourth cell remains 50/164 HumanEval
+and 43/164 HumanEval+.
 
 ## Contents
 

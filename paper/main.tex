@@ -28,9 +28,9 @@
   linkcolor=paperblue,
   citecolor=paperblue,
   urlcolor=paperblue,
-  pdftitle={Do Published HumanEval Rankings Transfer Across Evaluation Pipelines?},
+  pdftitle={One Byte, One Rank Reversal: Auditing HumanEval Pipeline Sensitivity for Base Code Models},
   pdfauthor={Jaiveer Bassi},
-  pdfsubject={Five-model HumanEval rank-transfer study on a consumer GPU}
+  pdfsubject={Prompt-boundary sensitivity audit for HumanEval base-model evaluation}
 }
 
 \pagestyle{fancy}
@@ -55,19 +55,20 @@
 \newcommand{\code}[1]{\texttt{#1}}
 \newcommand{\pp}{percentage points}
 
-\title{\vspace{-1.5em}\textbf{Do Published HumanEval Rankings Transfer Across Evaluation Pipelines?}\\
-\large A Five-Model Rank-Transfer Study on a Consumer GPU}
+\title{\vspace{-1.5em}\textbf{One Byte, One Rank Reversal:}\\
+\textbf{Auditing HumanEval Pipeline Sensitivity for Base Code Models}\\
+\large A Five-Model Study on a Consumer GPU}
 \author{Jaiveer Bassi\\
 \small Independent Researcher, USA\\
 \small \href{mailto:jaiveerbassi@yahoo.com}{jaiveerbassi@yahoo.com}}
-\date{\small Technical report -- primary experiment, diagnostic ablations, and sampling condition\\Version 1.9, September 22, 2026}
+\date{\small Technical report -- primary experiment, diagnostic ablations, and sampling condition\\Version 1.9, September 23, 2026}
 
 \begin{document}
 \maketitle
 \thispagestyle{fancy}
 
 \begin{abstract}
-Published benchmark tables are often reused as if model rankings were properties of checkpoints alone, although scores also depend on prompts, decoding, stopping, software, and execution policy. We tested whether the HumanEval ordering of five open base-model identifiers in Table~5 of the Qwen2.5-Coder report transfers to one fully disclosed local pipeline. This is a rank-transfer study, not an exact rerun of the source evaluation, whose immutable inference stack and checkpoint revisions are unavailable. Each locally pinned checkpoint produced one greedy completion for all 164 tasks in BF16 on an NVIDIA RTX~4070; EvalPlus~0.3.1 scored HumanEval and HumanEval+ in a network-isolated container. StarCoder2-3B scored 1.8\% locally rather than the displayed 31.7\%, reversing its order with Qwen2.5-Coder-0.5B. Kendall's tau-b was 0.8 (task-resampling interval: 0.6 to 0.8), and the paired difference was -21.95~\pp{} [-28.66, -15.85], meeting our prespecified failure-to-transfer rule. An unmodified-EvalPlus control scored 1.2\% (2/164). In a post-hoc counterfactual, removing only the trailing newline that EvalPlus appends to stripped base-model prompts raised StarCoder2-3B to 29.9\% (49/164) on HumanEval and 25.6\% (42/164) on HumanEval+, while the other four models moved by at most three tasks. The published order was then recovered (tau-b = 1.0; interval: 0.8 to 1.0). Within this pinned pipeline, that byte was sufficient to explain most of the discrepancy and the observed reversal; the experiment does not establish the unpublished historical source configuration.
+A trailing newline appended to stripped HumanEval prompts changed StarCoder2-3B from 3/164 to 49/164 passes in our pinned EvalPlus~0.3.1 pipeline and reversed a five-model ranking. We found this one-byte effect in a post-hoc mechanism audit following a prespecified rank-transfer study; it establishes sufficiency in this pipeline but does not establish the unpublished historical source configuration. The primary study is not an exact rerun because the source's immutable inference stack and checkpoint revisions are unavailable. Each locally pinned checkpoint produced one greedy BF16 completion for all 164 tasks on an NVIDIA RTX~4070, and a network-isolated container scored HumanEval and HumanEval+. Under the stock prompt boundary, StarCoder2-3B scored 1.8\% rather than the displayed 31.7\% and reversed order with Qwen2.5-Coder-0.5B. Kendall's tau-b was 0.8 (task-resampling interval: 0.6 to 0.8), and the paired difference was -21.95~\pp{} [-28.66, -15.85], meeting our prespecified failure-to-transfer rule. An unmodified-EvalPlus control scored 1.2\% (2/164). Removing only the trailing newline raised StarCoder2-3B to 29.9\% (49/164) on HumanEval and 25.6\% (42/164) on HumanEval+, while the other four models moved by at most three tasks. The displayed order was then recovered (tau-b = 1.0; interval: 0.8 to 1.0). Benchmark scores for base code models therefore depend on exact prompt boundaries as well as checkpoints.
 \end{abstract}
 
 \noindent\textbf{Keywords:} code language models; HumanEval; EvalPlus; reproducibility; local inference; functional correctness
@@ -80,7 +81,7 @@ That interpretation can be fragile. Functional-correctness results depend on mor
 
 We use an external and inspectable target: the ordering of five base-model identifiers in Table~5 of the Qwen2.5-Coder technical report~\citep{hui2024qwen25coder}. The target contains Qwen2.5-Coder at 0.5B, 1.5B, and 3B parameters, DeepSeek-Coder-1.3B, and StarCoder2-3B. The model families are documented separately by their developers~\citep{hui2024qwen25coder,lozhkov2024starcoder2,guo2024deepseekcoder}. Our question is deliberately narrower than exact score replication: does the displayed HumanEval order transfer when locally pinned revisions are run through one disclosed stack on a consumer GPU?
 
-The contribution is a completed five-model primary experiment with a prespecified rank endpoint, paired task-resampling analysis, locally pinned checkpoint revisions, raw and sanitized completions, full evaluator outputs, and environment metadata. The principal finding is one resolved rank reversal, followed by a post-hoc counterfactual showing that one documented prompt-construction choice is sufficient to recover the source order in this pipeline. The repository contains the evidence needed to audit that finding at task level~\citep{bassi2026repository}.
+The reusable contribution is a task-level mechanism audit showing that one documented prompt-boundary byte can move one base model by about 28 percentage points while leaving four others nearly unchanged. This post-hoc finding follows a completed five-model primary experiment with a prespecified rank endpoint, paired task-resampling analysis, pinned checkpoint revisions, raw and sanitized completions, full evaluator outputs, and environment metadata. The repository contains the evidence needed to audit both the primary result and the counterfactual~\citep{bassi2026repository}.
 
 \section{Related Work}
 
@@ -224,7 +225,7 @@ The other adjacent local HumanEval differences, in published low-to-high order, 
 
 HumanEval+ preserved the same local order. Qwen2.5-Coder-3B matched the displayed published percentage to rounding on both benchmarks; DeepSeek-Coder-1.3B was 1.9 points higher locally on HumanEval+; and the remaining Qwen checkpoints were 2.5 to 4.9 points lower. StarCoder2-3B was the clear outlier, 29.9 points below the displayed HumanEval score and 25.6 points below the displayed HumanEval+ score.
 
-\section{Diagnostic Analysis}
+\section{Prompt-Boundary Mechanism Audit}
 \label{sec:diagnostic}
 
 The StarCoder2-3B result warranted a targeted diagnostic because its absolute difference was much larger than those of the other models. Using the same pinned weights, BF16 precision, and eager Transformers path, the checkpoint generated ordinary Python for the short prompt shown in its model card~\citep{bigcode2024starcoder2card}. We first checked for a decoding error. EvalPlus's Hugging Face provider decodes only tokens generated after the input; the retained raw JSONL begins with the HumanEval prompt because the code-generation layer deliberately serializes \code{prompt + implementation}. The apparent prompt echo in the artifact is therefore not evidence that the provider decoded the full input sequence.
@@ -410,15 +411,14 @@ The public repository~\citep{bassi2026repository} contains:
   \item the Qwen2.5-Coder-1.5B prompt and 8-bit ablations, with generations, hardened evaluator outputs, paired analysis, and checksums.
 \end{itemize}
 
-The artifact directory contains model-generated Python and should be treated as untrusted data. Re-evaluation should use the documented disposable container rather than executing samples on a host system. Software and artifact release v1.3.0 is archived under DOI \href{https://doi.org/10.5281/zenodo.22848609}{10.5281/zenodo.22848609}; the concept DOI \href{https://doi.org/10.5281/zenodo.22800650}{10.5281/zenodo.22800650} resolves to the latest release. This manuscript is version 1.9 and is not contained in that archived release. It adds the post-hoc fourth generation cell and its hardened 50/164 HumanEval and 43/164 HumanEval+ scores, robustness analyses, and the publication-readiness corrections documented with the source.
+The artifact directory contains model-generated Python and should be treated as untrusted data. Re-evaluation should use the documented disposable container rather than executing samples on a host system. The matching software, artifact, and manuscript release v1.9.0 is archived under DOI \href{https://doi.org/10.5281/zenodo.22922348}{10.5281/zenodo.22922348}; the concept DOI \href{https://doi.org/10.5281/zenodo.22800650}{10.5281/zenodo.22800650} resolves to the latest release. The earlier v1.3.0 archive remains available under DOI \href{https://doi.org/10.5281/zenodo.22848609}{10.5281/zenodo.22848609}.
+
+\noindent\textbf{Release boundary.} The v1.9.0 DOI archives this manuscript and
+its matching evidence, including the completed factorial and subsequent review
+fixes. The v1.3.0 DOI identifies the earlier software/artifact release and does
+not contain those later additions.
 
 \section{Conclusion}
-
-\noindent\textbf{Release boundary.} The cited v1.3.0 DOI identifies an earlier
-software/artifact release; it must not be read as archiving every addition in
-this manuscript revision. The current repository and review supplement contain
-the completed factorial and subsequent review fixes. A matching archival
-release should accompany the final publication.
 
 The published five-model HumanEval ordering did not transfer to our specified local pipeline. A single resolved reversal reduced Kendall's tau-b to 0.8 (task-resampling interval: 0.6 to 0.8) and met the prespecified failure-to-transfer rule. The result was driven by StarCoder2-3B, and its 1.2\% unmodified-EvalPlus control shows that the optimized wrapper is not sufficient to explain the low score. In a post-hoc counterfactual, removing the trailing newline EvalPlus~0.3.1 appends to base-model prompts raised StarCoder2-3B to 29.9\%, three tasks below its published value, and recovered the displayed order.
 

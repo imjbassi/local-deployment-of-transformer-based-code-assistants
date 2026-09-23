@@ -1,4 +1,4 @@
-# Do Published HumanEval Rankings Transfer Across Evaluation Pipelines?
+# One Byte, One Rank Reversal
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22800650.svg)](https://doi.org/10.5281/zenodo.22800650)
 
@@ -30,7 +30,8 @@ host.
 
 The evidence-backed technical report, its canonical LaTeX and BibTeX sources,
 Tectonic build scripts, and internal claim review are in [paper](paper). The rendered PDF is
-[Do Published HumanEval Rankings Transfer Across Evaluation Pipelines?](paper/output/pdf/Do_Published_HumanEval_Rankings_Survive_Local_Deployment.pdf).
+[One Byte, One Rank Reversal: Auditing HumanEval Pipeline Sensitivity for Base
+Code Models](paper/output/pdf/Do_Published_HumanEval_Rankings_Survive_Local_Deployment.pdf).
 
 ## Primary comparison
 
@@ -270,8 +271,10 @@ audit manuscript.
 ## License and citation
 
 Software and documentation are MIT licensed. Models, HumanEval, and EvalPlus
-retain their upstream licenses. Release v1.2.0 of the code, protocol, artifacts,
-and report are archived on Zenodo. The concept DOI
+retain their upstream licenses. Release v1.9.0 of the code, protocol, artifacts,
+and report is archived as
+[10.5281/zenodo.22922348](https://doi.org/10.5281/zenodo.22922348). The concept DOI
 [10.5281/zenodo.22800650](https://doi.org/10.5281/zenodo.22800650) always resolves to the latest
-release; v1.3.0 is [10.5281/zenodo.22848609](https://doi.org/10.5281/zenodo.22848609). Citation
+release; the earlier v1.3.0 archive remains at
+[10.5281/zenodo.22848609](https://doi.org/10.5281/zenodo.22848609). Citation
 metadata is in [CITATION.cff](CITATION.cff).

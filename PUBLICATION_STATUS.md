@@ -28,15 +28,15 @@ A paper or archival release requires all of the following:
    named checkpoints at seed 11, and the prompt and 8-bit ablations ran on
    Qwen2.5-Coder-1.5B. No further seeds were triggered: the ordering is
    preserved and the closest adjacent pair differs by 5.37 percentage points.
-6. **Open, review packet prepared:** obtain a second-person review of
-   protocol-to-artifact mapping and the manuscript using
-   `paper/INDEPENDENT_REVIEW_PACKET.md`.
-7. **Release candidate prepared; current revision still to archive:** the concept DOI
+6. **Completed by author confirmation; record to retain:** a second person has
+   reviewed the work. Preserve their returned sign-off using
+   `paper/INDEPENDENT_REVIEW_PACKET.md` with the final release materials.
+7. **Matching release prepared:** the concept DOI
    [10.5281/zenodo.22800650](https://doi.org/10.5281/zenodo.22800650) resolves to the latest
    version; v1.3.0 is [10.5281/zenodo.22848609](https://doi.org/10.5281/zenodo.22848609).
-   `scripts/build_publication_release.py` produces a deterministic, matching
-   manuscript-v1.9 candidate, but it is not archival until it is deposited and
-   its final version DOI and tag are recorded.
+   `scripts/build_publication_release.py` produces the deterministic matching
+   archive for manuscript v1.9 / release v1.9.0, assigned version DOI
+   [10.5281/zenodo.22922348](https://doi.org/10.5281/zenodo.22922348).
 
 ## Additional control status
 
