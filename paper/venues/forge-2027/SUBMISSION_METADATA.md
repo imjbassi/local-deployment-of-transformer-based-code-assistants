@@ -77,7 +77,8 @@ they are deliberately not inferred here.
   markers and accept the residual deanonymization risk from the disclosed
   public repository and report.
 - [ ] Recheck the four-main-page plus one-reference-page limit and the official
-  deadline (currently recorded as 15 November 2026, Anywhere on Earth).
+  deadline immediately before upload. An interim recheck on 2026-09-24 found
+  the requirements unchanged: 15 November 2026 at 23:59 Anywhere on Earth.
 - [x] Designate Jaiveer Bassi as presenter/registrant.
 - [ ] Approve the final uploaded files.
 

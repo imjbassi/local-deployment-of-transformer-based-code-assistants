@@ -69,7 +69,7 @@ Acceptance remains a reviewer judgment about novelty and significance.
   listed in `venues/forge-2027/SUBMISSION_METADATA.md`. Submit the paper and ZIP
   through the venue system. Nothing has been submitted.
 - **Archival release:** the matching history-free v1.9.0 archive is built with
-  `scripts/build_publication_release.py` and assigned version DOI
+  `scripts/build_publication_release.py` and published under version DOI
   `10.5281/zenodo.22926448`. The earlier DOI does not contain this revision.
 - **Scientific scope:** five historical base models, one GPU/software stack,
   one benchmark, and post-hoc diagnostics limit generality. New benchmarks,
@@ -77,5 +77,5 @@ Acceptance remains a reviewer judgment about novelty and significance.
   not needed for the currently bounded local pipeline claim. No novelty or
   acceptance guarantee follows from the large effect size.
 
-Venue requirements checked against the official call:
+Venue requirements rechecked on 2026-09-24 against the official call:
 https://conf.researchr.org/track/forge-2027/forge-2027-data-and-benchmarking-track

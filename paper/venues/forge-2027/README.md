@@ -11,7 +11,7 @@ direct fit than a general empirical software-engineering venue.
 Official instructions:
 <https://conf.researchr.org/track/forge-2027/forge-2027-data-and-benchmarking-track>
 
-## Submission constraints (checked 2026-09-22)
+## Submission constraints (rechecked 2026-09-24)
 
 - Deadline: 15 November 2026, Anywhere on Earth.
 - Format: `IEEEtran`, `10pt,conference`, without `compsoc` or `compsocconf`.
@@ -51,7 +51,8 @@ Official instructions:
   author-decision checklist in `SUBMISSION_METADATA.md`.
 - [x] Obtain an independent review; retain its returned sign-off with the final
   release using `paper/INDEPENDENT_REVIEW_PACKET.md`.
-- [ ] Recheck the official instructions immediately before submission.
+- [ ] Recheck the official instructions again immediately before submission
+  (interim recheck completed 2026-09-24; requirements were unchanged).
 - [ ] Author confirms final content, attribution/licensing, conflicts, and
   submission declarations; upload through the submission system.
 

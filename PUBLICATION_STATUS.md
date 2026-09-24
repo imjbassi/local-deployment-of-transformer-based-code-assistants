@@ -8,9 +8,10 @@ historical machine-readable label `failed_to_reproduce`. Measured values and int
 limits are in `RESULTS.md`, with auditable artifacts in `artifacts/primary`.
 
 The repository now includes a versioned technical report of the completed
-primary experiment under `paper/`. It is not a completed archival or
-peer-reviewed paper. The historical PDF is not evidence for the new study and
-the removed self-audit manuscript must not be restored as the contribution.
+primary experiment under `paper/`, archived in the matching v1.9.0 Zenodo
+release. It is not a peer-reviewed or accepted paper. The historical PDF is not
+evidence for the new study and the removed self-audit manuscript must not be
+restored as the contribution.
 
 ## Release gate
 
@@ -31,7 +32,7 @@ A paper or archival release requires all of the following:
 6. **Completed by author confirmation; record to retain:** a second person has
    reviewed the work. Preserve their returned sign-off using
    `paper/INDEPENDENT_REVIEW_PACKET.md` with the final release materials.
-7. **Matching release prepared:** the concept DOI
+7. **Matching release published:** the concept DOI
    [10.5281/zenodo.22800650](https://doi.org/10.5281/zenodo.22800650) resolves to the latest
    version; v1.3.0 is [10.5281/zenodo.22848609](https://doi.org/10.5281/zenodo.22848609).
    `scripts/build_publication_release.py` produces the deterministic matching
@@ -98,6 +99,7 @@ tested from a fresh extraction. See `paper/PUBLICATION_CRITIQUE.md` for the
 human-owned declarations, and `paper/release/RELEASE_CANDIDATE.md` for the
 archival handoff.
 
-Until the independent review and final author checks pass, the defensible claim is limited to the completed
-primary condition and its stated interpretation boundary; do not describe the
-repository as a finished or peer-reviewed paper.
+The author confirms that independent review is complete; retain the reviewer's
+returned sign-off with the submission record. Until the final human-owned
+submission checks pass, do not describe the repository as peer-reviewed,
+accepted, or submitted to FORGE.
